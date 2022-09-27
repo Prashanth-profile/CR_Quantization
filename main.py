@@ -3,9 +3,23 @@
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
-
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
+
+
+def doubleto8bit(x, a):
+    s = np.sign(x)
+    x = abs(x)
+
+    if x == a:
+        return 0
+    b = np.floor(np.log2(x) + 1) - 8
+    m = s * round(x / 2 ** b)
+
+    y = m * 2 ** b
+    return y
+
 
 with open('C:/Users/Prashanth/Desktop/writefile.txt', 'r') as fin:
     data_read_SDR1 = fin.read()
@@ -21,36 +35,37 @@ list_of_strings_SDR1 = data_read_SDR1.split('\n')
 list_of_strings_SDR2 = data_read_SDR2.split('\n')
 
 list_of_floats_SDR1 = [float(x) for x in list_of_strings_SDR1]
-print(list_of_floats_SDR1)
 list_of_floats_SDR2 = [float(x) for x in list_of_strings_SDR2]
-print(list_of_floats_SDR2)
 
-quantized_bits_SDR1 = np.zeros(len(list_of_floats_SDR2))
+quantized_bits_SDR1 = np.zeros(len(list_of_floats_SDR1))
 quantized_bits_SDR2 = np.zeros(len(list_of_floats_SDR2))
 
 average_SDR1 = np.mean(list_of_floats_SDR1)
-print(average_SDR1)
 average_SDR2 = np.mean(list_of_floats_SDR2)
-print(average_SDR2)
 
 var_SDR1 = np.var(list_of_floats_SDR1)
-print(var_SDR1)
 var_SDR2 = np.var(list_of_floats_SDR2)
-print(var_SDR2)
+
+max_SDR1 = np.max(list_of_floats_SDR1)
+min_SDR1 = np.min(list_of_floats_SDR1)
+max_SDR2 = np.max(list_of_floats_SDR2)
+min_SDR2 = np.min(list_of_floats_SDR2)
+
+Quant_Range=255
+
+print("Max, Min, Avg, Var of SDR1", max_SDR1, min_SDR1, average_SDR1, var_SDR1)
+print("Max, Min, Avg, Var of SDR2", max_SDR2, min_SDR2, average_SDR2, var_SDR2)
+
+print("Number of entries from SDR1", len(list_of_floats_SDR1))
+print("Number of entries from SDR2", len(list_of_floats_SDR2))
 
 for i in range(len(list_of_floats_SDR1)):
-    if list_of_floats_SDR1[i] < average_SDR1:
-        quantized_bits_SDR1[i] = 0
-    else:
-        quantized_bits_SDR1[i] = 1
+    quantized_bits_SDR1[i] = round(((list_of_floats_SDR1[i] - min_SDR1) * Quant_Range) / (max_SDR1 - min_SDR1))
 for j in range(len(list_of_floats_SDR2)):
-    if list_of_floats_SDR2[j] < average_SDR2:
-        quantized_bits_SDR2[j] = 0
-    else:
-        quantized_bits_SDR2[j] = 1
+    quantized_bits_SDR2[j] = round(((list_of_floats_SDR2[j] - min_SDR2) * Quant_Range) / (max_SDR2 - min_SDR2))
 
 min_length = min(len(list_of_floats_SDR1), len(list_of_floats_SDR2))
-min_length=100
+min_length = 1000
 print("Min length =", min_length)
 print("secret key of SDR1=", quantized_bits_SDR1[0:min_length])
 print("secret key of SDR2=", quantized_bits_SDR2[0:min_length])
@@ -63,9 +78,26 @@ for i, j in zip(quantized_bits_SDR1[0:min_length], quantized_bits_SDR2[0:min_len
 
 print("Number of unequal bits", unequal_count)
 
-plt.plot(time, list_of_floats_SDR1[1:min_length+1], 'b-', label='SDR1')
-plt.plot(time, list_of_floats_SDR2[1:min_length+1], 'g-', label='SDR2')
-plt.legend(loc='upper left')
-plt.xlabel('Time (t)')
-plt.ylabel('SNR values')
+'''fig, (ax1, ax2, ax3) = plt.subplots(3, 1)
+ax1.plot(time, list_of_floats_SDR1[0:min_length], 'b-', label='SDR1')
+ax1.plot(time, list_of_floats_SDR2[0:min_length], 'g-', label='SDR2')
+ax1.legend(loc='upper left')
+ax1.set(xlabel="Number of samples", ylabel="SNR values")'''
+
+fig, (ax2, ax3) = plt.subplots(2, 1)
+ax2.plot(time, quantized_bits_SDR1[0:min_length], 'b-', label='SDR1_quantized')
+ax2.plot(time, quantized_bits_SDR2[0:min_length], 'g-', label='SDR2_quantized')
+ax2.set(xlabel="Number of samples", ylabel="Normalised SNR values")
+
+number_of_samples=range(min_length)
+corr_coeff=np.zeros(len(number_of_samples))
+for i in range(1, len(number_of_samples)):
+    corr_coefficient=np.corrcoef(quantized_bits_SDR1[0:i], quantized_bits_SDR2[0:i])
+    corr_coeff[i]=corr_coefficient[0,1]
+
+#corr_coeff=np.corrcoef(quantized_bits_SDR1[0:min_length], quantized_bits_SDR2[0:min_length])
+#print("Correlation coefficients are",corr_coeff)
+ax3.plot(number_of_samples, corr_coeff, 'r-')
+ax3.set(xlabel="Number of samples", ylabel="Correlation coefficient")
+
 plt.show()
