@@ -7,6 +7,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+import plot_RSSI
+import plot_correlation
+import reedsolomon_codec
+
 
 def doubleto8bit(x, a):
     s = np.sign(x)
@@ -51,7 +55,7 @@ min_SDR1 = np.min(list_of_floats_SDR1)
 max_SDR2 = np.max(list_of_floats_SDR2)
 min_SDR2 = np.min(list_of_floats_SDR2)
 
-Quant_Range=255
+Quant_Range=4
 
 print("Max, Min, Avg, Var of SDR1", max_SDR1, min_SDR1, average_SDR1, var_SDR1)
 print("Max, Min, Avg, Var of SDR2", max_SDR2, min_SDR2, average_SDR2, var_SDR2)
@@ -60,12 +64,12 @@ print("Number of entries from SDR1", len(list_of_floats_SDR1))
 print("Number of entries from SDR2", len(list_of_floats_SDR2))
 
 for i in range(len(list_of_floats_SDR1)):
-    quantized_bits_SDR1[i] = round(((list_of_floats_SDR1[i] - min_SDR1) * Quant_Range) / (max_SDR1 - min_SDR1))
+    quantized_bits_SDR1[i] = round(((list_of_floats_SDR1[i] - min_SDR1) * ((2**Quant_Range)-1)) / (max_SDR1 - min_SDR1))
 for j in range(len(list_of_floats_SDR2)):
-    quantized_bits_SDR2[j] = round(((list_of_floats_SDR2[j] - min_SDR2) * Quant_Range) / (max_SDR2 - min_SDR2))
+    quantized_bits_SDR2[j] = round(((list_of_floats_SDR2[j] - min_SDR2) * ((2**Quant_Range)-1)) / (max_SDR2 - min_SDR2))
 
 min_length = min(len(list_of_floats_SDR1), len(list_of_floats_SDR2))
-min_length = 1000
+#min_length = 1000
 print("Min length =", min_length)
 print("secret key of SDR1=", quantized_bits_SDR1[0:min_length])
 print("secret key of SDR2=", quantized_bits_SDR2[0:min_length])
@@ -78,16 +82,11 @@ for i, j in zip(quantized_bits_SDR1[0:min_length], quantized_bits_SDR2[0:min_len
 
 print("Number of unequal bits", unequal_count)
 
-'''fig, (ax1, ax2, ax3) = plt.subplots(3, 1)
-ax1.plot(time, list_of_floats_SDR1[0:min_length], 'b-', label='SDR1')
-ax1.plot(time, list_of_floats_SDR2[0:min_length], 'g-', label='SDR2')
-ax1.legend(loc='upper left')
-ax1.set(xlabel="Number of samples", ylabel="SNR values")'''
+fig, (ax1, ax2) = plt.subplots(2, 1)
 
-fig, (ax2, ax3) = plt.subplots(2, 1)
-ax2.plot(time, quantized_bits_SDR1[0:min_length], 'b-', label='SDR1_quantized')
-ax2.plot(time, quantized_bits_SDR2[0:min_length], 'g-', label='SDR2_quantized')
-ax2.set(xlabel="Number of samples", ylabel="Normalised SNR values")
+#plot_RSSI.plot_RSSI(time, list_of_floats_SDR1[0:min_length], list_of_floats_SDR2[0:min_length], ax1)
+
+#fig, (ax2, ax3) = plt.subplots(2, 1)
 
 number_of_samples=range(min_length)
 corr_coeff=np.zeros(len(number_of_samples))
@@ -95,9 +94,15 @@ for i in range(1, len(number_of_samples)):
     corr_coefficient=np.corrcoef(quantized_bits_SDR1[0:i], quantized_bits_SDR2[0:i])
     corr_coeff[i]=corr_coefficient[0,1]
 
-#corr_coeff=np.corrcoef(quantized_bits_SDR1[0:min_length], quantized_bits_SDR2[0:min_length])
-#print("Correlation coefficients are",corr_coeff)
-ax3.plot(number_of_samples, corr_coeff, 'r-')
-ax3.set(xlabel="Number of samples", ylabel="Correlation coefficient")
+#plot_correlation.correlation_plot(number_of_samples, corr_coeff, ax2)
+print("Quantised bits", list(quantized_bits_SDR1.astype(int)))
+RS_encode=reedsolomon_codec.RS_encoding(list(quantized_bits_SDR1.astype(int)))
+print("RS encoding", RS_encode)
 
-plt.show()
+RS_decode=reedsolomon_codec.RS_decoding(list(quantized_bits_SDR1.astype(int)), RS_encode)
+print("decoded bytes", RS_decode)
+print("Original", list(quantized_bits_SDR1.astype(int)))
+
+print("Decoding status", RS_decode==list(quantized_bits_SDR1.astype(int)))
+
+#plt.show()
