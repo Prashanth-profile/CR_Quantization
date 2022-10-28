@@ -1,12 +1,13 @@
-from bitstring import BitArray
-import numpy as np
-import itertools
+def bitstring_to_bytes(s):
+    print("length of string is ", len(s))
+    rem=len(s)%8
+    print(rem, " bits rejected")
+    return int(s[:len(s)-rem], 2).to_bytes((len(s[:len(s)-rem]) + 7) // 8, byteorder='big')
 
-def bitstobyte(bits):
-    #print(int(len(bits)/8))
-    #b=np.zeros(int(len(bits)/8))
-    #for i in range(0, int(len(bits)/8), 8):
-        #print(i)
-    b=BitArray(bits)
-    #print("b is ", b)
-    return b
+'''def bitstring_to_bytes(s):
+    v = int(s, 2)
+    b = bytearray()
+    while v:
+        b.append(v & 0xff)
+        v >>= 8
+    return bytes(b[::-1])'''
