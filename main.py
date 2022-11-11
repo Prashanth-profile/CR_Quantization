@@ -30,9 +30,9 @@ def doubleto8bit(x, a):
     return y
 
 #Read the text file
-with open('C:/Users/Prashanth/Desktop/writefile2.txt', 'r') as fin:
+with open('C:/Users/Prashanth/Desktop/CFO_sdr1.txt', 'r') as fin:
     data_read_SDR1 = fin.read()
-with open('C:/Users/Prashanth/Desktop/writefile.txt', 'r') as fin:
+with open('C:/Users/Prashanth/Desktop/CFO_sdr2.txt', 'r') as fin:
     data_read_SDR2 = fin.read()
 
 # average = mean(data)
@@ -45,8 +45,8 @@ list_of_strings_SDR1 = data_read_SDR1.split('\n')
 list_of_strings_SDR2 = data_read_SDR2.split('\n')
 
 #Convert string to float
-list_of_floats_SDR1 = [float(x) for x in list_of_strings_SDR1]
-list_of_floats_SDR2 = [float(x) for x in list_of_strings_SDR2]
+list_of_floats_SDR1 = np.abs([float(x) for x in list_of_strings_SDR1])
+list_of_floats_SDR2 = np.abs([float(x) for x in list_of_strings_SDR2])
 
 print("RSSI values of SDR1", list_of_floats_SDR1)
 print("RSSI values of SDR2", list_of_floats_SDR2)
@@ -81,8 +81,8 @@ uniform_quantized_bits_SDR2 = uniform_quantization.uniform_quantization(list_of_
 #quantized_bits_SDR2[np.where(quantized_bits_SDR2==0)] =1
 #Number of samples to work with
 #min_length = min(len(list_of_floats_SDR1), len(list_of_floats_SDR2))
-min_length = 256
-window_size=16
+min_length = 128
+window_size=8
 
 if min_length%window_size!=0:
     print("Window size not matching length of the samples. Enter valid window_size")

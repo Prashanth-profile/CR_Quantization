@@ -19,9 +19,9 @@ def correlation_non_overlapping_window(min_length, data1, data2, window_size):
     for i in range(0, min_length-window_size, window_size):
         corr_coefficient = np.corrcoef(data1[i:i+window_size], data2[i:i+window_size])
         corr_coeff[int(i/window_size)] = abs(corr_coefficient[0, 1])
-        if np.isnan(abs(corr_coefficient[0, 1])):
-            print("data1 with Nan",data1[i:i+window_size])
-            print("data2 with Nan", data2[i:i + window_size])
+        #if np.isnan(abs(corr_coefficient[0, 1])):
+            #print("data1 with Nan",data1[i:i+window_size])
+            #print("data2 with Nan", data2[i:i + window_size])
     corr_coeff = np.nan_to_num(corr_coeff)
     return corr_coeff, number_of_samples
 
