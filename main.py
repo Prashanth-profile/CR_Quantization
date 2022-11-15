@@ -30,9 +30,9 @@ def doubleto8bit(x, a):
     return y
 
 #Read the text file
-with open('C:/Users/Prashanth/Desktop/CFO_sdr1.txt', 'r') as fin:
+with open('C:/Users/Prashanth/Desktop/CFO Logs/CFO_sdr1.txt', 'r') as fin:
     data_read_SDR1 = fin.read()
-with open('C:/Users/Prashanth/Desktop/CFO_sdr2.txt', 'r') as fin:
+with open('C:/Users/Prashanth/Desktop/CFO Logs/CFO_sdr2.txt', 'r') as fin:
     data_read_SDR2 = fin.read()
 
 # average = mean(data)
@@ -48,8 +48,8 @@ list_of_strings_SDR2 = data_read_SDR2.split('\n')
 list_of_floats_SDR1 = np.abs([float(x) for x in list_of_strings_SDR1])
 list_of_floats_SDR2 = np.abs([float(x) for x in list_of_strings_SDR2])
 
-print("RSSI values of SDR1", list_of_floats_SDR1)
-print("RSSI values of SDR2", list_of_floats_SDR2)
+#print("RSSI values of SDR1", list_of_floats_SDR1)
+#print("RSSI values of SDR2", list_of_floats_SDR2)
 
 #Calculate mean
 average_SDR1 = np.mean(list_of_floats_SDR1)
@@ -66,7 +66,7 @@ max_SDR2 = np.max(list_of_floats_SDR2)
 min_SDR2 = np.min(list_of_floats_SDR2)
 
 #Specify quantization range (3bits, 4bits,.....)
-Quant_Range=4
+Quant_Range=8
 
 print("Max, Min, Avg, Var of SDR1", max_SDR1, min_SDR1, average_SDR1, var_SDR1)
 print("Max, Min, Avg, Var of SDR2", max_SDR2, min_SDR2, average_SDR2, var_SDR2)
@@ -81,7 +81,7 @@ uniform_quantized_bits_SDR2 = uniform_quantization.uniform_quantization(list_of_
 #quantized_bits_SDR2[np.where(quantized_bits_SDR2==0)] =1
 #Number of samples to work with
 #min_length = min(len(list_of_floats_SDR1), len(list_of_floats_SDR2))
-min_length = 128
+min_length = 512
 window_size=8
 
 if min_length%window_size!=0:
@@ -89,15 +89,15 @@ if min_length%window_size!=0:
     exit()
 
 print("Min length =", min_length)
-print("secret key of SDR1=", uniform_quantized_bits_SDR1[0:min_length])
-print("secret key of SDR2=", uniform_quantized_bits_SDR2[0:min_length])
+#print("secret key of SDR1=", uniform_quantized_bits_SDR1[0:min_length])
+#print("secret key of SDR2=", uniform_quantized_bits_SDR2[0:min_length])
 time = list(range(min_length))
 
 #Quantization based on threshold detection
 threshold_quantized_bits_SDR1=[0 if list_of_floats_SDR1_ < average_SDR1 else 1 for list_of_floats_SDR1_ in list_of_floats_SDR1]
 threshold_quantized_bits_SDR2=[0 if list_of_floats_SDR2_ < average_SDR2 else 1 for list_of_floats_SDR2_ in list_of_floats_SDR2]
-print("Quantized bits of SDR1", threshold_quantized_bits_SDR1)
-print("Quantized bits of SDR2", threshold_quantized_bits_SDR2)
+#print("Quantized bits of SDR1", threshold_quantized_bits_SDR1)
+#print("Quantized bits of SDR2", threshold_quantized_bits_SDR2)
 
 #Convert Quantized bits into string
 SDR1_string=stringify.stringify(threshold_quantized_bits_SDR1)
@@ -115,8 +115,8 @@ fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1)
 #Plot RSSI values
 plot_RSSI.plot_RSSI(time, list_of_floats_SDR1[0:min_length], list_of_floats_SDR2[0:min_length], ax1)
 
-print("Result of uniform quantization", uniform_quantized_bits_SDR1.astype(int))
-print("Result of Threshold detection based quantization", list(SDR1_bytes))
+#print("Result of uniform quantization", uniform_quantized_bits_SDR1.astype(int))
+#print("Result of Threshold detection based quantization", list(SDR1_bytes))
 
 #fig, (ax2, ax3) = plt.subplots(2, 1)
 #Calculate correlation coefficient of samples over certain range
@@ -144,13 +144,13 @@ plot_correlation.correlation_plot(number_of_samples, corr_coeff, ax4, 'b-')
 
 #Reed Solomon encoding
 RS_encode=reedsolomon_codec.RS_encoding(list(uniform_quantized_bits_SDR1.astype(int)))
-print("RS encoding", RS_encode)
+print("RS encoding", RS_encode[0:min_length])
 
 #Reed SOlomon decoding
 RS_decode=reedsolomon_codec.RS_decoding(list(uniform_quantized_bits_SDR1.astype(int)), RS_encode)
-print("decoded bytes", RS_decode)
-print("Original", list(uniform_quantized_bits_SDR2.astype(int)))
+print("decoded bytes", RS_decode[0:min_length])
+print("Original", list(uniform_quantized_bits_SDR1[0:min_length].astype(int)))
 
-print("Decoding status", RS_decode==list(uniform_quantized_bits_SDR2.astype(int)))
+print("Decoding status", RS_decode==list(uniform_quantized_bits_SDR1[0:min_length].astype(int)))
 
 plt.show()

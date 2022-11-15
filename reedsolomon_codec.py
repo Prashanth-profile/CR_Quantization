@@ -3,12 +3,14 @@ from reedsolo import RSCodec
 segment_size=223
 parity_size=32
 
+number_of_segments=448
+
 rsc=RSCodec(parity_size)
 
 def RS_encoding(complete_data):
     rs_encoded=bytearray()
     parity_bytes_complete=bytearray()
-    for i in range(0, len(complete_data), segment_size):
+    for i in range(0, segment_size*number_of_segments, segment_size):
         segmentencode=rsc.encode(complete_data[i:i+segment_size])
         parity_bytes=segmentencode[len(segmentencode)-parity_size:len(segmentencode)]
         rs_encoded.extend(segmentencode)
@@ -22,7 +24,7 @@ def RS_decoding(complete_data, parity_bytes):
     j=0
     encoded_bytes=bytearray()
     decoded_bytes = bytearray()
-    for i in range(0, len(complete_data), segment_size):
+    for i in range(0, segment_size*number_of_segments, segment_size):
         encoded_bytes=bytearray(complete_data[i:i+segment_size])
         encoded_bytes.extend(parity_bytes[j:j+parity_size])
         decoded_bytes_per_segment=rsc.decode(encoded_bytes)[0]
