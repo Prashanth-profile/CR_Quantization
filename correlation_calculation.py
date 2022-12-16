@@ -30,7 +30,6 @@ def correlation_overlapping_window(min_length, data1, data2, window_size):
     number_of_samples = range(0, min_length-window_size)
     corr_coeff = np.zeros(len(number_of_samples))
     for i in range(0, min_length-window_size):
-        print(data1[i:i + window_size])
         corr_coefficient = np.corrcoef(data1[i:i + window_size], data2[i:i + window_size])
         corr_coeff[i] = abs(corr_coefficient[0, 1])
 
