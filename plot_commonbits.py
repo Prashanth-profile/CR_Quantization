@@ -5,6 +5,6 @@ def plot_equalbits(common_bits_array, ax, col):
         #ax.plot(time, RSSI_SDR2, 'g-', label='SDR2')
         #ax.legend(loc='upper left')
     else:
-        ax.bar(range(len(common_bits_array)), common_bits_array, color='megenta', label='Threshold Quantization')
+        ax.bar(range(len(common_bits_array)), common_bits_array, color='magenta', label='Threshold Quantization')
     ax.legend(loc='upper left')
     ax.set(xlabel="Number of samples", ylabel="Number of common bits between both SDRs")
