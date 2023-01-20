@@ -14,9 +14,9 @@ def complete_correlation(min_length, data1, data2):
     return corr_coeff, number_of_samples
 
 def correlation_non_overlapping_window(min_length, data1, data2, window_size):
-    number_of_samples = range(0, min_length-window_size, window_size)
+    number_of_samples = range(0, min_length, window_size)
     corr_coeff = np.zeros(len(number_of_samples))
-    for i in range(0, min_length-window_size, window_size):
+    for i in range(0, min_length, window_size):
         corr_coefficient = np.corrcoef(data1[i:i+window_size], data2[i:i+window_size])
         corr_coeff[int(i/window_size)] = abs(corr_coefficient[0, 1])
         #if np.isnan(abs(corr_coefficient[0, 1])):
@@ -27,9 +27,9 @@ def correlation_non_overlapping_window(min_length, data1, data2, window_size):
 
 
 def correlation_overlapping_window(min_length, data1, data2, window_size):
-    number_of_samples = range(0, min_length-window_size)
+    number_of_samples = range(0, min_length)
     corr_coeff = np.zeros(len(number_of_samples))
-    for i in range(0, min_length-window_size):
+    for i in range(0, min_length):
         corr_coefficient = np.corrcoef(data1[i:i + window_size], data2[i:i + window_size])
         corr_coeff[i] = abs(corr_coefficient[0, 1])
 

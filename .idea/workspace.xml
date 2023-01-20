@@ -4,9 +4,9 @@
     <list default="true" id="93ded42d-dba7-41e4-8fd9-b6acae1c0569" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/binary_count.py" beforeDir="false" afterPath="$PROJECT_DIR$/binary_count.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/correlation_calculation.py" beforeDir="false" afterPath="$PROJECT_DIR$/correlation_calculation.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plot_commonbits.py" beforeDir="false" afterPath="$PROJECT_DIR$/plot_commonbits.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/window_average_threshold_quantization.py" beforeDir="false" afterPath="$PROJECT_DIR$/window_average_threshold_quantization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plot_RSSI.py" beforeDir="false" afterPath="$PROJECT_DIR$/plot_RSSI.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -35,14 +35,14 @@ def doubleto8bit(x, a):
 
 class Quantization(enum.Enum):
     UNIFORM= True
-    WINDOW_THRESHOLD=True
+    WINDOW_THRESHOLD=False
 
 print("Uniform quantization flag set to ", Quantization.UNIFORM.value)
 
 #Read the text file
-with open('C:/Users/Prashanth/Desktop/CFO_sdr1.txt', 'r') as fin:
+with open('C:/Users/Prashanth/Desktop/SDR1simulation/RSSI_sdr1.txt', 'r') as fin:
     data_read_SDR1 = fin.read()
-with open('C:/Users/Prashanth/Desktop/CFO_sdr1.txt', 'r') as fin:
+with open('C:/Users/Prashanth/Desktop/SDR2simulation/RSSI_sdr2.txt', 'r') as fin:
     data_read_SDR2 = fin.read()
 
 # average = mean(data)
@@ -55,8 +55,8 @@ list_of_strings_SDR1 = data_read_SDR1.split('\n')
 list_of_strings_SDR2 = data_read_SDR2.split('\n')
 
 #Convert string to float
-list_of_floats_SDR1 = np.abs([float(x) for x in list_of_strings_SDR1])
-list_of_floats_SDR2 = np.abs([float(x) for x in list_of_strings_SDR2])
+list_of_floats_SDR1 = [float(x) for x in list_of_strings_SDR1]
+list_of_floats_SDR2 = [float(x) for x in list_of_strings_SDR2]
 
 #print("RSSI values of SDR1", list_of_floats_SDR1)
 #print("RSSI values of SDR2", list_of_floats_SDR2)
@@ -76,7 +76,7 @@ max_SDR2 = np.max(list_of_floats_SDR2)
 min_SDR2 = np.min(list_of_floats_SDR2)
 
 #Specify quantization range (3bits, 4bits,.....)
-Quant_Range=8
+Quant_Range=3
 
 print("Max, Min, Avg, Var of SDR1", max_SDR1, min_SDR1, average_SDR1, var_SDR1)
 print("Max, Min, Avg, Var of SDR2", max_SDR2, min_SDR2, average_SDR2, var_SDR2)
@@ -102,7 +102,7 @@ if min_length%window_size!=0:
     print("Window size not matching length of the samples. Enter valid window_size")
     exit()
 
-print("Min length =", min_length)
+print("Min length = ", min_length)
 time = list(range(min_length))
 
 #Quantization based on threshold detection
@@ -178,9 +178,11 @@ if Quantization.UNIFORM.value==True:
     plot_commonbits.plot_equalbits(equal_bit_array_uniquant, ax5, 'c-')
 
 min_thresh_len=min_length*window_size
+min_thresh_len=min(len(threshold_quantized_bits_SDR1[0:min_thresh_len]), len(threshold_quantized_bits_SDR2[0:min_thresh_len]))
 equal_bit_array_threshold=binary_count.bitcount_window(threshold_quantized_bits_SDR1[0:min_thresh_len], threshold_quantized_bits_SDR2[0:min_thresh_len], 1)
-print("Number of bits equal to each other are for threshold based quantization", equal_bit_array_threshold, "for ", min_thresh_len*Quant_Range, "total bits")
-print("Length of same bits array for threshold quantization", len(equal_bit_array_threshold))
+print("equal", equal_bit_array_threshold, len(threshold_quantized_bits_SDR1[0:min_thresh_len]), len(threshold_quantized_bits_SDR2[0:min_thresh_len]))
+#print("Number of bits equal to each other are for threshold based quantization", equal_bit_array_threshold, "for ", min_thresh_len*Quant_Range, "total bits")
+#print("Length of same bits array for threshold quantization", len(equal_bit_array_threshold))
 sum_bitarray_threshold=[]
 for i in range(0, len(equal_bit_array_threshold), window_size):
     sum_perwindow=sum(equal_bit_array_threshold[i:i+window_size])

@@ -22,10 +22,10 @@ def intarray2binarray(int_array):
 def bitcount_window(binarray1, binarray2, window_size):
     bincount=[]
     if len(binarray1)%window_size!=0:
-        #print("Error in window_size or sample size ", len(binarray1))
+        print("Error in window_size or sample size ", len(binarray1))
         return -1
     if len(binarray1)!=len(binarray2):
-        #print("Error in one or both sample size, sample size not same")
+        print("Error in one or both sample size, sample size not same")
         return -1
     for i in range(0, len(binarray1), window_size):
         #print("bincount", bincount)
