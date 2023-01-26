@@ -7,4 +7,4 @@ def plot_equalbits(common_bits_array, ax, col):
     else:
         ax.bar(range(len(common_bits_array)), common_bits_array, color='magenta', label='Threshold Quantization')
     ax.legend(loc='upper left')
-    ax.set(xlabel="Number of samples", ylabel="Number of common bits between both SDRs")
+    ax.set(xlabel="Number of samples", ylabel="Nr of Common bits")

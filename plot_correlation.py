@@ -6,4 +6,4 @@ def correlation_plot(time, corr_coeff, ax, colour):
         ax.plot(time, corr_coeff, colour, label='Threshold Detection')
         ax.scatter(time, corr_coeff, color='blue')
     ax.legend(loc='upper left')
-    ax.set(xlabel="Number of samples", ylabel="Correlation coefficient")
+    ax.set(xlabel="Window position", ylabel="Correlation coefficient")
