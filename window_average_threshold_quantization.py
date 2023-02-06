@@ -18,7 +18,7 @@ def window_average(arr, window_size):
         # Calculate the average of current window
         window_average = np.sum(arr[i:i + window_size]) / window_size
         threshold_detection_bit = [0 if x < window_average else 1 for x in arr[i:i + window_size]]
-        print("Result at index", i, "is ", threshold_detection_bit)
+        #print("Result at index", i, "is ", threshold_detection_bit)
         # Store the average of current
         # window in moving average list
         moving_averages.append(window_average)
@@ -27,12 +27,12 @@ def window_average(arr, window_size):
         i += 1
 
     #print(moving_averages)
-    print("After threshold detection", np.asarray(threshold_detection))
+    '''print("After threshold detection", np.asarray(threshold_detection))
 
     l = []
     for item in threshold_detection:
         l.append(item[0])
 
-    print("After concatenation", l)
+    print("After concatenation", list(np.asarray(threshold_detection).flat))'''
 
-    return l
+    return list(np.asarray(threshold_detection).flat)

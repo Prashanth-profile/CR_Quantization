@@ -40,9 +40,9 @@ class Quantization(enum.Enum):
 print("Uniform quantization flag set to ", Quantization.UNIFORM.value)
 
 #Read the text file
-with open('C:/Users/Prashanth/Desktop/SDR1simulation/RSSI_sdr1.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/RSSI_SDR1_32.txt', 'r') as fin:
     data_read_SDR1 = fin.read()
-with open('C:/Users/Prashanth/Desktop/SDR2simulation/RSSI_sdr2.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/RSSI_SDR2_32.txt', 'r') as fin:
     data_read_SDR2 = fin.read()
 
 # average = mean(data)
@@ -57,6 +57,8 @@ list_of_strings_SDR2 = data_read_SDR2.split('\n')
 #Convert string to float
 list_of_floats_SDR1 = [float(x) for x in list_of_strings_SDR1]
 list_of_floats_SDR2 = [float(x) for x in list_of_strings_SDR2]
+list_of_floats_SDR1 = list(map(lambda x: x*-1 if x > 0 else x, list_of_floats_SDR1))
+list_of_floats_SDR2 = list(map(lambda x: x*-1 if x > 0 else x, list_of_floats_SDR2))
 
 #print("RSSI values of SDR1", list_of_floats_SDR1)
 #print("RSSI values of SDR2", list_of_floats_SDR2)
@@ -109,8 +111,8 @@ time = list(range(min_length))
 #Quantization based on threshold detection
 #threshold_quantized_bits_SDR1=[0 if list_of_floats_SDR1_ < average_SDR1 else 1 for list_of_floats_SDR1_ in list_of_floats_SDR1]
 #threshold_quantized_bits_SDR2=[0 if list_of_floats_SDR2_ < average_SDR2 else 1 for list_of_floats_SDR2_ in list_of_floats_SDR2]
-threshold_quantized_bits_SDR1 = window_average_threshold_quantization.window_average(list_of_floats_SDR1[0:min_length*32], 8)
-threshold_quantized_bits_SDR2 = window_average_threshold_quantization.window_average(list_of_floats_SDR2[0:min_length*32], 8)
+threshold_quantized_bits_SDR1 = window_average_threshold_quantization.window_average(list_of_floats_SDR1[0:min_length], 8)
+threshold_quantized_bits_SDR2 = window_average_threshold_quantization.window_average(list_of_floats_SDR2[0:min_length], 8)
 
 #Convert Quantized bits into string
 SDR1_string = stringify.stringify(threshold_quantized_bits_SDR1)
@@ -129,10 +131,10 @@ fig, (ax1, ax5) = plt.subplots(2, 1)
 plot_RSSI.plot_RSSI(time, list_of_floats_SDR1[0:min_length], list_of_floats_SDR2[0:min_length], ax1)
 
 if Quantization.UNIFORM.value==True:
-    print("secret key of SDR1=", uniform_quantized_bits_SDR1[0:min_length])
-    print("secret key of SDR2=", uniform_quantized_bits_SDR2[0:min_length])
-    print("Result of uniform quantization for SDR1", uniform_quantized_bits_SDR1.astype(int))
-    print("Result of uniform quantization for SDR2", uniform_quantized_bits_SDR2.astype(int))
+    print("secret key of SDR1=", len(uniform_quantized_bits_SDR1[0:min_length]))
+    print("secret key of SDR2=", len(uniform_quantized_bits_SDR2[0:min_length]))
+    print("Result of uniform quantization for SDR1", len(uniform_quantized_bits_SDR1.astype(int)))
+    print("Result of uniform quantization for SDR2", len(uniform_quantized_bits_SDR2.astype(int)))
 if Quantization.WINDOW_THRESHOLD.value==True:
     print("Threshold Quantized bits of SDR1", threshold_quantized_bits_SDR1)
     print("Threshold Quantized bits of SDR2", threshold_quantized_bits_SDR2)
@@ -170,18 +172,20 @@ if Quantization.WINDOW_THRESHOLD.value==True:
     plot_correlation.correlation_plot(number_of_samples, corr_coeff, ax4, 'b-')'''
 
 #Binary Count
-SDR1_bincount=binary_count.intarray2binarray(uniform_quantized_bits_SDR1[0:round(min_length*Quant_Range/window_size)].astype(int))
-SDR2_bincount=binary_count.intarray2binarray(uniform_quantized_bits_SDR2[0:round(min_length*Quant_Range/window_size)].astype(int))
+SDR1_bincount=binary_count.intarray2binarray(uniform_quantized_bits_SDR1[0:round(min_length)].astype(int), Quant_Range)
+SDR2_bincount=binary_count.intarray2binarray(uniform_quantized_bits_SDR2[0:round(min_length)].astype(int), Quant_Range)
+print("SDR1 binary array", len(SDR1_bincount))
+print("SDR2 binary array", len(SDR2_bincount))
 equal_bit_array_uniquant=binary_count.bitcount_window(SDR1_bincount, SDR2_bincount, window_size)
-print("Number of bits equal to each other are for uniform quantization", equal_bit_array_uniquant, "for ", min_length*Quant_Range, "total bits")
+print("Number of bits equal to each other for uniform quantization are", sum(equal_bit_array_uniquant), "for ", min_length*Quant_Range, "total bits")
 print("Length of same bits array for uniform quantization", len(equal_bit_array_uniquant))
 if Quantization.UNIFORM.value==True:
     plot_commonbits.plot_equalbits(equal_bit_array_uniquant, ax5, 'c-')
 
 min_thresh_len=min_length
-min_thresh_len=min(len(threshold_quantized_bits_SDR1[0:min_thresh_len]), len(threshold_quantized_bits_SDR2[0:min_thresh_len]))
+#min_thresh_len=min(len(threshold_quantized_bits_SDR1[0:min_thresh_len]), len(threshold_quantized_bits_SDR2[0:min_thresh_len]))
 equal_bit_array_threshold=binary_count.bitcount_window(threshold_quantized_bits_SDR1[0:min_thresh_len], threshold_quantized_bits_SDR2[0:min_thresh_len], 1)
-print("equal", equal_bit_array_threshold, len(threshold_quantized_bits_SDR1[0:min_thresh_len]), len(threshold_quantized_bits_SDR2[0:min_thresh_len]), len(equal_bit_array_threshold))
+print("equal", equal_bit_array_threshold, len(threshold_quantized_bits_SDR1[0:min_thresh_len]), len(threshold_quantized_bits_SDR2[0:min_thresh_len]), len(equal_bit_array_threshold), min_thresh_len)
 #print("Number of bits equal to each other are for threshold based quantization", equal_bit_array_threshold, "for ", min_thresh_len*Quant_Range, "total bits")
 #print("Length of same bits array for threshold quantization", len(equal_bit_array_threshold))
 sum_bitarray_threshold=[]

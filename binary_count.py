@@ -10,10 +10,10 @@ test2=[0, 0, 0, 1]
 
 getbinary = lambda x, n: format(x, 'b').zfill(n)
 
-def intarray2binarray(int_array):
+def intarray2binarray(int_array, nr_bits):
     b=[]
     for i in range(len(int_array)):
-        b=np.concatenate([b,bin_array(int_array[i],8)])
+        b=np.concatenate([b,bin_array(int_array[i],nr_bits)])
     # printing original number
     #print("The original number is : " + str(int_array))
     #print("The converted binary list is : ", b)
@@ -31,7 +31,7 @@ def bitcount_window(binarray1, binarray2, window_size):
         #print("bincount", bincount)
         #print("np.count", np.count_nonzero(binarray1[i:i+window_size]==binarray2[i:i+window_size]))
         bincount.append(np.count_nonzero(binarray1[i:i+window_size]==binarray2[i:i+window_size]))
-    #print("Equal bit count", bincount)
+    print("Equal bit count", len(bincount))
     return bincount
 
 bitcount_window(test1, test2, 1)

@@ -1,0 +1,7 @@
+def convert_gray(binary):
+  binary = int(binary, 2)
+  binary ^= (binary >> 1)
+  return bin(binary)[2:]
+binary_num = input("BINARY NUMBER : ")
+gray_code = convert_gray(binary_num)
+print("EQUIVALENT GRAY CODE IS : ",gray_code)
