@@ -31,7 +31,7 @@ def bitcount_window(binarray1, binarray2, window_size):
         #print("bincount", bincount)
         #print("np.count", np.count_nonzero(binarray1[i:i+window_size]==binarray2[i:i+window_size]))
         bincount.append(np.count_nonzero(binarray1[i:i+window_size]==binarray2[i:i+window_size]))
-    print("Equal bit count", len(bincount))
+    print("Equal bit count", sum(bincount))
     return bincount
 
 bitcount_window(test1, test2, 1)
