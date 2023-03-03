@@ -12,10 +12,15 @@ ind=0
 
 #########################################RSSI########################################
 #Read the text file
-with open('C:/Users/prashanth/Desktop/Logs SC 1302/Logs 500ms/RSSI_SC_132_SDR1.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/RSSI_Freqsweep_132_SDR1.txt', 'r') as fin:
     data_read_SDR1 = fin.read()
-with open('C:/Users/prashanth/Desktop/Logs SC 1302/Logs 500ms/RSSI_SC_132_SDR2.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/RSSI_Freqsweep_132_SDR2.txt', 'r') as fin:
     data_read_SDR2 = fin.read()
+
+'''with open('C:/Users/prashanth/Desktop/Logs Freqsweep/RSSI_Freqsweep_132_SDR1.txt', 'r') as fin:
+    data_read_SDR1 = fin.read()
+with open('C:/Users/prashanth/Desktop/Logs Freqsweep/RSSI_Freqsweep_132_SDR2.txt', 'r') as fin:
+    data_read_SDR2 = fin.read()'''
 
 # average = mean(data)
 # print(average)
@@ -38,9 +43,9 @@ plot_RSSI.plot_RSSI(time, list_of_floats_SDR1[ind:ind+min_length], list_of_float
 
 #######################################CFO##############################################
 #Read the text file
-with open('C:/Users/prashanth/Desktop/Logs SC 1302/Logs 500ms/CFO_SC_132_SDR1.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/CFO_Freqsweep_132_SDR1.txt', 'r') as fin:
     data_read_SDR1 = fin.read()
-with open('C:/Users/prashanth/Desktop/Logs SC 1302/Logs 500ms/CFO_SC_132_SDR2.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/CFO_Freqsweep_132_SDR2.txt', 'r') as fin:
     data_read_SDR2 = fin.read()
 
 # average = mean(data)
@@ -62,9 +67,9 @@ plot_CFO.plot_CFO(time, list_of_floats_SDR1[ind:ind+min_length], list_of_floats_
 
 #######################################PO##############################################
 #Read the text file
-with open('C:/Users/prashanth/Desktop/Logs SC 1302/Logs 500ms/PO_SC_132_SDR1.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/PO_Freqsweep_132_SDR1.txt', 'r') as fin:
     data_read_SDR1 = fin.read()
-with open('C:/Users/prashanth/Desktop/Logs SC 1302/Logs 500ms/PO_SC_132_SDR2.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/PO_Freqsweep_132_SDR2.txt', 'r') as fin:
     data_read_SDR2 = fin.read()
 
 # average = mean(data)

@@ -5,8 +5,8 @@ def bin_array(num, m):
     return np.array(list(np.binary_repr(num).zfill(m))).astype(np.int8)
 
 test_num = [38, 22, 100, 121]
-test1=[0, 0, 0, 0]
-test2=[0, 0, 0, 1]
+test1=[0, 0, 0, 1, 1, 1, 0, 0]
+test2=[0, 0, 0, 1, 1, 1, 1, 1]
 
 getbinary = lambda x, n: format(x, 'b').zfill(n)
 

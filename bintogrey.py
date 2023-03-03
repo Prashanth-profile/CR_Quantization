@@ -1,7 +1,18 @@
-def convert_gray(binary):
-  binary = int(binary, 2)
-  binary ^= (binary >> 1)
-  return bin(binary)[2:]
-binary_num = input("BINARY NUMBER : ")
-gray_code = convert_gray(binary_num)
-print("EQUIVALENT GRAY CODE IS : ",gray_code)
+import numpy as np
+
+
+def grayCode(n):
+    # Right Shift the number
+    # by 1 taking xor with
+    # original number
+    return n ^ (n >> 1)
+
+def array_conversion_togray(arr):
+    grayarr=[]
+    for i in range(0, len(arr)):
+        code=grayCode(arr[i])
+        grayarr.append(code)
+    return grayarr
+# Driver Code
+n = [77, 67]
+print(array_conversion_togray(n))

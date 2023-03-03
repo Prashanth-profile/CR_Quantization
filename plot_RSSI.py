@@ -4,4 +4,4 @@ def plot_RSSI(time, RSSI_SDR1, RSSI_SDR2, ax):
     ax.plot(time, RSSI_SDR2, 'g-', label='SDR2')
     ax.scatter(time, RSSI_SDR2, color='green')
     ax.legend(loc='upper left')
-    ax.set(xlabel="Frequency in MHz", ylabel="RSSI values in dBm")
+    ax.set(xlabel="Time Index", ylabel="RSSI values in dBm")
