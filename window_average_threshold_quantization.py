@@ -1,5 +1,7 @@
 # Python program to calculate
 # simple moving averages using pandas
+import statistics
+
 import numpy as np
 import pandas as pd
 
@@ -36,3 +38,52 @@ def window_average(arr, window_size):
     print("After concatenation", list(np.asarray(threshold_detection).flat))'''
 
     return list(np.asarray(threshold_detection).flat)
+
+def window_average_meanmedian(arr, window_size, mean_medianbar):
+    i = 0
+    # Initialize an empty list to store moving averages
+    moving_averages = []
+    threshold_detection=[]
+    # Loop through the array t o
+    # consider every window of size window_size
+    print("Original array is", arr)
+    for i in range(0, len(arr), window_size):
+        # Calculate the average of current window
+        if mean_medianbar==True:
+            window_average = statistics.mean(arr[i:i + window_size])
+        else:
+            window_average = statistics.median(arr[i:i + window_size])
+        threshold_detection_bit = [0 if x < window_average else 1 for x in arr[i:i + window_size]]
+        #print("Result at index", i, "is ", threshold_detection_bit)
+        # Store the average of current
+        # window in moving average list
+        moving_averages.append(window_average)
+        threshold_detection.append(threshold_detection_bit)
+        # Shift window to right by one position
+        i += 1
+    print("Result", threshold_detection)
+    return list(np.asarray(threshold_detection).flat)
+
+def float_to_binary_lossyquantization_onebit(float_array, window_size, mean_medianbar, alpha):
+    rem=len(float_array)%window_size
+    if rem!=0:
+        float_array=float_array[:-rem]
+    binary_array = []
+    for i in range(0, len(float_array), window_size):
+        # Calculate the average of current window
+        if mean_medianbar==True:
+            window_average = statistics.mean(float_array[i:i + window_size])
+        else:
+            window_average = statistics.median(float_array[i:i + window_size])
+        window_var=statistics.variance(float_array[i:i + window_size])
+
+        threshold1=window_average-window_var*alpha
+        threshold2=window_average+window_var*alpha
+        for f in float_array[i:i + window_size]:
+            if f > threshold1:
+                binary_array.append(1)
+            elif f < threshold2:
+                binary_array.append(0)
+            else:
+                binary_array.append(None)  # Skip this value
+    return binary_array

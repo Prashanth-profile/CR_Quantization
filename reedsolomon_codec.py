@@ -15,7 +15,7 @@ def RS_encoding(complete_data, segment_size, parity_size, number_of_segments):
         rs_encoded.extend(segmentencode)
         parity_bytes_complete.extend(parity_bytes)
         #print("Complete_parity_bytes",parity_bytes_complete)
-
+    print("Complete_parity_bytes", parity_bytes_complete)
     return parity_bytes_complete
 
 

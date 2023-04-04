@@ -37,8 +37,9 @@ def doubleto8bit(x, a):
     return y
 
 class Quantization(enum.Enum):
-    UNIFORM= True
+    UNIFORM= False
     WINDOW_THRESHOLD=True
+    GREY_CODE=False
 
 print("Uniform quantization flag set to ", Quantization.UNIFORM.value)
 
@@ -139,9 +140,10 @@ if Quantization.WINDOW_THRESHOLD.value==True:
     print("Result of Threshold detection based quantization for SDR1", list(SDR1_bytes))
     print("Result of Threshold detection based quantization for SDR2", list(SDR2_bytes))
 
-fig, (ax1, ax5) = plt.subplots(2, 1)
+
 
 ###########################        Plot RSSI values
+fig, (ax1, ax5) = plt.subplots(2, 1)
 plot_RSSI.plot_RSSI(time, list_of_floats_SDR1[0:min_length], list_of_floats_SDR2[0:min_length], ax1)
 
 if Quantization.UNIFORM.value==True:
@@ -154,11 +156,11 @@ if Quantization.WINDOW_THRESHOLD.value==True:
     print("Threshold Quantized bits of SDR2", threshold_quantized_bits_SDR2)
 
 #################################      INTEGER BYTE TO GRAY CODE CONVERSION       ############################################
-if Quantization.UNIFORM.value==True:
+if (Quantization.UNIFORM.value==True) & (Quantization.GREY_CODE.value==True):
     uniform_graycode_SDR1 = bintogrey.array_conversion_togray(uniform_quantized_bytes_SDR1.astype(int))
     uniform_graycode_SDR2 = bintogrey.array_conversion_togray(uniform_quantized_bytes_SDR2.astype(int))
-    print("Result of uniform quantization gray code conversion for SDR1", uniform_graycode_SDR1)
-    print("Result of uniform quantization gray code conversion for SDR2", uniform_graycode_SDR2)
+    print("Result of uniform quantization gray code conversion for SDR1", uniform_graycode_SDR1, "of length", len(uniform_graycode_SDR1)*Quant_Range, "bits")
+    print("Result of uniform quantization gray code conversion for SDR2", uniform_graycode_SDR2, "of length", len(uniform_graycode_SDR2)*Quant_Range, "bits")
 
 ##############################     CORRELATION PLOT START       ##############################################################################
 
@@ -244,52 +246,67 @@ ax5=sns.histplot(corr_coeff,
 
 
 ############################################      REED SOLOMON CODE START     ###################################################################
+#Length of the entire sample in bytes
+min_length = 128 #For 128 samples
+
 #Size of message length in bytes
-segment_size=1
+segment_size=8
 
 #Size of parity in bytes
-parity_size=2
+parity_size=4     ####Parity bytes must not be equal to segment size to prove effectiveness of ECC
+
+if min_length%segment_size!=0:
+    print("Segment for reed solomon code do not match size of the data that needs error correction")
+    exit()
 
 #Number of smaller message segments
-number_of_segments=int((min_length*Quant_Range)/(8*segment_size))
+number_of_segments=int((min_length*Quant_Range)/(8 * segment_size))  #For 128 bits sample, 2bit quantization, 2 byte parity, we get 4 segments. Hence 16bytes parity
 print("Number of segments", number_of_segments)
 
 # Enable For Gray Codes
-SDR1_bincount = binary_count.intarray2binarray(uniform_graycode_SDR1[0:round(min_length)], Quant_Range)
-SDR2_bincount = binary_count.intarray2binarray(uniform_graycode_SDR2[0:round(min_length)], Quant_Range)
-print("SDR1 binary array", SDR1_bincount)
-print("SDR2 binary array", SDR2_bincount)
+if Quantization.GREY_CODE.value==True:
+    SDR1_bincount = binary_count.intarray2binarray(uniform_graycode_SDR1[0:round(min_length)], Quant_Range)
+    SDR2_bincount = binary_count.intarray2binarray(uniform_graycode_SDR2[0:round(min_length)], Quant_Range)
+    print("SDR1 binary array", SDR1_bincount)
+    print("SDR2 binary array", SDR2_bincount)
 
-greycode_stringSDR1 = stringify.stringify(SDR1_bincount.astype(int))
-greycode_stringSDR2 = stringify.stringify(SDR2_bincount.astype(int))
-print("greycode string for SDR1", greycode_stringSDR1)
-print("greycode string for SDR2", greycode_stringSDR2)
+    greycode_stringSDR1 = stringify.stringify(SDR1_bincount.astype(int))
+    greycode_stringSDR2 = stringify.stringify(SDR2_bincount.astype(int))
+    print("greycode string for SDR1", greycode_stringSDR1, " of length", len(greycode_stringSDR1))
+    print("greycode string for SDR2", greycode_stringSDR2, " of length", len(greycode_stringSDR2))
 
-greycodeSDR1_bytes = string_to_bytearray.string_to_bytearray_conversion(8, greycode_stringSDR1)
-greycodeSDR2_bytes = string_to_bytearray.string_to_bytearray_conversion(8, greycode_stringSDR2)
-print("greycode SDR1", greycodeSDR1_bytes, "of length", len(greycodeSDR1_bytes))
-print("greycode SDR2", greycodeSDR2_bytes, "of length", len(greycodeSDR2_bytes))
+    greycodeSDR1_bytes = string_to_bytearray.string_to_bytearray_conversion(8, greycode_stringSDR1)
+    greycodeSDR2_bytes = string_to_bytearray.string_to_bytearray_conversion(8, greycode_stringSDR2)
+    print("greycode SDR1", greycodeSDR1_bytes, "of length", len(greycodeSDR1_bytes))
+    print("greycode SDR2", greycodeSDR2_bytes, "of length", len(greycodeSDR2_bytes))
 
 #RS encoding for uniformly quantized binary codes
-#RS_encode=reedsolomon_codec.RS_encoding(list(uniform_quantized_bytes_SDR1[0:min_length].astype(int)), segment_size, parity_size, number_of_segments)
+'''''''''''ENABLE WHEN NOT USING GREY CODES'''''''''''''''''
+if Quantization.GREY_CODE.value==True:
+    RS_encode = reedsolomon_codec.RS_encoding(list(greycodeSDR1_bytes[0:segment_size*number_of_segments]), segment_size, parity_size, number_of_segments)
+    print("RS encoding for gray coding is ", list(RS_encode), " with parity byte length ", len(RS_encode))
+    #RS Decode
+    RS_decode = reedsolomon_codec.RS_decoding(list(greycodeSDR2_bytes[0:segment_size*number_of_segments]), RS_encode, segment_size, parity_size, number_of_segments)
+    print("Decoding status with gray codes ", RS_decode == list(greycodeSDR2_bytes[0:segment_size * number_of_segments]))
+    print("decoded bytes with gray codes ", list(RS_decode), " with byte length ", len(RS_decode))
 
 #RS encoding for grey codes
-RS_encode = reedsolomon_codec.RS_encoding(list(greycodeSDR1_bytes[0:segment_size*number_of_segments]), segment_size, parity_size, number_of_segments)
-print("RS encoding", list(RS_encode), " with parity byte length ", len(RS_encode))
+elif (Quantization.GREY_CODE.value==False) & (Quantization.UNIFORM.value==True):
+    RS_encode=reedsolomon_codec.RS_encoding(list(uniform_quantized_bytes_SDR1[0:min_length].astype(int)), segment_size, parity_size, number_of_segments)
+    print("RS encoding without gray coding is ", list(RS_encode), " with parity byte length ", len(RS_encode))
+    #RS decoding for uniformly quantized binary codes and grey codes
+    RS_decode=reedsolomon_codec.RS_decoding(list(uniform_quantized_bytes_SDR2[0:min_length].astype(int)), RS_encode, segment_size, parity_size, number_of_segments)
+    print("Decoding status without gray codes ", RS_decode == list(uniform_quantized_bytes_SDR2[0:segment_size * number_of_segments]))
+    print("decoded bytes without gray codes ", list(RS_decode), " with byte length ", len(RS_decode))
 
-#RS decoding for uniformly quantized binary codes
-#RS_decode=reedsolomon_codec.RS_decoding(list(uniform_quantized_bytes_SDR2[0:min_length].astype(int)), RS_encode, segment_size, parity_size, number_of_segments)
+#print("Original", list(greycodeSDR1_bytes))
+#print("Target", list(greycodeSDR2_bytes))
 
-#RS decoding for grey codes
-RS_decode = reedsolomon_codec.RS_decoding(list(greycodeSDR2_bytes[0:segment_size*number_of_segments]), RS_encode, segment_size, parity_size, number_of_segments)
-print("decoded bytes", list(RS_decode), " with byte length ", len(RS_decode))
-
-print("Original", list(greycodeSDR1_bytes))
-print("Target", list(greycodeSDR2_bytes))
-
-print("Decoding status ", RS_decode==list(greycodeSDR1_bytes[0:segment_size*number_of_segments]))
+#print("Decoding status ", RS_decode==list(greycodeSDR1_bytes[0:segment_size*number_of_segments]))
 
 ############################################      REED SOLOMON CODE END     ###################################################################
+
+############################################             LDPC CODE START         ##############################################################
 
 #print("Number of unequal elements", min_length-sum(binary_count.bitcount_window(list(uniform_quantized_bytes_SDR1[0:min_length].astype(int)), list(uniform_quantized_bytes_SDR2[0:min_length].astype(int)), 1)))
 plt.tight_layout()
@@ -306,5 +323,3 @@ print("Number of 0's", nzeros, "and number of 1's", 128-nzeros, "for SDR1, in TQ
 threshold_quantized_bits_SDR2=np.array(threshold_quantized_bits_SDR2)
 nzeros=np.count_nonzero(threshold_quantized_bits_SDR2==0)
 print("Number of 0's", nzeros, "and number of 1's", 128-nzeros, "for SDR2, in TQ")
-
-
