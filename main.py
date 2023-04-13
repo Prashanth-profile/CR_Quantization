@@ -109,16 +109,16 @@ print("Number of entries from SDR2", len(list_of_floats_SDR2))
 min_length = 128
 window_size=8
 
+if min_length%window_size!=0:
+    print("Window size not matching length of the samples. Enter valid window_size")
+    exit()
+
 ##########################         Perform Uniform quantization
 #uniform_quantized_bytes_SDR1 = uniform_quantization.uniform_quantization(list_of_floats_SDR1, min_SDR1, Quant_Range, max_SDR1)
 #uniform_quantized_bytes_SDR2 = uniform_quantization.uniform_quantization(list_of_floats_SDR2, min_SDR2, Quant_Range, max_SDR2)
 uniform_quantized_bytes_SDR1 = uniform_quantization.uniform_quantization_window(list_of_floats_SDR1, Quant_Range, window_size)
 uniform_quantized_bytes_SDR2 = uniform_quantization.uniform_quantization_window(list_of_floats_SDR2, Quant_Range, window_size)
 print("After quantization, sizes are", len(list_of_floats_SDR1), len(list_of_floats_SDR2))
-
-if min_length%window_size!=0:
-    print("Window size not matching length of the samples. Enter valid window_size")
-    exit()
 
 print("Min length = ", min_length)
 time = list(range(min_length))

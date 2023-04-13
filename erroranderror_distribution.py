@@ -38,3 +38,9 @@ def plot_error_distribution(error_dist):
     plt.ylabel('Percentage of Errors')
     plt.title('Cumulative Distribution of Errors')
     plt.show()
+
+arr1 = b'\x51\x52\x53\x54\x52'
+arr2 = b'\x52\x52\x52\x54\x54'
+
+error, error_dis=error_distribution(arr1, arr2)
+print("Number of errors", error)

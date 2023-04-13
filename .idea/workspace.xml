@@ -2,14 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="93ded42d-dba7-41e4-8fd9-b6acae1c0569" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/erroranderror_distribution.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/quantization_main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/system_design.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/systemdesign_sinewave.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/errorcorrectioncode.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extract_CFO_PO_RSS.py" beforeDir="false" afterPath="$PROJECT_DIR$/extract_CFO_PO_RSS.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bintogrey.py" beforeDir="false" afterPath="$PROJECT_DIR$/bintogrey.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/erroranderror_distribution.py" beforeDir="false" afterPath="$PROJECT_DIR$/erroranderror_distribution.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/quantization_main.py" beforeDir="false" afterPath="$PROJECT_DIR$/quantization_main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/reedsolomon_codec.py" beforeDir="false" afterPath="$PROJECT_DIR$/reedsolomon_codec.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/simple plot.py" beforeDir="false" afterPath="$PROJECT_DIR$/simple plot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/uniform_quantization.py" beforeDir="false" afterPath="$PROJECT_DIR$/uniform_quantization.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/window_average_threshold_quantization.py" beforeDir="false" afterPath="$PROJECT_DIR$/window_average_threshold_quantization.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

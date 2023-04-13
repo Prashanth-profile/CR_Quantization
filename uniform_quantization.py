@@ -18,3 +18,11 @@ def uniform_quantization_window(complete_data, Quant_Range, window_size):
             #print("i+j", i+j)
             result[i+j] = round(((complete_data[i+j] - minimum_window) * ((2 ** Quant_Range) - 1)) / (maximum_window - minimum_window))
     return result
+
+############## Obtained from GPT
+def quantize(arr1, arr2, num_bits):
+    max_val = np.max(np.abs([arr1, arr2]))
+    q_step = max_val / ((2**num_bits) - 1)
+    arr1_quantized = np.round(arr1 / q_step) * q_step
+    arr2_quantized = np.round(arr2 / q_step) * q_step
+    return arr1_quantized, arr2_quantized

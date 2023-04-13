@@ -77,13 +77,20 @@ def float_to_binary_lossyquantization_onebit(float_array, window_size, mean_medi
             window_average = statistics.median(float_array[i:i + window_size])
         window_var=statistics.variance(float_array[i:i + window_size])
 
-        threshold1=window_average-window_var*alpha
-        threshold2=window_average+window_var*alpha
+        threshold1=window_average+window_var*alpha
+        threshold2=window_average-window_var*alpha
+        print("threshold values are", threshold1, threshold2)
         for f in float_array[i:i + window_size]:
-            if f > threshold1:
+            if (f > threshold1):
                 binary_array.append(1)
             elif f < threshold2:
                 binary_array.append(0)
             else:
-                binary_array.append(None)  # Skip this value
+                continue
     return binary_array
+
+'''print(statistics.variance([1, 2, 3]))
+arr=[1, 2, 3, 4, 5, 6]
+print("array", arr)
+arr2=float_to_binary_lossyquantization_onebit(arr, 3, True, 0.1)
+print(arr2)'''
