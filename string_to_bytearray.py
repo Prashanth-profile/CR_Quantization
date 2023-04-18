@@ -5,7 +5,7 @@ def string_to_bytearray_conversion(Quant_Range, data):
     data = [int(i, 2) for i in data]
     #data[np.where(data==0)] =1
     #data = ''.join(chr(i) for i in data)
-    print(bytearray(data))
+    #print(bytearray(data))
     return bytearray(data)
 
 def string_to_greycode_bytearray_conversion(Quant_Range, data):
@@ -14,5 +14,5 @@ def string_to_greycode_bytearray_conversion(Quant_Range, data):
     data = [data(i)^(data(i) >> 1) for i in range(len(data))]
     #data[np.where(data==0)] =1
     #data = ''.join(chr(i) for i in data)
-    print(bytearray(data))
+    #print(bytearray(data))
     return bytearray(data)

@@ -46,7 +46,7 @@ def window_average_meanmedian(arr, window_size, mean_medianbar):
     threshold_detection=[]
     # Loop through the array t o
     # consider every window of size window_size
-    print("Original array is", arr)
+    #print("Original array is", arr)
     for i in range(0, len(arr), window_size):
         # Calculate the average of current window
         if mean_medianbar==True:
@@ -61,7 +61,7 @@ def window_average_meanmedian(arr, window_size, mean_medianbar):
         threshold_detection.append(threshold_detection_bit)
         # Shift window to right by one position
         i += 1
-    print("Result", threshold_detection)
+    #print("Result", threshold_detection)
     return list(np.asarray(threshold_detection).flat)
 
 def float_to_binary_lossyquantization_onebit(float_array, window_size, mean_medianbar, alpha):
@@ -79,7 +79,7 @@ def float_to_binary_lossyquantization_onebit(float_array, window_size, mean_medi
 
         threshold1=window_average+window_var*alpha
         threshold2=window_average-window_var*alpha
-        print("threshold values are", threshold1, threshold2)
+        #print("threshold values are", threshold1, threshold2)
         for f in float_array[i:i + window_size]:
             if (f > threshold1):
                 binary_array.append(1)
