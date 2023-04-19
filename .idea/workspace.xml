@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="93ded42d-dba7-41e4-8fd9-b6acae1c0569" name="Changes" comment="">
+    <list default="true" id="93ded42d-dba7-41e4-8fd9-b6acae1c0569" name="Changes" comment="UPDATE: Histogram plot for error distribution added to quantization main">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extract_CFO_PO_RSS.py" beforeDir="false" afterPath="$PROJECT_DIR$/extract_CFO_PO_RSS.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/quantization_main.py" beforeDir="false" afterPath="$PROJECT_DIR$/quantization_main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/string_to_bytearray.py" beforeDir="false" afterPath="$PROJECT_DIR$/string_to_bytearray.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uniform_quantization.py" beforeDir="false" afterPath="$PROJECT_DIR$/uniform_quantization.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/window_average_threshold_quantization.py" beforeDir="false" afterPath="$PROJECT_DIR$/window_average_threshold_quantization.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -104,6 +99,14 @@
       <option name="presentableId" value="Default" />
       <updated>1666774130440</updated>
     </task>
+    <task id="LOCAL-00001" summary="UPDATE: Histogram plot for error distribution added to quantization main">
+      <created>1681835717227</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1681835717227</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -116,5 +119,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="UPDATE: Histogram plot for error distribution added to quantization main" />
+    <option name="LAST_COMMIT_MESSAGE" value="UPDATE: Histogram plot for error distribution added to quantization main" />
   </component>
 </project>
