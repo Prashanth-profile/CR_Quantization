@@ -19,11 +19,11 @@ import sionna
 ##### Make sure appropriate values is choosen. Setting more than one value to True can cause unexpected behavior
 class Quantization(enum.Enum):
     UNIFORM= False
-    WINDOW_THRESHOLD=True
+    WINDOW_THRESHOLD=False
     GREY_CODE=False
     #Set MEAN_MEDIANBAR to True of False only after setting LOSSY_QUANTIZATION or WINDOW_THRESHOLD to True. Otherwise, it really is not useful
-    LOSSY_QUANTIZATION = False
-    MEAN_MEDIANBAR=False
+    LOSSY_QUANTIZATION = True
+    MEAN_MEDIANBAR=True
 
 min_length=128
 time=range(min_length)
