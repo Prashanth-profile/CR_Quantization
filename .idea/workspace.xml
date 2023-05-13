@@ -2,11 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="93ded42d-dba7-41e4-8fd9-b6acae1c0569" name="Changes" comment="UPDATE: Histogram plot for error distribution added to quantization main">
-      <change afterPath="$PROJECT_DIR$/ECC_main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/merger_list.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/convolutionalcodes_two.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/remove_list_element.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ECC_main.py" beforeDir="false" afterPath="$PROJECT_DIR$/ECC_main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/errorcorrectioncode.py" beforeDir="false" afterPath="$PROJECT_DIR$/errorcorrectioncode.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/quantization_main.py" beforeDir="false" afterPath="$PROJECT_DIR$/quantization_main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extract_CFO_PO_RSS.py" beforeDir="false" afterPath="$PROJECT_DIR$/extract_CFO_PO_RSS.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/merger_list.py" beforeDir="false" afterPath="$PROJECT_DIR$/merger_list.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

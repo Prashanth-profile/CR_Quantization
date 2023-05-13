@@ -5,7 +5,7 @@ import plot_PO
 import math
 
 
-min_length=2048
+min_length=128
 time=range(min_length)
 ind=0
 

@@ -17,6 +17,8 @@ import reedsolomon_codec
 import sionna
 import errorcorrectioncode
 import merger_list
+import sk_dsp_comm.digitalcom as dc
+import sk_dsp_comm.fec_conv as fec
 
 ##### Make sure appropriate values is choosen. Setting more than one value to True can cause unexpected behavior
 class Quantization(enum.Enum):
@@ -26,6 +28,10 @@ class Quantization(enum.Enum):
     #Set MEAN_MEDIANBAR to True of False only after setting LOSSY_QUANTIZATION or WINDOW_THRESHOLD to True. Otherwise, it really is not useful
     LOSSY_QUANTIZATION = False
     MEAN_MEDIANBAR=False
+    REEDSOLOMONCODE=True
+
+class convolutional_code_stage(enum.Enum):
+    STAGE=3
 
 min_length=128
 time=range(min_length)
@@ -37,13 +43,13 @@ window_size=min_length
 
 #######################################CFO##############################################
 #Read the text file
-with open('C:/Users/prashanth/Desktop/RSSI_SC_212_SDR1.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/CFO_SC_212_SDR1.txt', 'r') as fin:
     data_read_SDR1 = fin.read()
     last_char_SDR1 = data_read_SDR1[-1]
     if last_char_SDR1 == '\n':
         print("last next line character detected in first sample file")
         data_read_SDR1 = data_read_SDR1[:-1]
-with open('C:/Users/prashanth/Desktop/RSSI_SC_212_SDR2.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/CFO_SC_212_SDR2.txt', 'r') as fin:
     data_read_SDR2 = fin.read()
     last_char_SDR2 = data_read_SDR2[-1]
     if last_char_SDR2 == '\n':
@@ -161,7 +167,9 @@ else:
         num_errors, error_dist = erroranderror_distribution.error_distribution(SDR1_bytes, SDR2_bytes)
 
 num_errors, error_dist = erroranderror_distribution.error_distribution(SDR1_bytes, SDR2_bytes)
-print("Number of errors before convolutional coding", num_errors)
+print("Number of errors before error correction coding", num_errors)
+print("Total number of errors: ", num_errors)
+print("Distribution of errors: ", error_dist)
 
 '''#min_len=min(len(SDR1_bytes), len(SDR2_bytes))
 #num_errors, error_dist = erroranderror_distribution.error_distribution(SDR1_bytes[0:min_len], SDR2_bytes[0:min_len])
@@ -172,85 +180,81 @@ plt.ylabel('Number of errors in the bit position')
 plt.title('Distribution of Errors with 2048 samples')
 plt.show()'''
 
-
-'''################################# REED SOLOMON ENCODING AND DECODING ####################################
-
-#Initialize RS encoding parameters in bytes
-segment_size=8
-parity_size=8
-print("Length", len(SDR1_bytes), len(SDR2_bytes))
-number_of_segments=round(len(SDR1_bytes)/(segment_size))
-print("Number of segments", number_of_segments)
-
-RS_encode = reedsolomon_codec.RS_encoding(SDR1_bytes, segment_size, parity_size, number_of_segments)
-
-print("RS encoding ", RS_encode, " with parity byte length ", len(RS_encode))
-# RS decoding for uniformly quantized binary codes and grey codes
-RS_decode = reedsolomon_codec.RS_decoding(SDR2_bytes, RS_encode, segment_size, parity_size, number_of_segments)
-print("decoded bytes  ", RS_decode, " with byte length ", len(RS_decode))
-print("Decoding status without gray codes ", RS_decode == SDR1_bytes)
-################################# REED SOLOMON ENCODING AND DECODING ENDS  ####################################
-
-print("Total number of errors: ", num_errors)
-print("Distribution of errors: ", error_dist)'''
-
 ##########################################  CONVOLUTIONAL CODES BEGIN HERE   ####################################
 
-conv = errorcorrectioncode.ConvolutionalCode((4, 7))
-encoded = conv.encode(SDR1_bytes)
+if convolutional_code_stage.STAGE.value==3:
+    SDR1_bytes=b"\x72\x51\x01"
+    SDR2_bytes = b"\x72\x51\x01"
 
-print("Encoded bytes are", encoded, "for ", SDR1_bytes)
+    cc1 = fec.FECConv(('1000', '0111', '1101'), 3)
+    state = '000'
+    input_bytes = SDR1_bytes
+    x = np.array(errorcorrectioncode.bytearray_to_binarray(input_bytes))
+    print("x is", x)
+    encoded,state = cc1.conv_encoder(x,state)
+    print("encoded", encoded.astype(int))
+    parity=[encoded.astype(int)[x] for x in range(len(encoded)) if x%3!=0]
+    print("parity is ", parity)
 
-initial_parity=encoded[0:4]
-print("Initial parity", initial_parity)
-parity=encoded[5::2]
+    input_bytes = SDR1_bytes
+    SDR2_bin=errorcorrectioncode.bytearray_to_binarray(SDR2_bytes)
+    print("SDR2 bin is", SDR2_bin)
+    received_bin= merger_list.merge_offset(SDR2_bin, parity, 2)
+    print("received bin", np.array(received_bin))
 
-complete_parity=initial_parity+parity
+    received_bin = np.pad(received_bin, (0, 4))
+    decoded=cc1.viterbi_decoder(np.array(received_bin),'hard')
+    print("decoded", decoded, "of length", len(decoded), "\nagainst", x)
+    print("decoded status", decoded.astype(int) == x)
 
-print("Complete parity", complete_parity)
+    bit_count, bit_errors = dc.bit_errors(x,decoded)
+    print("Number of errors after 4 stage convolutional coding is ", bit_errors, "with parity length ", len(parity))
 
-received_init_bin=complete_parity[0:4]
-print("received initial bin", received_init_bin)
+elif convolutional_code_stage.STAGE.value==2:
+    cc1 = fec.FECConv(('100', '111'), 2)
+    state = '00'
+    input_bytes = SDR1_bytes
+    x = np.array(errorcorrectioncode.bytearray_to_binarray(input_bytes))
+    print("x is", x)
+    encoded,state = cc1.conv_encoder(x,state)
+    print("encoded", encoded.astype(int))
+    parity = [encoded.astype(int)[x] for x in range(len(encoded)) if x % 2 != 0]
 
-SDR2_bin=errorcorrectioncode.bytearray_to_binarray(SDR2_bytes)
-print("SDR2 bin", SDR2_bin)
+    #SDR2_bin = errorcorrectioncode.bytearray_to_binarray(SDR2_bytes)
+    input_bytes = SDR2_bytes
+    SDR2_bin = np.array(errorcorrectioncode.bytearray_to_binarray(input_bytes))
+    print("received binary", parity, "data", SDR2_bin)
+    received_bin = merger_list.merge(SDR2_bin, parity)
+    received_bin = np.pad(received_bin, (0, 1))
+    print("received bin", np.array(received_bin))
 
-received_bin= merger_list.merge(SDR2_bin, complete_parity[4:])
-print("received bin", received_bin)
+    decoded=cc1.viterbi_decoder(np.array(received_bin),'hard')
+    print("decoded", decoded)
+    print("decoded status", decoded.astype(int) == x)
 
-received_complete=received_init_bin+received_bin
-print("received complete \n", received_complete, " against \n", encoded)
+    bit_count, bit_errors = dc.bit_errors(x,decoded)
+    print("Number of errors after 3 stage convolutional coding is ", bit_errors, "with parity length ", len(parity))
 
-decoded, corrected_errors = conv.decode(received_complete)
-print("Decoded data", decoded, "with ", corrected_errors, " corrected errors and original data", SDR1_bytes)
+##############################    CONVOLUTIONAL CODE ENDS HERE       ###################################
 
-print("decoded status", decoded==SDR1_bytes)
 
-num_errors, error_dist = erroranderror_distribution.error_distribution(decoded, SDR1_bytes)
-print("Number of errors after convolutional coding", num_errors)
+################################# REED SOLOMON ENCODING AND DECODING ####################################
 
 #Initialize RS encoding parameters in bytes
-segment_size=8
-parity_size=8
-print("Length", len(SDR1_bytes), len(SDR2_bytes))
-number_of_segments=round(len(SDR1_bytes)/(segment_size))
-print("Number of segments", number_of_segments)
+if Quantization.REEDSOLOMONCODE.value==True:
+    segment_size=8
+    parity_size=16
+    print("Length", len(SDR1_bytes), len(SDR2_bytes))
+    number_of_segments=round(len(SDR1_bytes)/(segment_size))
+    print("Number of segments", number_of_segments)
 
-RS_encode = reedsolomon_codec.RS_encoding(SDR1_bytes, segment_size, parity_size, number_of_segments)
+    RS_encode = reedsolomon_codec.RS_encoding(SDR1_bytes, segment_size, parity_size, number_of_segments)
 
-print("RS encoding ", RS_encode, " with parity byte length ", len(RS_encode))
-# RS decoding for uniformly quantized binary codes and grey codes
-RS_decode = reedsolomon_codec.RS_decoding(decoded, RS_encode, segment_size, parity_size, number_of_segments)
-
-num_errors, error_dist = erroranderror_distribution.error_distribution(RS_decode, SDR1_bytes)
-print("Number of errors after reed solomon coding", num_errors)
-plt.plot(range(len(error_dist)), error_dist)
-plt.xlabel('Bit Position')
-plt.ylabel('Number of errors in the bit position')
-plt.title('Distribution of Errors')
-plt.show()
-
-print("decoded bytes  ", RS_decode, " with byte length ", len(RS_decode))
-print("Decoding status without gray codes ", RS_decode == SDR1_bytes)
-
-
+    print("RS encoding ", RS_encode, " with parity byte length ", len(RS_encode))
+    # RS decoding for uniformly quantized binary codes and grey codes
+    RS_decode = reedsolomon_codec.RS_decoding(SDR2_bytes, RS_encode, segment_size, parity_size, number_of_segments)
+    print("decoded bytes  ", RS_decode, " with byte length ", len(RS_decode))
+    print("Decoding status without gray codes ", RS_decode == SDR1_bytes)
+    num_errors, error_dist = erroranderror_distribution.error_distribution(RS_decode, SDR1_bytes)
+    print("Length of parity for reed solomon codecs is ", len(RS_encode)*8, "with number of errors", num_errors)
+################################# REED SOLOMON ENCODING AND DECODING ENDS  ####################################

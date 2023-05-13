@@ -1,5 +1,7 @@
 import math
+import merger_list
 import sys
+import numpy as np
 
 
 class DecodingError(Exception):
@@ -204,6 +206,40 @@ def bitarraytobytearray(bit_array):
 
     return byte_array
 
+def block_encoding(input_bytes, window_size):
+    conv = ConvolutionalCode((4, 7))
+    encoded=[]
+    for i in range(0, len(input_bytes), window_size):
+        print("bytes to be encoded", input_bytes[i:i+window_size], "in ", input_bytes)
+        encoded_perblock = conv.encode(input_bytes[i:i+window_size])
+        print("encoded per block", encoded_perblock, " of length", len(encoded_perblock))
+        initial_parity = encoded_perblock[0:4]
+        parity = [encoded_perblock[x] for x in range(4, len(encoded_perblock)) if x % 2 != 0]
+        print("parity is", parity, "of length", len(parity))
+        complete_parity = initial_parity + parity
+        print("Complete parity", complete_parity)
+        encoded = encoded + complete_parity
+
+    return encoded
+
+def block_decoding(complete_parity, SDR2_bytes, window_size):
+    conv = ConvolutionalCode((4, 7))
+    decoded=bytearray()
+    SDR2_bin = bytearray_to_binarray(SDR2_bytes)
+    print("SDR2 bin", SDR2_bin, "\nand parity is ", complete_parity)
+    for i in range(0, len(SDR2_bin), window_size):
+        received_init_bin = complete_parity[i:i+4]
+        received_bin = merger_list.merge(SDR2_bin[i:i+window_size], complete_parity[i:i+window_size])
+        print("received bin", received_bin)
+        received_complete = received_init_bin + received_bin
+        print("received complete bin", received_complete)
+        decoded_perblock, corrected_errors = conv.decode(received_complete)
+        print("decoded per block", decoded_perblock)
+        if decoded_perblock:
+            decoded.extend(decoded_perblock)
+    print("decoded", decoded)
+
+    return decoded
 
 ## Convert b'\x0a\x0a' into [0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0]
 def bytearray_to_binarray(byte_arr):
@@ -211,7 +247,6 @@ def bytearray_to_binarray(byte_arr):
     # Convert the bytes object to a list of integers
     int_arr = []
     for byte in byte_arr:
-        print(bin(byte))
         bits = [int(bit) for bit in bin(byte)[2:].zfill(8)]
         int_arr.extend(bits)
 
@@ -226,15 +261,18 @@ if __name__ == "__main__":
     conv = ConvolutionalCode((4, 7))
 
     # encoding a byte stream
-    input_bytes = b"\xFE\xF0\x0A\x01"
+    #input_bytes = b"\xFE\xF0\x0A\x01"
+    input_bytes = b"\x72\x01"
     encoded = conv.encode(input_bytes)
     print(encoded == [1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0,
                       0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1])
-
     print(encoded)
+    initial_parity = encoded[0:4]
+    parity = [encoded[x] for x in range(4, len(encoded)) if x % 2 != 0]
+    print("parity is", parity)
 
-    binarr=bytearray_to_binarray(input_bytes)
-    print(encoded[4::2], " of length ", len(encoded), "for byte array\n", binarr, " of length ", len(binarr))
+    complete_parity=initial_parity+parity
+    print("complete parity is ", complete_parity)
 
     # introduced five random bit flips
     import random
@@ -243,9 +281,29 @@ if __name__ == "__main__":
         idx = random.randint(0, len(encoded) - 1)
         corrupted[idx] = int(not (corrupted[idx]))
     decoded, corrected_errors = conv.decode(corrupted)
+    print("decoded", decoded)
+
 
     print(decoded == input_bytes)
     print(corrected_errors)
+
+    ################### ECC decoding here for CR ################################
+    SDR2_bytes = b"\xFE\xF0\x0A\x01"
+    SDR2_bin = bytearray_to_binarray(SDR2_bytes)
+    #print("SDR2 bin", SDR2_bin)
+
+    received_bin = merger_list.merge(SDR2_bin, complete_parity[4:])
+    #print("received bin", received_bin)
+    received_init_bin = complete_parity[0:4]
+
+    received_complete = received_init_bin + received_bin
+    #print("received complete \n", received_complete, " against \n", encoded)
+
+    decoded, corrected_errors = conv.decode(received_complete)
+    #print("Decoded data", decoded, "with ", corrected_errors, " corrected errors and original data", input_bytes)
+
+    #print("decoded status", decoded == input_bytes)
+    #########################################################
 
 
     # example of constructing an encoder with constraint length = 3, and rate 1/3
@@ -261,6 +319,37 @@ if __name__ == "__main__":
     print(encoded == [0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0,
                       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1])
 
+    #print(encoded)
+    initial_parity = encoded[0:6]
+
+    binarr=bytearray_to_binarray(input_bytes)
+    parity=[encoded[x] for x in range(6,len(encoded)-3) if x%3!=0]
+    #print(encoded[6::3][:-1], " of length ", len(encoded), "for byte array\n", binarr, " of length ", len(binarr))
+    #print("parity is", parity, " of length ", len(parity))
+    last_three_parity=encoded[-3:]
+    #print("last_three_parity ", last_three_parity)
+
+    complete_parity=initial_parity+parity+last_three_parity
+
+
+    ################### ECC decoding here for CR ################################
+    SDR2_bytes = b"\x73\x01"
+    SDR2_bin = bytearray_to_binarray(SDR2_bytes)
+    #print("SDR2 bin", SDR2_bin)
+
+    received_bin = merger_list.merge_offset(SDR2_bin, complete_parity[6:-3], 2)
+    #print("received bin", received_bin)
+    received_init_bin = complete_parity[0:6]
+
+    received_complete = received_init_bin + received_bin + last_three_parity
+    #print("received complete \n", received_complete, " against \n", encoded)
+
+    decoded, corrected_errors = conv.decode(received_complete)
+    #print("Decoded data", decoded, "with ", corrected_errors, " corrected errors and original data", input_bytes)
+
+    #print("decoded status", decoded == input_bytes)
+    #########################################################
+
 
     # introduced five random bit flips
     corrupted = encoded.copy()
@@ -271,3 +360,14 @@ if __name__ == "__main__":
 
     print(decoded == input_bytes)
     print(corrected_errors)
+
+    ################# Block convolutional code
+
+    # encoding a byte stream
+    #input_bytes = b'\x01\x02\x03\x04\x05\x01\x02\x03\x04\x05\x01\x02\x03\x04\x05\x01\x01\x02\x03\x04\x05\x01\x02\x03\x04\x05\x01\x02\x03\x04\x05\x01'
+    input_bytes= b"\x72\x01"
+    encoded = block_encoding(input_bytes, 8)
+    print("Result of block encoding", encoded)
+
+    decoded = block_decoding(encoded, input_bytes, 8)
+    print("Result of block decoding", decoded)

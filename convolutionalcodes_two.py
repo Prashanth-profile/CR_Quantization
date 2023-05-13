@@ -1,0 +1,41 @@
+import scipy.special as special
+import sk_dsp_comm.digitalcom as dc
+import sk_dsp_comm.fec_conv as fec
+import numpy as np
+from numpy import sign
+from numpy.random import randint
+import errorcorrectioncode
+
+N_bits_per_frame = 10000
+EbN0 = 4
+total_bit_errors = 0
+total_bit_count = 0
+#cc1 = fec.FECConv(('10000','10011'),25)
+cc1 = fec.FECConv(('1000', '0111', '1101'),2)
+# Encode with shift register starting state of '0000'
+state = '0000'
+while total_bit_errors < 100:
+    # Create 100000 random 0/1 bits
+    input_bytes = b"\x72\x51\x01"
+    x = np.array(errorcorrectioncode.bytearray_to_binarray(input_bytes))
+    x=np.pad(x, (0,1))
+    #x = randint(0,2,N_bits_per_frame)
+    print("x is", x, "of length ", len(x))
+    y,state = cc1.conv_encoder(x,state)
+    # Add channel noise to bits, include antipodal level shift to [-1,1]
+    #yn_soft = dc.cpx_awgn(2*y-1,EbN0-3,1) # Channel SNR is 3 dB less for rate 1/2
+    yn_hard = ((sign(y.real)+1)/2).astype(int)
+    print("Hard decoded", yn_hard, "of length", len(yn_hard))
+    z = cc1.viterbi_decoder(yn_hard,'hard')
+    print("z is", z.astype(int), "of length", len(z))
+    # Count bit errors
+    bit_count, bit_errors = dc.bit_errors(x,z)
+    total_bit_errors += bit_errors
+    total_bit_count += bit_count
+    print('Bits Received = %d, Bit errors = %d, BEP = %1.2e' %\
+          (total_bit_count, total_bit_errors,\
+           total_bit_errors/total_bit_count))
+print('*****************************************************')
+print('Bits Received = %d, Bit errors = %d, BEP = %1.2e' %\
+      (total_bit_count, total_bit_errors,\
+       total_bit_errors/total_bit_count))
