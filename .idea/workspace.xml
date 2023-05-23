@@ -2,13 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="93ded42d-dba7-41e4-8fd9-b6acae1c0569" name="Changes" comment="UPDATE: Histogram plot for error distribution added to quantization main">
-      <change afterPath="$PROJECT_DIR$/convolutionalcodes_two.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/remove_list_element.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lossless_quantization.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lossy_quantization.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/plot_error.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/quantization_correlationplot_main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ECC_main.py" beforeDir="false" afterPath="$PROJECT_DIR$/ECC_main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/errorcorrectioncode.py" beforeDir="false" afterPath="$PROJECT_DIR$/errorcorrectioncode.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/binary_count.py" beforeDir="false" afterPath="$PROJECT_DIR$/binary_count.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bintogrey.py" beforeDir="false" afterPath="$PROJECT_DIR$/bintogrey.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/convolutionalcodes_two.py" beforeDir="false" afterPath="$PROJECT_DIR$/convolutionalcodes_two.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/correlation_calculation.py" beforeDir="false" afterPath="$PROJECT_DIR$/correlation_calculation.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/extract_CFO_PO_RSS.py" beforeDir="false" afterPath="$PROJECT_DIR$/extract_CFO_PO_RSS.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/merger_list.py" beforeDir="false" afterPath="$PROJECT_DIR$/merger_list.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plot_correlation.py" beforeDir="false" afterPath="$PROJECT_DIR$/plot_correlation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/window_average_threshold_quantization.py" beforeDir="false" afterPath="$PROJECT_DIR$/window_average_threshold_quantization.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -22,9 +22,9 @@ import sk_dsp_comm.fec_conv as fec
 
 ##### Make sure appropriate values is choosen. Setting more than one value to True can cause unexpected behavior
 class Quantization(enum.Enum):
-    UNIFORM= True
-    WINDOW_THRESHOLD=False
-    GREY_CODE=True
+    UNIFORM= False
+    WINDOW_THRESHOLD=True
+    GREY_CODE=False
     #Set MEAN_MEDIANBAR to True of False only after setting LOSSY_QUANTIZATION or WINDOW_THRESHOLD to True. Otherwise, it really is not useful
     LOSSY_QUANTIZATION = False
     MEAN_MEDIANBAR=False
@@ -184,13 +184,14 @@ plt.show()'''
 
 if convolutional_code_stage.STAGE.value==3:
     SDR1_bytes=b"\x72\x51\x01"
-    SDR2_bytes = b"\x72\x51\x01"
+    SDR2_bytes = b"\x53\x51\x01"
 
-    cc1 = fec.FECConv(('1000', '0111', '1101'), 3)
-    state = '000'
+    cc1 = fec.FECConv(('1000', '1001', '1101'), 3)
+    state = '0000'
     input_bytes = SDR1_bytes
     x = np.array(errorcorrectioncode.bytearray_to_binarray(input_bytes))
     print("x is", x)
+    x = np.pad(x, (0, 1))
     encoded,state = cc1.conv_encoder(x,state)
     print("encoded", encoded.astype(int))
     parity=[encoded.astype(int)[x] for x in range(len(encoded)) if x%3!=0]
@@ -198,14 +199,15 @@ if convolutional_code_stage.STAGE.value==3:
 
     input_bytes = SDR1_bytes
     SDR2_bin=errorcorrectioncode.bytearray_to_binarray(SDR2_bytes)
+    #SDR2_bin = np.pad(SDR2_bin, (0, 1))
     print("SDR2 bin is", SDR2_bin)
     received_bin= merger_list.merge_offset(SDR2_bin, parity, 2)
     print("received bin", np.array(received_bin))
 
-    received_bin = np.pad(received_bin, (0, 4))
+    #received_bin = np.pad(received_bin, (0, 4))
     decoded=cc1.viterbi_decoder(np.array(received_bin),'hard')
     print("decoded", decoded, "of length", len(decoded), "\nagainst", x)
-    print("decoded status", decoded.astype(int) == x)
+    print("decoded status", all(decoded.astype(int)==x[0:len(decoded)]))
 
     bit_count, bit_errors = dc.bit_errors(x,decoded)
     print("Number of errors after 4 stage convolutional coding is ", bit_errors, "with parity length ", len(parity))

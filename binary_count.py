@@ -34,4 +34,14 @@ def bitcount_window(binarray1, binarray2, window_size):
     print("Equal bit count", sum(bincount))
     return bincount
 
+def perform_elementwise_boolean_operation(array1, array2):
+    result = [x and y for x, y in zip(array1, array2)]
+    return all(result)
+
+array1 = [True, True, True, True]
+array2 = [True, True, True, True]
+
+result = perform_elementwise_boolean_operation(list(array1), list(array2))
+print(result)
+
 bitcount_window(test1, test2, 1)

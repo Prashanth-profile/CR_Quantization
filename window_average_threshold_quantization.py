@@ -90,7 +90,7 @@ def float_to_binary_lossyquantization_onebit(float_array, window_size, mean_medi
     return binary_array
 
 '''print(statistics.variance([1, 2, 3]))
-arr=[1, 2, 3, 4, 5, 6]
+arr=[1, 2.2, 3, 4, 5.9, 6]
 print("array", arr)
-arr2=float_to_binary_lossyquantization_onebit(arr, 3, True, 0.1)
+arr2=float_to_binary_lossyquantization_onebit(arr, 3, False, 0.1)
 print(arr2)'''
