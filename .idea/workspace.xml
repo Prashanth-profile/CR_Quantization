@@ -2,19 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="93ded42d-dba7-41e4-8fd9-b6acae1c0569" name="Changes" comment="UPDATE: Histogram plot for error distribution added to quantization main">
-      <change afterPath="$PROJECT_DIR$/lossless_quantization.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lossy_quantization.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/plot_error.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/quantization_correlationplot_main.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bitwisecorrelation.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hgr_correlation.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/non_uniform_quantization.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/normalization.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/principal_component_analysis.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ECC_main.py" beforeDir="false" afterPath="$PROJECT_DIR$/ECC_main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/binary_count.py" beforeDir="false" afterPath="$PROJECT_DIR$/binary_count.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bintogrey.py" beforeDir="false" afterPath="$PROJECT_DIR$/bintogrey.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/convolutionalcodes_two.py" beforeDir="false" afterPath="$PROJECT_DIR$/convolutionalcodes_two.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/correlation_calculation.py" beforeDir="false" afterPath="$PROJECT_DIR$/correlation_calculation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extract_CFO_PO_RSS.py" beforeDir="false" afterPath="$PROJECT_DIR$/extract_CFO_PO_RSS.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plot_correlation.py" beforeDir="false" afterPath="$PROJECT_DIR$/plot_correlation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/window_average_threshold_quantization.py" beforeDir="false" afterPath="$PROJECT_DIR$/window_average_threshold_quantization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plot_CFO.py" beforeDir="false" afterPath="$PROJECT_DIR$/plot_CFO.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/quantization_correlationplot_main.py" beforeDir="false" afterPath="$PROJECT_DIR$/quantization_correlationplot_main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/uniform_quantization.py" beforeDir="false" afterPath="$PROJECT_DIR$/uniform_quantization.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,14 +37,14 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/prashanth/Documents/GitHub/CR_Quantization&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "last_opened_file_path": "C:/Users/prashanth/Documents/GitHub/CR_Quantization",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\prashanth\Documents\GitHub\CR_Quantization" />
@@ -96,8 +93,30 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="principal_component_analysis" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="CR_Quantization" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/principal_component_analysis.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.principal_component_analysis" />
         <item itemvalue="Python.extract_CFO_PO_RSS" />
       </list>
     </recent_temporary>

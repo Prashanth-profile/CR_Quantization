@@ -13,7 +13,7 @@ def uniform_quantization_window(complete_data, Quant_Range, window_size):
         #print("i", i)
         minimum_window=np.min(complete_data[i:i+window_size])
         maximum_window=np.max(complete_data[i:i+window_size])
-        #print("minimum", minimum_window, "maximum value", maximum_window)
+        print("minimum", minimum_window, "maximum value", maximum_window, "at",np.argmax(complete_data[i:i+window_size]), " and ", np.argmin(complete_data[i:i+window_size]), "respectively")
         for j in range(0, window_size):
             #print("i+j", i+j)
             result[i+j] = round(((complete_data[i+j] - minimum_window) * ((2 ** Quant_Range) - 1)) / (maximum_window - minimum_window))
