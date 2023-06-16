@@ -21,18 +21,23 @@ import lossy_quantization
 import lossless_quantization
 import plot_error
 import bitwisecorrelation
+import plot_histogram
+import threading
+import int2byte_conversion
+import simple_plot
 
 class correlation_mode(enum.Enum):
     BITWISE_CORRELATION=False
-    INTEGER_CORRELATION=False
+    INTEGER_CORRELATION=True
+    FIND_NUMBER_OF_ERRORS=True
 
-min_length=2048
+
+min_length=16
 time=range(min_length)
-ind=0
+ind=17
 
 #########This variable is the window size: This is used in both lossy and lossless quantization
-Quant_Range=2
-window_size=128
+window_size=min_length
 
 #######################################CFO##############################################
 #Read the text file
@@ -62,22 +67,29 @@ list_of_floats_SDR2 = [float(x) for x in list_of_strings_SDR2]
 list_of_floats_SDR1 = list(map(lambda x: x*-1 if x < 0 else x, list_of_floats_SDR1))
 list_of_floats_SDR2 = list(map(lambda x: x*-1 if x < 0 else x, list_of_floats_SDR2))
 
-print("Raw sample values", list_of_floats_SDR1[0:min_length], " and ", list_of_floats_SDR2[0:min_length])
+# Interpolate between the corresponding elements
+#interpolated_list = [a + (b - a) / 2 for a, b in zip(list_of_floats_SDR1, list_of_floats_SDR2)]
+
+# Create two arrays with the interpolated values
+#list_of_floats_SDR1 = list_of_floats_SDR1.copy()
+#list_of_floats_SDR2 = interpolated_list.copy()
+
+print("Raw sample values", list_of_floats_SDR1[ind:ind+min_length], " and ", list_of_floats_SDR2[ind:ind+min_length])
 
 #fig2, (ax1, ax4, ax2, ax5, ax3) = plt2.subplots(5, 1)
 fig2, (ax2, ax4) = plt2.subplots(2, 1)
-min_l=2048
+min_l=min_length
 #Plot Original
 time=range(min_l)
 plot_CFO.plot_CFO(time, list_of_floats_SDR1[ind:ind+min_l], list_of_floats_SDR2[ind:ind+min_l], ax2)
-maxSDR1=max(list_of_floats_SDR1[0:min_length])
-maxSDR2=max(list_of_floats_SDR2[0:min_length])
+maxSDR1=max(list_of_floats_SDR1[ind:ind+min_length])
+maxSDR2=max(list_of_floats_SDR2[ind:ind+min_length])
 
-minSDR1=min(list_of_floats_SDR1[0:min_length])
-minSDR2=min(list_of_floats_SDR2[0:min_length])
+minSDR1=min(list_of_floats_SDR1[ind:ind+min_length])
+minSDR2=min(list_of_floats_SDR2[ind:ind+min_length])
 
-print("Number of elements", len(list_of_floats_SDR1), " with max for SDR1", maxSDR1, "at", list_of_floats_SDR1.index(maxSDR1) ," and max at SDR2 ", maxSDR2, " at ", list_of_floats_SDR2.index(maxSDR2))
-print("Number of elements", len(list_of_floats_SDR1), " with min for SDR1", minSDR1, "at", list_of_floats_SDR1.index(minSDR1) ," and min at SDR2 ", minSDR2, " at ", list_of_floats_SDR2.index(minSDR2))
+#print("Number of elements", len(list_of_floats_SDR1), " with max for SDR1", maxSDR1, "at", list_of_floats_SDR1.index(maxSDR1) ," and max at SDR2 ", maxSDR2, " at ", list_of_floats_SDR2.index(maxSDR2))
+#print("Number of elements", len(list_of_floats_SDR1), " with min for SDR1", minSDR1, "at", list_of_floats_SDR1.index(minSDR1) ," and min at SDR2 ", minSDR2, " at ", list_of_floats_SDR2.index(minSDR2))
 
 old_error_dist = []
 remind=len(list_of_floats_SDR1)%min_length
@@ -130,23 +142,42 @@ print("After 1 bit median ", SDR1_mdbytes, SDR2_mdbytes)
 ######################2 bit quantization
 Quant_Range=2
 
-SDR1_2gbytes, SDR2_2gbytes=lossless_quantization.multi_bit_quantization_corrplot(list_of_floats_SDR1, list_of_floats_SDR2, min_length, window_size, Quant_Range, True)
+SDR1_2gbytes, SDR2_2gbytes=lossless_quantization.multi_bit_quantization_corrplot(list_of_floats_SDR1, list_of_floats_SDR2, min_length, window_size, Quant_Range, True, ind)
 print("After two bit gray code", SDR1_2gbytes, " and ", SDR2_2gbytes)
+#plot_histogram.create_histogram(SDR1_2gbytes, 4, ax22)
+#plot_histogram.create_histogram(SDR2_2gbytes, 4, ax22)
+
 #time2=range(min_l)
 #plot_CFO.plot_CFO_grey(time2, SDR1_2gbytes[ind:ind+min_l], SDR2_2gbytes[ind:ind+min_l], ax1)
 
-SDR1_2bytes, SDR2_2bytes=lossless_quantization.multi_bit_quantization_corrplot(list_of_floats_SDR1, list_of_floats_SDR2, min_length, window_size, Quant_Range, False)
+SDR1_2bytes, SDR2_2bytes=lossless_quantization.multi_bit_quantization_corrplot(list_of_floats_SDR1, list_of_floats_SDR2, min_length, window_size, Quant_Range, False, ind)
 print("After two bit code", SDR1_2bytes, " and ", SDR2_2bytes)
+#plot_histogram.create_histogram(SDR1_2bytes, ax11)
+#plot_histogram.create_histogram(SDR2_2bytes, ax11)
 #time2=range(min_l)
 #plot_CFO.plot_CFO(time2, SDR1_2bytes[ind:ind+min_l], SDR2_2bytes[ind:ind+min_l], ax1)
 
+err_values=[]
+quan_size=[]
 
+if correlation_mode.FIND_NUMBER_OF_ERRORS.value==True:
+    SDR1_2, SDR2_2=int2byte_conversion.intarray_to_bytearray(SDR1_2gbytes, SDR2_2gbytes, Quant_Range)
+    num_errors, error_dist = erroranderror_distribution.error_distribution(SDR1_2, SDR2_2)
+    print("Number of errors after 2 bit gray code Quantization", num_errors, " with maximum dynamic range", error_dist)
+    err_values.append(num_errors)
+    quan_size.append(len(SDR1_2)*8)
+
+    SDR1_2, SDR2_2 = int2byte_conversion.intarray_to_bytearray(SDR1_2bytes, SDR2_2bytes, Quant_Range)
+    num_errors, error_dist = erroranderror_distribution.error_distribution(SDR1_2, SDR2_2)
+    print("Number of errors after 2 bit code Quantization", num_errors, " with maximum dynamic range", error_dist)
+    err_values.append(num_errors)
+    quan_size.append(len(SDR1_2)*8)
 
 
 #################4 bit quantization
 Quant_Range=4
 
-SDR1_4gbytes, SDR2_4gbytes=lossless_quantization.multi_bit_quantization_corrplot(list_of_floats_SDR1, list_of_floats_SDR2, min_length, window_size, Quant_Range, True)
+SDR1_4gbytes, SDR2_4gbytes=lossless_quantization.multi_bit_quantization_corrplot(list_of_floats_SDR1, list_of_floats_SDR2, min_length, window_size, Quant_Range, True, ind)
 print("After 4 bit gray code", SDR1_4gbytes, " and ", SDR2_4gbytes)
 #time2=range(min_l)
 #plot_CFO.plot_CFO_grey(time2, SDR1_4gbytes[ind:ind+min_l], SDR2_4gbytes[ind:ind+min_l], ax4)
@@ -154,10 +185,23 @@ print("After 4 bit gray code", SDR1_4gbytes, " and ", SDR2_4gbytes)
 
 
 
-SDR1_4bytes, SDR2_4bytes=lossless_quantization.multi_bit_quantization_corrplot(list_of_floats_SDR1, list_of_floats_SDR2, min_length, window_size, Quant_Range, False)
+SDR1_4bytes, SDR2_4bytes=lossless_quantization.multi_bit_quantization_corrplot(list_of_floats_SDR1, list_of_floats_SDR2, min_length, window_size, Quant_Range, False, ind)
 print("After 4 bit code", SDR1_4bytes, " and ", SDR2_4bytes)
 #time2=range(min_l)
 #plot_CFO.plot_CFO(time2, SDR1_4bytes[ind:ind+min_l], SDR2_4bytes[ind:ind+min_l], ax4)
+
+if correlation_mode.FIND_NUMBER_OF_ERRORS.value==True:
+    SDR1_4, SDR2_4 = int2byte_conversion.intarray_to_bytearray(SDR1_4gbytes, SDR2_4gbytes, Quant_Range)
+    num_errors, error_dist = erroranderror_distribution.error_distribution(SDR1_4, SDR2_4)
+    print("Number of errors after 4 bit gray code Quantization", num_errors, " with maximum dynamic range", error_dist)
+    err_values.append(num_errors)
+    quan_size.append(len(SDR1_4)*8)
+
+    SDR1_4, SDR2_4 = int2byte_conversion.intarray_to_bytearray(SDR1_4bytes, SDR2_4bytes, Quant_Range)
+    num_errors, error_dist = erroranderror_distribution.error_distribution(SDR1_4, SDR2_4)
+    print("Number of errors after 4 bit code Quantization", num_errors, " with maximum dynamic range", error_dist)
+    err_values.append(num_errors)
+    quan_size.append(len(SDR1_4)*8)
 
 
 
@@ -165,32 +209,28 @@ print("After 4 bit code", SDR1_4bytes, " and ", SDR2_4bytes)
 ########################8 bit quantization
 Quant_Range=8
 
-SDR1_8gbytes, SDR2_8gbytes=lossless_quantization.multi_bit_quantization_corrplot(list_of_floats_SDR1, list_of_floats_SDR2, min_length, window_size, Quant_Range, True)
+SDR1_8gbytes, SDR2_8gbytes=lossless_quantization.multi_bit_quantization_corrplot(list_of_floats_SDR1, list_of_floats_SDR2, min_length, window_size, Quant_Range, True, ind)
 print("After 8 bit gray code", SDR1_8gbytes, " and ", SDR2_8gbytes)
 #time2=range(min_l)
 #plot_CFO.plot_CFO_grey(time2, SDR1_8gbytes[ind:ind+min_l], SDR2_8gbytes[ind:ind+min_l], ax3)
 
-
-
-
-#Plot error
-num_errors, error_dist = erroranderror_distribution.error_distribution(bytearray(SDR1_8gbytes), bytearray(SDR2_8gbytes))
-err=np.abs(np.array(SDR1_8gbytes)-np.array(SDR2_8gbytes))
-print("Number of errors after 8 bit gray code Quantization", num_errors, " with maximum dynamic range", np.var(err), "with SD", math.sqrt(np.var(err)))
-
-SDR1_8bytes, SDR2_8bytes=lossless_quantization.multi_bit_quantization_corrplot(list_of_floats_SDR1, list_of_floats_SDR2, min_length, window_size, Quant_Range, False)
+SDR1_8bytes, SDR2_8bytes=lossless_quantization.multi_bit_quantization_corrplot(list_of_floats_SDR1, list_of_floats_SDR2, min_length, window_size, Quant_Range, False, ind)
 print("After 8 bit code", SDR1_8bytes, " and ", SDR2_8bytes)
 #time2=range(min_l)
 #plot_CFO.plot_CFO(time2, SDR1_8bytes[ind:ind+min_l], SDR2_8bytes[ind:ind+min_l], ax3)
 
+if correlation_mode.FIND_NUMBER_OF_ERRORS.value==True:
+    SDR1_8, SDR2_8 = int2byte_conversion.intarray_to_bytearray(SDR1_8gbytes, SDR2_8gbytes, Quant_Range)
+    num_errors, error_dist = erroranderror_distribution.error_distribution(SDR1_8, SDR2_8)
+    print("Number of errors after 8 bit gray code Quantization", num_errors, " with maximum dynamic range", error_dist)
+    err_values.append(num_errors)
+    quan_size.append(len(SDR1_8)*8)
 
-
-
-
-#Plot error
-#num_errors, error_dist = erroranderror_distribution.error_distribution(bytearray(SDR1_8bytes), bytearray(SDR2_8bytes))
-#err=np.abs(np.array(SDR1_8bytes)-np.array(SDR2_8bytes))
-#print("Number of errors after 8 bit gray code Quantization", num_errors, " with maximum dynamic range", np.var(err), "with SD", math.sqrt(np.var(err)))
+    SDR1_8, SDR2_8 = int2byte_conversion.intarray_to_bytearray(SDR1_8bytes, SDR2_8bytes, Quant_Range)
+    num_errors, error_dist = erroranderror_distribution.error_distribution(SDR1_8, SDR2_8)
+    print("Number of errors after 8 bit code Quantization", num_errors, " with maximum dynamic range", error_dist)
+    err_values.append(num_errors)
+    quan_size.append(len(SDR1_8)*8)
 
 
 #Plot Quantized
@@ -201,22 +241,33 @@ print("After 8 bit code", SDR1_8bytes, " and ", SDR2_8bytes)
 #16 bit quantization
 Quant_Range=16
 
-SDR1_16gbytes, SDR2_16gbytes=lossless_quantization.multi_bit_quantization_corrplot(list_of_floats_SDR1, list_of_floats_SDR2, min_length, window_size, Quant_Range, True)
+SDR1_16gbytes, SDR2_16gbytes=lossless_quantization.multi_bit_quantization_corrplot(list_of_floats_SDR1, list_of_floats_SDR2, min_length, window_size, Quant_Range, True, ind)
 print("After 16 bits gray code", SDR1_16gbytes, " and ", SDR2_16gbytes)
 
 
 
-
-
-SDR1_16bytes, SDR2_16bytes=lossless_quantization.multi_bit_quantization_corrplot(list_of_floats_SDR1, list_of_floats_SDR2, min_length, window_size, Quant_Range, False)
+SDR1_16bytes, SDR2_16bytes=lossless_quantization.multi_bit_quantization_corrplot(list_of_floats_SDR1, list_of_floats_SDR2, min_length, window_size, Quant_Range, False, ind)
 print("After 16 bits code", SDR1_16bytes, " and ", SDR2_16bytes)
+
+if correlation_mode.FIND_NUMBER_OF_ERRORS.value==True:
+    SDR1_16, SDR2_16 = int2byte_conversion.intarray_to_bytearray(SDR1_16gbytes, SDR2_16gbytes, Quant_Range)
+    num_errors, error_dist = erroranderror_distribution.error_distribution(SDR1_16, SDR2_16)
+    print("Number of errors after 16 bit gray code Quantization", num_errors, " with maximum dynamic range", error_dist)
+    err_values.append(num_errors)
+    quan_size.append(len(SDR1_16)*8)
+
+    SDR1_16, SDR2_16 = int2byte_conversion.intarray_to_bytearray(SDR1_16bytes, SDR2_16bytes, Quant_Range)
+    num_errors, error_dist = erroranderror_distribution.error_distribution(SDR1_16, SDR2_16)
+    print("Number of errors after 16 bit code Quantization", num_errors, " with maximum dynamic range", error_dist)
+    err_values.append(num_errors)
+    quan_size.append(len(SDR1_16)*8)
 
 
 
 
 
 if correlation_mode.BITWISE_CORRELATION.value==True or correlation_mode.INTEGER_CORRELATION.value==True:
-    corr_coeff_cfo, number_of_samples_cfo = correlation_calculation.complete_correlation(min_length, list_of_floats_SDR1, list_of_floats_SDR2)
+    corr_coeff_cfo, number_of_samples_cfo = correlation_calculation.complete_correlation(min_length, list_of_floats_SDR1[ind:], list_of_floats_SDR2[ind:])
     print(corr_coeff_cfo)
     plot_correlation.correlation_plot_multibit(number_of_samples_cfo, corr_coeff_cfo, ax4, '#01ff07', "Correlation of raw samples")
 
@@ -306,3 +357,8 @@ elif correlation_mode.INTEGER_CORRELATION.value==True:
 ####Multi bit quantization stops
 
 plt2.show()
+
+print(err_values)
+print(quan_size)
+
+simple_plot.auto_plot(np.array(err_values), np.array(quan_size))

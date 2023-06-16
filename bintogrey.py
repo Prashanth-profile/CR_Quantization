@@ -14,5 +14,5 @@ def array_conversion_togray(arr):
         grayarr.append(code)
     return np.array(grayarr)
 # Driver Code
-n = [15, 67]
+n = [98, 67]
 print(array_conversion_togray(n))

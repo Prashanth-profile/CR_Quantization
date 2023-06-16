@@ -16,6 +16,7 @@ def convert_vectors(a, b):
 
     # Step 4: Generate new data
     transformed_a = principal_components.flatten()
+    print(transformed_a)
 
     # Step 5: Reverse the standardization
     transformed_a = (transformed_a * a_std) + a_mean
@@ -31,4 +32,4 @@ transformed_a = convert_vectors(a, b)
 print("Original Vector A:", a)
 print("Transformed Vector A':", transformed_a)
 print("Vector B:", b)
-print("Correlation between A' and B:", np.corrcoef(transformed_a, b)[0, 1])
+print("Correlation between A' and B:", convert_vectors(b, a))

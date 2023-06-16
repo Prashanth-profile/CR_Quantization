@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/CR_Quantization.iml" filepath="$PROJECT_DIR$/.idea/CR_Quantization.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../NIST test/sp800_22_tests-master/.idea/sp800_22_tests-master.iml" filepath="$PROJECT_DIR$/../../NIST test/sp800_22_tests-master/.idea/sp800_22_tests-master.iml" />
     </modules>
   </component>
 </project>

@@ -45,10 +45,11 @@ list_of_floats_SDR1 = [float(x) for x in list_of_strings_SDR1]
 list_of_floats_SDR2 = [float(x) for x in list_of_strings_SDR2]
 
 
-fig2, (ax1, ax2, ax3) = plt2.subplots(3, 1)
+#fig2, (ax1, ax2, ax3) = plt2.subplots(3, 1)
 #fig3, (ax1, ax2) = plt2.subplot(2,1)
+fig2, axis = plt2.subplots()
 
-plot_RSSI.plot_RSSI(time, list_of_floats_SDR1[ind:ind+min_length], list_of_floats_SDR2[ind:ind+min_length], ax1)
+#plot_RSSI.plot_RSSI(time, list_of_floats_SDR1[ind:ind+min_length], list_of_floats_SDR2[ind:ind+min_length], ax1)
 
 corr_coeff_rssi, number_of_samples_rssi = correlation_calculation.complete_correlation(min_length, list_of_floats_SDR1,
                                                                              list_of_floats_SDR2)
@@ -85,13 +86,13 @@ list_of_floats_SDR2 = list(map(lambda x: x*-1 if x < 0 else x, list_of_floats_SD
 
 print("length", len(list_of_floats_SDR1))
 
-plot_CFO.plot_CFO(time, list_of_floats_SDR1[ind:ind+min_length], list_of_floats_SDR2[ind:ind+min_length], ax2)
+#plot_CFO.plot_CFO(time, list_of_floats_SDR1[ind:ind+min_length], list_of_floats_SDR2[ind:ind+min_length], ax2)
 
 corr_coeff_cfo, number_of_samples_cfo = correlation_calculation.complete_correlation(min_length, list_of_floats_SDR1,
                                                                              list_of_floats_SDR2)
 
-plot_correlation.correlation_plot(number_of_samples_rssi, corr_coeff_rssi, ax3, 'r-')
-plot_correlation.correlation_plot(number_of_samples_cfo, corr_coeff_cfo, ax3, 'b-')
+plot_correlation.correlation_plot(number_of_samples_rssi, corr_coeff_rssi, axis, 'r-')
+plot_correlation.correlation_plot(number_of_samples_cfo, corr_coeff_cfo, axis, 'b-')
 
 #######################################PO##############################################
 #Read the text file
