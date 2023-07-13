@@ -148,6 +148,7 @@ print("After two bit gray code", SDR1_2gbytes, " and ", SDR2_2gbytes)
 #plot_histogram.create_histogram(SDR2_2gbytes, 4, ax22)
 
 #time2=range(min_l)
+
 #plot_CFO.plot_CFO_grey(time2, SDR1_2gbytes[ind:ind+min_l], SDR2_2gbytes[ind:ind+min_l], ax1)
 
 SDR1_2bytes, SDR2_2bytes=lossless_quantization.multi_bit_quantization_corrplot(list_of_floats_SDR1, list_of_floats_SDR2, min_length, window_size, Quant_Range, False, ind)

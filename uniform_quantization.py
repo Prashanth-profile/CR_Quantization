@@ -14,10 +14,24 @@ def uniform_quantization_window(complete_data, Quant_Range, window_size):
         #print("i", i)
         minimum_window = np.min(complete_data[i:i+window_size])
         maximum_window = np.max(complete_data[i:i+window_size])
+
+        intervalsize=(maximum_window-minimum_window)/ (2 ** Quant_Range)
+
+        minimum_window=minimum_window-intervalsize
+        maximum_window=maximum_window+intervalsize
+
+
         #print("minimum", minimum_window, "maximum value", maximum_window, "at",np.argmax(complete_data[i:i+window_size]), " and ", np.argmin(complete_data[i:i+window_size]), "respectively")
         for j in range(0, window_size):
             #print("i+j", i+j)
-            result[i+j] = np.round(((complete_data[i+j] - minimum_window) * ((2 ** Quant_Range) - 1)) / (maximum_window - minimum_window))
+            if minimum_window >= complete_data[i+j]:
+                result[i+j] = 0
+
+            elif maximum_window <= complete_data[i+j]:
+                result[i+j] = (2**Quant_Range) - 1
+
+            else:
+                result[i+j] = np.floor(((complete_data[i+j] - minimum_window) * ((2 ** Quant_Range) - 1)) / (maximum_window - minimum_window))
     return result
 
 
@@ -25,12 +39,18 @@ def uniform_dynamic_quantization(arr, num_levels):
     quantized_arr = np.zeros_like(arr, dtype=int)
 
     # Calculate the range of values in the input array
-    arr_min = np.min(arr)
-    arr_max = np.max(arr)
+    arr_min2 = np.min(arr)
+    arr_max2 = np.max(arr)
 
-    arr_min=arr_min-((arr_max-arr_min)*2)
-    arr_max=arr_max+((arr_max-arr_min)*2)
-    arr_range = arr_max - arr_min
+    #arr_min2=arr_min+((arr_max-arr_min)/4)
+    #arr_max2=arr_max-((arr_max-arr_min)/4)
+
+    #arr_min2=arr_min-((arr_max-arr_min)/4)
+    #arr_max2=arr_max+((arr_max-arr_min)/4)
+
+    print("Min and max are", arr_min2, arr_max2)
+
+    arr_range = arr_max2 - arr_min2
 
     # Calculate the interval size for each quantization level
     interval = arr_range / (num_levels)
@@ -38,23 +58,24 @@ def uniform_dynamic_quantization(arr, num_levels):
     # Generate the ranges variable dynamically
     ranges = []
     for i in range(num_levels):
-        if i==0:
-            lower = (arr_min - (interval/2)) + (i * interval)
-        else:
-            lower = arr_min + (i * interval)
-        if i==num_levels-1:
-            upper = lower + interval + interval/2
-        else:
-            upper = lower + interval
+        lower = arr_min2 + (i * interval)
+        upper = lower + interval
         ranges.append((lower, upper))
     #print("Range for", math.log2(num_levels)," quantization", ranges)
 
     # Perform quantization on each value in the array
     for i in range(len(arr)):
-        for j, (lower, upper) in enumerate(ranges):
-            if lower <= arr[i] <= upper:
-                quantized_arr[i] = j
-                break
+        if arr_min2 > arr[i]:
+            quantized_arr[i] = 0
+
+        elif arr_max2 < arr[i]:
+            quantized_arr[i] = num_levels-1
+
+        else:
+            for j, (lower, upper) in enumerate(ranges):
+                if lower <= arr[i] <= upper:
+                    quantized_arr[i] = j
+                    break
     ranges.clear()
 
     #signed_quantized_array=

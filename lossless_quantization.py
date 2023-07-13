@@ -45,21 +45,21 @@ def multi_bit_quantization(list_of_floats_SDR1, list_of_floats_SDR2, min_length,
 
     return SDR1_bytes, SDR2_bytes
 
-def multi_bit_quantization_corrplot(list_of_floats_SDR1, list_of_floats_SDR2, min_length, window_size, Quant_Range, gray_state, ind):
-    uniform_quantized_bytes_SDR1 = uniform_quantization.uniform_quantization_window(list_of_floats_SDR1[ind:ind+min_length],
+def multi_bit_quantization_corrplot(list_of_floats_SDR1, list_of_floats_SDR2, min_length, window_size, Quant_Range, gray_state):
+    uniform_quantized_bytes_SDR1 = uniform_quantization.uniform_quantization_window(list_of_floats_SDR1[0:min_length],
                                                                                     Quant_Range, window_size)
-    uniform_quantized_bytes_SDR2 = uniform_quantization.uniform_quantization_window(list_of_floats_SDR2[ind:ind+min_length],
+    uniform_quantized_bytes_SDR2 = uniform_quantization.uniform_quantization_window(list_of_floats_SDR2[0:min_length],
                                                                                     Quant_Range, window_size)
 
     if gray_state == True:
-        uniform_graycode_SDR1 = bintogrey.array_conversion_togray(uniform_quantized_bytes_SDR1.astype(np.uint))
-        uniform_graycode_SDR2 = bintogrey.array_conversion_togray(uniform_quantized_bytes_SDR2.astype(np.uint))
+        uniform_graycode_SDR1 = bintogrey.array_conversion_togray(uniform_quantized_bytes_SDR1.astype(int))
+        uniform_graycode_SDR2 = bintogrey.array_conversion_togray(uniform_quantized_bytes_SDR2.astype(int))
 
-        uniform_SDR1=uniform_graycode_SDR1.astype(np.uint)
-        uniform_SDR2=uniform_graycode_SDR2.astype(np.uint)
+        uniform_SDR1=uniform_graycode_SDR1.astype(int)
+        uniform_SDR2=uniform_graycode_SDR2.astype(int)
     else:
-        uniform_SDR1 = uniform_quantized_bytes_SDR1.astype(np.uint)
-        uniform_SDR2 = uniform_quantized_bytes_SDR2.astype(np.uint)
+        uniform_SDR1 = uniform_quantized_bytes_SDR1.astype(int)
+        uniform_SDR2 = uniform_quantized_bytes_SDR2.astype(int)
 
 
     return uniform_SDR1, uniform_SDR2
@@ -79,14 +79,14 @@ def multi_bit_dynamic_quantization_corrplot(list_of_floats_SDR1, list_of_floats_
     #                                                                                2**Quant_Range)
 
     if gray_state == True:
-        uniform_graycode_SDR1 = bintogrey.array_conversion_togray(uniform_quantized_bytes_SDR1.astype(np.uint8))
-        uniform_graycode_SDR2 = bintogrey.array_conversion_togray(uniform_quantized_bytes_SDR2.astype(np.uint8))
+        uniform_graycode_SDR1 = bintogrey.array_conversion_togray(uniform_quantized_bytes_SDR1.astype(int))
+        uniform_graycode_SDR2 = bintogrey.array_conversion_togray(uniform_quantized_bytes_SDR2.astype(int))
 
-        uniform_SDR1=uniform_graycode_SDR1.astype(np.uint8)
-        uniform_SDR2=uniform_graycode_SDR2.astype(np.uint8)
+        uniform_SDR1=uniform_graycode_SDR1.astype(int)
+        uniform_SDR2=uniform_graycode_SDR2.astype(int)
     else:
-        uniform_SDR1 = uniform_quantized_bytes_SDR1.astype(np.uint8)
-        uniform_SDR2 = uniform_quantized_bytes_SDR2.astype(np.uint8)
+        uniform_SDR1 = uniform_quantized_bytes_SDR1.astype(int)
+        uniform_SDR2 = uniform_quantized_bytes_SDR2.astype(int)
 
 
     return uniform_SDR1, uniform_SDR2
