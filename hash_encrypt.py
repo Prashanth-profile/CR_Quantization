@@ -1,4 +1,5 @@
 import hashlib
+import save_to_bin
 
 def encrypt_bytes(input_bytes):
     # Create a SHA-256 hash object
@@ -12,12 +13,16 @@ def encrypt_bytes(input_bytes):
 
     return encrypted_bytes
 
-def save_to_bin(SDR1_bytes):
-    hash_lossy = encrypt_bytes(SDR1_bytes)
+def save_to_bin_hashencrypt(SDR1_bytes):
+    hash_lossy = encrypt_bytes(bytearray(SDR1_bytes))
     file_path = r'C:\Users\prashanth\Desktop\2byte_array.bin'
     save_to_bin.save_byte_array(hash_lossy, file_path)
     return
 
+def save_to_binary(SDR1_bytes):
+    file_path = r'C:\Users\prashanth\Desktop\2byte_array.bin'
+    save_to_bin.save_byte_array(bytearray(SDR1_bytes), file_path)
+    return
 # Example usage
 '''input_bytes = b'\x01\x02\x03\x04\x05'
 encrypted_bytes = encrypt_bytes(input_bytes)

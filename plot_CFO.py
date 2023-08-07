@@ -1,10 +1,10 @@
-def plot_CFO(time, CFO_SDR1, CFO_SDR2, ax):
+def plot_CFO(time, CFO_SDR1, CFO_SDR2, ax, xlbl):
     ax.plot(time, CFO_SDR1, 'k-', label='SDR1')
     ax.scatter(time, CFO_SDR1, color='black')
     ax.plot(time, CFO_SDR2, 'g-', label='SDR2')
     ax.scatter(time, CFO_SDR2, color='green')
     ax.legend(loc='upper left')
-    ax.set(xlabel="Time Index", ylabel="Frequency offset values in Hz")
+    ax.set(xlabel="Time Index", ylabel=xlbl)
 
 def plot_CFO_grey(time, CFO_SDR1, CFO_SDR2, ax):
     ax.plot(time, CFO_SDR1, 'r-', label='SDR1g')

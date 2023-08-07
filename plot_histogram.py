@@ -4,7 +4,7 @@ import seaborn as sns
 import numpy as np
 from scipy.stats import norm
 
-def create_histogram(rssi_data, nbins, ax, titl):
+def create_histogram(rssi_data, nbins, ax, titl, col):
 
     # Calculate histogram values
     #hist_values, bins, _ = ax.hist(rssi_data, bins=nbins, density=True, edgecolor='black')  # Adjust the number of bins as needed
@@ -16,8 +16,6 @@ def create_histogram(rssi_data, nbins, ax, titl):
     #x = np.linspace(np.min(rssi_data), np.max(rssi_data), nbins+1)
     #pdf = norm.pdf(x, mu, sigma)
 
-    sns.kdeplot(rssi_data, fill=True, common_norm=True, legend=True, ax=ax)
-
     # Generate curve based on distribution parameters
     #curve = norm.pdf(bins, mu, sigma)
 
@@ -25,9 +23,16 @@ def create_histogram(rssi_data, nbins, ax, titl):
     #ax.plot(bins, curve, 'r-', linewidth=2)
 
     # Set labels and title
-    ax.set(xlabel="Quantized value", ylabel="Density")
+    ax.set(xlabel="Quantized Value", ylabel="PDF")
     #ax.legend(loc='upper left')
     #ax.title('Distribution')
+
+    #legend_labels = ['SDR1', 'SDR2']
+    #legend_colors = ['blue']
+
+    sns.kdeplot(rssi_data, color=col, label=titl, fill=True, common_norm=True, legend=True, ax=ax)
+    #legend_patches = [plt.Rectangle((0, 0), 1, 1, color=color) for color in legend_colors]
+    ax.legend()
 
     # Show the plot
     #plt.show()

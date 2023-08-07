@@ -27,7 +27,7 @@ def window_smoothening(signal, window_size):
 # Method 3: Gaussian filtering
 def gaussian_filtering(signal):
     from scipy.ndimage import gaussian_filter1d
-    filtered_signal = gaussian_filter1d(signal, sigma=8, truncate=4)
+    filtered_signal = gaussian_filter1d(signal, sigma=16, truncate=4)
 
     return filtered_signal
 

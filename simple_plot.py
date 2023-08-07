@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from scipy import stats
 
 def manual_plot():
     # Sample data
@@ -117,7 +118,7 @@ def percentage_plot(values1, values2):
     # Show the plot
     plt.show()
 
-def percentage_plot_axis(values1, values2, labels, axis, c):
+def percentage_plot_axis(values1, values2, labels, axis, c, leg, mark):
     #labels = ['2bit(Gray)', '2bit', '3bit(Gray)', '3bit', '4bit(Gray)', '4bit', '5bit(Gray)', '5bit', '6bit(Gray)',
     #          '6bit', '7bit(Gray)', '7bit', '8bit(Gray)', '8bit', '16bit(Gray)', '16bit', '32bit(Gray)', '32bit', '64bit(Gray)', '64bit']
 
@@ -127,20 +128,18 @@ def percentage_plot_axis(values1, values2, labels, axis, c):
     x_pos = np.arange(len(labels))
 
     # Create the first bar plot and set the color to blue
-    if c=='r-':
+    if c=='r':
         col='red'
-        lab='Normal code'
-    elif c=='b-':
+    elif c=='b':
         col='blue'
-        lab='Gray Codes'
-    rects1 = axis.plot(x_pos, percentage_error, color=col, label=lab)
+    axis.plot(x_pos, percentage_error, linestyle='-', marker=mark, color=c, label=leg)
 
     # Add x-axis and y-axis labels
-    axis.set_xlabel('Category of Quantization')
-    axis.set_ylabel('% error')
+    axis.set_xlabel('Order of Quantization', fontsize=40, fontname='Times New Roman')
+    axis.set_ylabel('% error', fontsize=40, fontname='Times New Roman')
 
     # Add a title to the plot
-    axis.set_title('Percentage plot')
+    #axis.set_title('Percentage plot', fontsize=40, fontname='Times New Roman')
 
     # Add x-axis ticks and labels
     axis.set_xticks(x_pos)

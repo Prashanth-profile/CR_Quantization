@@ -40,29 +40,24 @@ def window_average(arr, window_size):
     return list(np.asarray(threshold_detection).flat)
 
 def window_average_meanmedian(arr, window_size, mean_medianbar):
-    i = 0
+
     # Initialize an empty list to store moving averages
-    moving_averages = []
-    threshold_detection=[]
-    # Loop through the array t o
-    # consider every window of size window_size
-    #print("Original array is", arr)
+    binary_array = []
     for i in range(0, len(arr), window_size):
         # Calculate the average of current window
         if mean_medianbar==True:
             window_average = statistics.mean(arr[i:i + window_size])
         else:
             window_average = statistics.median(arr[i:i + window_size])
-        threshold_detection_bit = [0 if x < window_average else 1 for x in arr[i:i + window_size]]
-        #print("Result at index", i, "is ", threshold_detection_bit)
-        # Store the average of current
-        # window in moving average list
-        moving_averages.append(window_average)
-        threshold_detection.append(threshold_detection_bit)
-        # Shift window to right by one position
-        i += 1
-    #print("Result", threshold_detection)
-    return list(np.asarray(threshold_detection).flat)
+
+        for f, ind in zip(arr[i:i + window_size], range(0, len(arr[i:i + window_size]))) :
+            if (f >= window_average):
+                binary_array.append(1)
+            elif f < window_average:
+                binary_array.append(0)
+    print("binary array", binary_array)
+    return binary_array
+    #return np.asarray(threshold_detection).flat
 
 def float_to_binary_lossyquantization_onebit(float_array, min_length, window_size, mean_medianbar, alpha):
 
@@ -90,7 +85,7 @@ def float_to_binary_lossyquantization_onebit(float_array, min_length, window_siz
                 print("Number of trials", ind)
                 break
     print("binary array", binary_array)
-    return binary_array[0:min_length]
+    return binary_array
 
 
 '''arr=[1, 2, 3.5, 4, 5, 6]

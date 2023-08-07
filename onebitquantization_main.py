@@ -22,13 +22,14 @@ import noise_removal
 import hash_encrypt
 
 ##### Make sure appropriate values is choosen. Setting more than one value to True can cause unexpected behavior
-
-min_length=1024
+fontsz=38
+min_length=16384
 time=range(min_length)
 ind=0
 
 #########This variable is the window size: This is used in both lossy and lossless quantization
-window_size=32
+window_size=1024
+subset=1024
 
 #######################################CFO##############################################
 #Read the text file
@@ -67,24 +68,27 @@ remind=len(list_of_floats_SDR1)%min_length
 
 ####Lossy Quantization starts
 #MEAN
-alpha = 0.001
+alpha = 0.0001
 mean_medbar=True
 
-#SDR1_1_norm=list_of_floats_SDR1
-#SDR2_1_norm=list_of_floats_SDR2
+SDR1_1_norm=list_of_floats_SDR1
+SDR2_1_norm=list_of_floats_SDR2
 
-SDR1_1_norm=noise_removal.gaussian_filtering(list_of_floats_SDR1)
-SDR2_1_norm=noise_removal.gaussian_filtering(list_of_floats_SDR2)
+#SDR1_1_norm=noise_removal.gaussian_filtering(list_of_floats_SDR1)
+#SDR2_1_norm=noise_removal.gaussian_filtering(list_of_floats_SDR2)
 
-#SDR1_1_norm=noise_removal.window_smoothening(list_of_floats_SDR1, 17)
-#SDR2_1_norm=noise_removal.window_smoothening(list_of_floats_SDR2, 17)
+#SDR1_1_norm=noise_removal.window_smoothening(list_of_floats_SDR1, 64)
+#SDR2_1_norm=noise_removal.window_smoothening(list_of_floats_SDR2, 64)
 
-SDR1_bytes, SDR2_bytes=lossy_quantization.lossy_quantization(SDR1_1_norm, SDR2_1_norm, min_length, window_size, True, alpha)
+#print("Raw samples SDR1", SDR1_1_norm, len(SDR1_1_norm))
+#print("Raw samples SDR2", SDR2_1_norm, len(SDR2_1_norm))
+
+'''SDR1_bytes, SDR2_bytes=lossy_quantization.lossy_quantization(SDR1_1_norm, SDR2_1_norm, min_length, window_size, True, alpha)
 print("After 1 bit lossy mean ", SDR1_bytes, SDR2_bytes)
-num_errors, error_dist = erroranderror_distribution.error_distribution(SDR1_bytes[0:64],SDR2_bytes[0:64])
+num_errors, error_dist = erroranderror_distribution.error_distribution(SDR1_bytes[0:128],SDR2_bytes[0:128])
 print("Number of errors lossy mean", num_errors)
 erroranderror_distribution.plot_error_distribution(error_dist)
-#hash_encrypt.save_to_bin(SDR1_bytes)
+hash_encrypt.save_to_bin_hashencrypt(SDR1_bytes)
 
 print("Raw samples SDR1", SDR1_1_norm)
 print("Raw samples SDR2", SDR2_1_norm)
@@ -93,27 +97,39 @@ print("Raw samples SDR2", SDR2_1_norm)
 #MEDIAN
 SDR1_bytes, SDR2_bytes=lossy_quantization.lossy_quantization(SDR1_1_norm, SDR2_1_norm, min_length, window_size, False, alpha)
 print("After 1 bit lossy median ", SDR1_bytes, SDR2_bytes)
-num_errors, error_dist = erroranderror_distribution.error_distribution(SDR1_bytes[0:64],SDR2_bytes[0:64])
+num_errors, error_dist = erroranderror_distribution.error_distribution(SDR1_bytes[0:128],SDR2_bytes[0:128])
 print("Number of errors lossy median", num_errors)
-erroranderror_distribution.plot_error_distribution(error_dist)
+erroranderror_distribution.plot_error_distribution(error_dist)'''
 
 ######Lossy Quantization Ends
 
 ###### Lossless quantization starts
 ######1 bit Quanzization starts
 #MEAN
-SDR1_mebytes, SDR2_mebytes=lossless_quantization.one_bit_quantization(SDR1_1_norm, SDR2_1_norm, min_length, window_size, True)
-print("After 1 bit mean ", SDR1_mebytes, SDR2_mebytes)
-num_errors, error_dist = erroranderror_distribution.error_distribution(SDR1_mebytes[0:64],SDR2_mebytes[0:64])
-print("Number of errors mean", num_errors)
-erroranderror_distribution.plot_error_distribution(error_dist)
-#hash_encrypt.save_to_bin(SDR1_mebytes)
+
+mean_err=[]
+median_err=[]
+
+for ind in range(0, min_length, subset):
+
+    SDR1_mebytes, SDR2_mebytes=lossless_quantization.one_bit_quantization(SDR1_1_norm[ind:ind+subset], SDR2_1_norm[ind:ind+subset], window_size, subset, True)
+    #print("After 1 bit mean ", SDR1_mebytes, SDR2_mebytes)
+    num_errors, error_dist = erroranderror_distribution.error_distribution(SDR1_mebytes,SDR2_mebytes)
+    #print("Number of errors mean", num_errors)
+    #erroranderror_distribution.plot_error_distribution(error_dist)
+    mean_err.append(num_errors)
+    #hash_encrypt.save_to_bin(SDR1_mebytes)
 
 
 
-#MEDIAN
-SDR1_mdbytes, SDR2_mdbytes=lossless_quantization.one_bit_quantization(SDR1_1_norm, SDR2_1_norm, min_length, window_size, False)
-print("After 1 bit median ", SDR1_mdbytes, SDR2_mdbytes)
-num_errors, error_dist = erroranderror_distribution.error_distribution(SDR1_mdbytes[0:64],SDR2_mdbytes[0:64])
-print("Number of errors median", num_errors)
-erroranderror_distribution.plot_error_distribution(error_dist)
+    #MEDIAN
+    SDR1_mdbytes, SDR2_mdbytes=lossless_quantization.one_bit_quantization(SDR1_1_norm[ind:ind+subset], SDR2_1_norm[ind:ind+subset], window_size, subset, False)
+    #print("After 1 bit median ", SDR1_mdbytes, SDR2_mdbytes)
+    num_errors, error_dist = erroranderror_distribution.error_distribution(SDR1_mdbytes,SDR2_mdbytes)
+    #print("Number of errors median", num_errors)
+    #erroranderror_distribution.plot_error_distribution(error_dist)
+    median_err.append(num_errors)
+
+
+print("Number of errors median", median_err)
+print("Number of errors mean", mean_err)

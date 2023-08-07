@@ -15,10 +15,10 @@ def uniform_quantization_window(complete_data, Quant_Range, window_size):
         minimum_window = np.min(complete_data[i:i+window_size])
         maximum_window = np.max(complete_data[i:i+window_size])
 
-        intervalsize=(maximum_window-minimum_window)/ (2 ** Quant_Range)
+        #intervalsize=(maximum_window-minimum_window)/ (2 ** Quant_Range)
 
-        minimum_window=minimum_window-intervalsize
-        maximum_window=maximum_window+intervalsize
+        #minimum_window=minimum_window-(intervalsize/2)
+        #maximum_window=maximum_window+(intervalsize/2)
 
 
         #print("minimum", minimum_window, "maximum value", maximum_window, "at",np.argmax(complete_data[i:i+window_size]), " and ", np.argmin(complete_data[i:i+window_size]), "respectively")

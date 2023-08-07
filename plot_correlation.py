@@ -1,14 +1,14 @@
 def correlation_plot(time, corr_coeff, ax, colour, lbl):
     if colour=='r-':
-        ax.plot(time, corr_coeff, colour, label=lbl)
+        ax.plot(time, corr_coeff, colour, label=lbl, linewidth=3)
         #ax.scatter(time, corr_coeff, color='red')
     elif colour=='b-':
-        ax.plot(time, corr_coeff, colour, label=lbl)
+        ax.plot(time, corr_coeff, colour, label=lbl, linewidth=3)
     else:
-        ax.plot(time, corr_coeff, colour, label=lbl)
+        ax.plot(time, corr_coeff, colour, label=lbl, linewidth=3)
         #ax.scatter(time, corr_coeff, color='blue')
     ax.legend(loc='upper right')
-    ax.set(xlabel="Time Index", ylabel="Correlation coefficient")
+    ax.set(xlabel="Number of measurements", ylabel="Correlation coefficient")
 
 def correlation_plot_lossy(time, corr_coeff, ax, colour, lbl):
     ax.plot(time, corr_coeff, colour, label=lbl)

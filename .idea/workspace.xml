@@ -2,19 +2,25 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="93ded42d-dba7-41e4-8fd9-b6acae1c0569" name="Changes" comment="UPDATE: Histogram plot for error distribution added to quantization main">
-      <change afterPath="$PROJECT_DIR$/hash_encrypt.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/noise_removal.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/onebitquantization_main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pyplot_errors.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/confidence_interval.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/int_to_nbit_bytearray.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/multibit_quant_main2.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/multibitquant_confidenceinterval_main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/erroranderror_distribution.py" beforeDir="false" afterPath="$PROJECT_DIR$/erroranderror_distribution.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/extract_CFO_PO_RSS.py" beforeDir="false" afterPath="$PROJECT_DIR$/extract_CFO_PO_RSS.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hash_encrypt.py" beforeDir="false" afterPath="$PROJECT_DIR$/hash_encrypt.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/int2byte_conversion.py" beforeDir="false" afterPath="$PROJECT_DIR$/int2byte_conversion.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lossless_quantization.py" beforeDir="false" afterPath="$PROJECT_DIR$/lossless_quantization.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lossy_quantization.py" beforeDir="false" afterPath="$PROJECT_DIR$/lossy_quantization.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/multibits_quant_main.py" beforeDir="false" afterPath="$PROJECT_DIR$/multibits_quant_main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/noise_removal.py" beforeDir="false" afterPath="$PROJECT_DIR$/noise_removal.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/onebitquantization_main.py" beforeDir="false" afterPath="$PROJECT_DIR$/onebitquantization_main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plot_CFO.py" beforeDir="false" afterPath="$PROJECT_DIR$/plot_CFO.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/plot_correlation.py" beforeDir="false" afterPath="$PROJECT_DIR$/plot_correlation.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/plot_histogram.py" beforeDir="false" afterPath="$PROJECT_DIR$/plot_histogram.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/quantization_correlationplot_main.py" beforeDir="false" afterPath="$PROJECT_DIR$/quantization_correlationplot_main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyplot_errors.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyplot_errors.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/simple_plot.py" beforeDir="false" afterPath="$PROJECT_DIR$/simple_plot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/string_to_bytearray.py" beforeDir="false" afterPath="$PROJECT_DIR$/string_to_bytearray.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/uniform_quantization.py" beforeDir="false" afterPath="$PROJECT_DIR$/uniform_quantization.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/window_average_threshold_quantization.py" beforeDir="false" afterPath="$PROJECT_DIR$/window_average_threshold_quantization.py" afterDir="false" />
     </list>
@@ -226,6 +232,13 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/multibitquant_confidenceinterval_main.py</url>
+          <line>202</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
           <properties notifyOnTerminate="true" exception="BaseException">
