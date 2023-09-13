@@ -11,7 +11,8 @@ def RS_encoding(complete_data, segment_size, parity_size, number_of_segments):
     parity_bytes_complete=bytearray()
     for i in range(0, segment_size*number_of_segments, segment_size):
         segmentencode=rsc.encode(complete_data[i:i+segment_size])
-        parity_bytes=segmentencode[len(segmentencode)-parity_size:len(segmentencode)]
+        print("segment code", segmentencode)
+        parity_bytes=segmentencode[len(segmentencode)-parity_size:]
         rs_encoded.extend(segmentencode)
         parity_bytes_complete.extend(parity_bytes)
         #print("Complete_parity_bytes",parity_bytes_complete)
@@ -33,8 +34,8 @@ def RS_decoding(complete_data, parity_bytes, segment_size, parity_size, number_o
     print("decoded bytes", decoded_bytes)
     return decoded_bytes
 
-'''
-########################## REED SOLOMON ENCODING
+
+''''########################## REED SOLOMON ENCODING
 arr1 = b'\x01\x02\x03\x04\x05\x01\x02\x03\x04\x05\x01\x02\x03\x04\x05\x01\x01\x02\x03\x04\x05\x01\x02\x03\x04\x05\x01\x02\x03\x04\x05\x01'
 arr2 = b'\x01\x02\x02\x04\x04\x01\x02\x03\x04\x05\x01\x02\x03\x04\x05\x01\x01\x02\x02\x04\x04\x01\x02\x03\x04\x05\x01\x02\x03\x04\x05\x01'
 

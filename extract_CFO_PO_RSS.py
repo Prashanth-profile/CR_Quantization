@@ -45,8 +45,8 @@ list_of_strings_SDR2 = data_read_SDR2.split('\n')
 list_of_floats_SDR1 = [float(x) for x in list_of_strings_SDR1]
 list_of_floats_SDR2 = [float(x) for x in list_of_strings_SDR2]
 
-SDR1_1_norm=noise_removal.window_smoothening(list_of_floats_SDR1[ind:ind+min_length], 64)
-SDR2_1_norm=noise_removal.window_smoothening(list_of_floats_SDR2[ind:ind+min_length], 64)
+#SDR1_1_norm=noise_removal.window_smoothening(list_of_floats_SDR1[ind:ind+min_length], 64)
+#SDR2_1_norm=noise_removal.window_smoothening(list_of_floats_SDR2[ind:ind+min_length], 64)
 
 
 #fig2, (ax1, ax2, ax3) = plt2.subplots(3, 1)
@@ -59,8 +59,8 @@ plt2.grid()
 
 corr_coeff_rssi, number_of_samples_rssi = correlation_calculation.complete_correlation(min_length, list_of_floats_SDR1[ind:ind+min_length],
                                                                              list_of_floats_SDR2[ind:ind+min_length])
-corr_coeff_smoothrssi, number_of_samples_smoothrssi = correlation_calculation.complete_correlation(min_length, SDR1_1_norm,
-                                                                             SDR2_1_norm)
+#corr_coeff_smoothrssi, number_of_samples_smoothrssi = correlation_calculation.complete_correlation(min_length, SDR1_1_norm,
+#                                                                             SDR2_1_norm)
 #######################################CFO##############################################
 #Read the text file
 with open('C:/Users/prashanth/Desktop/CFO_SC_212_SDR1.txt', 'r') as fin:
@@ -92,8 +92,8 @@ list_of_floats_SDR1 = list(map(lambda x: x*-1 if x < 0 else x, list_of_floats_SD
 list_of_floats_SDR2 = list(map(lambda x: x*-1 if x < 0 else x, list_of_floats_SDR2))
 
 
-SDR1_1_norm=noise_removal.window_smoothening(list_of_floats_SDR1[ind:ind+min_length], 64)
-SDR2_1_norm=noise_removal.window_smoothening(list_of_floats_SDR2[ind:ind+min_length], 64)
+#SDR1_1_norm=noise_removal.window_smoothening(list_of_floats_SDR1[ind:ind+min_length], 64)
+#SDR2_1_norm=noise_removal.window_smoothening(list_of_floats_SDR2[ind:ind+min_length], 64)
 
 print("length", len(list_of_floats_SDR1))
 
@@ -101,8 +101,8 @@ print("length", len(list_of_floats_SDR1))
 
 corr_coeff_cfo, number_of_samples_cfo = correlation_calculation.complete_correlation(min_length, list_of_floats_SDR1[ind:ind+min_length],
                                                                              list_of_floats_SDR2[ind:ind+min_length])
-corr_coeff_smoothcfo, number_of_samples_smoothcfo = correlation_calculation.complete_correlation(min_length, SDR1_1_norm,
-                                                                             SDR2_1_norm)
+#corr_coeff_smoothcfo, number_of_samples_smoothcfo = correlation_calculation.complete_correlation(min_length, SDR1_1_norm,
+#                                                                             SDR2_1_norm)
 
 #######################################PO##############################################
 #Read the text file
@@ -135,8 +135,8 @@ list_of_floats_SDR1 = list(map(lambda x: x*-1 if x < 0 else x, list_of_floats_SD
 list_of_floats_SDR2 = list(map(lambda x: x*-1 if x < 0 else x, list_of_floats_SDR2))
 
 
-SDR1_1_norm=noise_removal.window_smoothening(list_of_floats_SDR1[ind:ind+min_length], 64)
-SDR2_1_norm=noise_removal.window_smoothening(list_of_floats_SDR2[ind:ind+min_length], 64)
+#SDR1_1_norm=noise_removal.window_smoothening(list_of_floats_SDR1[ind:ind+min_length], 64)
+#SDR2_1_norm=noise_removal.window_smoothening(list_of_floats_SDR2[ind:ind+min_length], 64)
 
 print("length", len(list_of_floats_SDR1))
 
@@ -145,8 +145,8 @@ print("length", len(list_of_floats_SDR1))
 corr_coeff_po, number_of_samples_po = correlation_calculation.complete_correlation(min_length, list_of_floats_SDR1[ind:ind+min_length],
                                                                              list_of_floats_SDR2[ind:ind+min_length])
 
-corr_coeff_smoothpo, number_of_samples_smoothpo = correlation_calculation.complete_correlation(min_length, SDR1_1_norm,
-                                                                             SDR2_1_norm)
+#corr_coeff_smoothpo, number_of_samples_smoothpo = correlation_calculation.complete_correlation(min_length, SDR1_1_norm,
+#                                                                             SDR2_1_norm)
 
 #######################################POW##############################################
 #Read the text file
@@ -179,8 +179,8 @@ list_of_floats_SDR1 = list(map(lambda x: x*-1 if x < 0 else x, list_of_floats_SD
 list_of_floats_SDR2 = list(map(lambda x: x*-1 if x < 0 else x, list_of_floats_SDR2))
 
 
-SDR1_1_norm=noise_removal.gaussian_filtering(list_of_floats_SDR1[ind:ind+min_length])
-SDR2_1_norm=noise_removal.gaussian_filtering(list_of_floats_SDR2[ind:ind+min_length])
+#SDR1_1_norm=noise_removal.gaussian_filtering(list_of_floats_SDR1[ind:ind+min_length], 64)
+#SDR2_1_norm=noise_removal.gaussian_filtering(list_of_floats_SDR2[ind:ind+min_length], 64)
 
 print("length", len(list_of_floats_SDR1))
 
@@ -188,8 +188,8 @@ print("length", len(list_of_floats_SDR1))
 
 corr_coeff_vol, number_of_samples_vol = correlation_calculation.complete_correlation(min_length, list_of_floats_SDR1[ind:ind+min_length],
                                                                              list_of_floats_SDR2[ind:ind+min_length])
-corr_coeff_smoothvol, number_of_samples_smoothvol = correlation_calculation.complete_correlation(min_length, SDR1_1_norm,
-                                                                             SDR2_1_norm)
+#corr_coeff_smoothvol, number_of_samples_smoothvol = correlation_calculation.complete_correlation(min_length, SDR1_1_norm,
+#                                                                             SDR2_1_norm)
 
 
 plot_correlation.correlation_plot(number_of_samples_rssi, corr_coeff_rssi, axis, 'r-', "RSSI")

@@ -33,6 +33,8 @@ import simple_plot
 import linear_regression
 import save_to_bin
 import noise_removal
+import calculate_entropy
+import cr_rate_plot
 
 
 class correlation_mode(enum.Enum):
@@ -116,8 +118,18 @@ err_values_unitstep_gray = []
 err_values_gaus = []
 err_values_gaus_gray = []
 
+entropy=[]
+entropy_US=[]
+entropy_gauss=[]
+
+CR_rate=[]
+CR_rate_US=[]
+CR_rate_gauss=[]
+
 quan_size = []
 a = 0
+
+labelarray = []
 
 for ind in range(0, min_length, min_l):
     for a in range(3):
@@ -130,7 +142,7 @@ for ind in range(0, min_length, min_l):
             SDR1_1_norm = noise_removal.window_smoothening(list_of_floats_SDR1[ind:ind + min_l], 64)
             SDR2_1_norm = noise_removal.window_smoothening(list_of_floats_SDR2[ind:ind + min_l], 64)
 
-        else:
+        elif a==2:
             SDR1_1_norm = noise_removal.gaussian_filtering(list_of_floats_SDR1[ind:ind + min_l])
             SDR2_1_norm = noise_removal.gaussian_filtering(list_of_floats_SDR2[ind:ind + min_l])
 
@@ -148,10 +160,9 @@ for ind in range(0, min_length, min_l):
         ##### Multi bit Quantization starts
         ######################2 bit quantization
         # The maximum quantization range
-        maxQuantrange = 2
+        maxQuantrange = 4
 
         j = 0
-        labelarray = []
         count = 0
         Quantseteps = 8
 
@@ -163,7 +174,7 @@ for ind in range(0, min_length, min_l):
         # SDR1_2gbytes, SDR2_2gbytes=lossless_quantization.multi_bit_dynamic_quantization_corrplot(list_of_floats_SDR1, list_of_floats_SDR2, min_length, Quant_Range, True, ind)
         SDR1_2gbytes, SDR2_2gbytes = lossless_quantization.multi_bit_quantization_corrplot(SDR1_1_norm,
                                                                                            SDR2_1_norm,
-                                                                                           min_length,
+                                                                                           min_l,
                                                                                            window_size,
                                                                                            Quant_Range,
                                                                                            True)
@@ -174,7 +185,7 @@ for ind in range(0, min_length, min_l):
         # SDR1_2bytes, SDR2_2bytes=lossless_quantization.multi_bit_dynamic_quantization_corrplot(list_of_floats_SDR1, list_of_floats_SDR2, min_length, Quant_Range, False, ind)
         SDR1_2bytes, SDR2_2bytes = lossless_quantization.multi_bit_quantization_corrplot(SDR1_1_norm,
                                                                                          SDR2_1_norm,
-                                                                                         min_length,
+                                                                                         min_l,
                                                                                          window_size,
                                                                                          Quant_Range,
                                                                                          False)
@@ -194,15 +205,21 @@ for ind in range(0, min_length, min_l):
             if a == 0:
                 err_values_gray.append(num_errors)
                 err_values.append(num_errors_norm)
+                entropy.append((calculate_entropy.calculate_entropy(SDR1_2)*Quant_Range)/8)
+                CR_rate.append(((calculate_entropy.calculate_entropy(SDR1_2)*Quant_Range)/8)*abs((1-2*(num_errors/(Quant_Range*min_l)))))
                 quan_size.append(len(SDR1_2) * 8)
 
             elif a == 1:
                 err_values_unitstep_gray.append(num_errors)
                 err_values_unitstep.append(num_errors_norm)
+                entropy_US.append((calculate_entropy.calculate_entropy(SDR1_2) * Quant_Range) / 8)
+                CR_rate_US.append((calculate_entropy.calculate_entropy(SDR1_2)*Quant_Range/8)*abs((1-2*(num_errors/(Quant_Range*min_l)))))
 
             else:
                 err_values_gaus_gray.append(num_errors)
                 err_values_gaus.append(num_errors_norm)
+                entropy_gauss.append((calculate_entropy.calculate_entropy(SDR1_2) * Quant_Range) / 8)
+                CR_rate_gauss.append((calculate_entropy.calculate_entropy(SDR1_2)*Quant_Range/8)*abs((1-2*(num_errors/(Quant_Range*min_l)))))
 
         #j = j + 2
 
@@ -211,3 +228,7 @@ for ind in range(0, min_length, min_l):
 print("err1", err_values, quan_size)
 print("err1", err_values_unitstep, quan_size)
 print("err1", err_values_gaus, quan_size)
+
+print("Max Entropy of NF, US, Gauss", max(entropy), max(entropy_US), max(entropy_gauss))
+
+print("CR rate of NF, US, Gauss", CR_rate, CR_rate_US, CR_rate_gauss)

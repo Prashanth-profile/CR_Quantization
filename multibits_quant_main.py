@@ -33,6 +33,7 @@ import simple_plot
 import linear_regression
 import save_to_bin
 import noise_removal
+import calculate_entropy
 
 class correlation_mode(enum.Enum):
     BITWISE_CORRELATION=False
@@ -40,7 +41,7 @@ class correlation_mode(enum.Enum):
     FIND_NUMBER_OF_ERRORS=True
 
 
-min_length=16384
+min_length=1024
 #Choose index 12 for lower noise representation and 17 for higher noise and 16 for higher noise in gray code
 ind=0
 
@@ -118,7 +119,7 @@ quan_size = []
 a=0
 
 # The maximum quantization range
-maxQuantrange = 8
+maxQuantrange = 16
 nr_trials=int(min_length/min_l)
 
 #Initialize error arrays
@@ -129,7 +130,18 @@ err_values_unitstep_gray = []
 err_values_gaus = []
 err_values_gaus_gray = []
 
+entropy=[]
+entropy_US=[]
+entropy_gauss=[]
+
+CR_rate=[]
+CR_rate_US=[]
+CR_rate_gauss=[]
+
 #for ind range(0, min_length, min_l):
+#Normalization
+#SDR1_1_norm_normalized=normalization_and_standardization.z_score_normalization(list_of_floats_SDR1[ind:ind+min_l])
+#SDR2_1_norm_normalized=normalization_and_standardization.z_score_normalization(list_of_floats_SDR2[ind:ind+min_l])
 
 for a in range(0,3):
     #SDR1_1_norm=[]
@@ -138,16 +150,22 @@ for a in range(0,3):
     if a==0:
         SDR1_1_norm=list_of_floats_SDR1[ind:ind+min_l]
         SDR2_1_norm=list_of_floats_SDR2[ind:ind+min_l]
+        #SDR1_1_norm = SDR1_1_norm_normalized
+        #SDR2_1_norm = SDR2_1_norm_normalized
         #plot_histogram.create_histogram(SDR1_1_norm, 4, axis11, 'No filter', 'blue')
 
     elif a==1:
         SDR1_1_norm=noise_removal.window_smoothening(list_of_floats_SDR1[ind:ind+min_l], 64)
         SDR2_1_norm=noise_removal.window_smoothening(list_of_floats_SDR2[ind:ind+min_l], 64)
+        #SDR1_1_norm=noise_removal.window_smoothening(SDR1_1_norm_normalized, 64)
+        #SDR2_1_norm=noise_removal.window_smoothening(SDR2_1_norm_normalized, 64)
         #plot_histogram.create_histogram(SDR1_1_norm, 4, axis11, 'Unit Step Kernel', 'red')
 
     else:
         SDR1_1_norm=noise_removal.gaussian_filtering(list_of_floats_SDR1[ind:ind+min_l])
         SDR2_1_norm=noise_removal.gaussian_filtering(list_of_floats_SDR2[ind:ind+min_l])
+        #SDR1_1_norm = noise_removal.gaussian_filtering(SDR1_1_norm_normalized)
+        #SDR2_1_norm = noise_removal.gaussian_filtering(SDR2_1_norm_normalized)
         #plot_histogram.create_histogram(SDR1_1_norm, 4, axis11, 'Gaussian Kernel', 'green')
 
     #SDR1_1_norm=normalization_and_standardization.mean_centering(SDR1_1_norm)
@@ -214,7 +232,7 @@ for a in range(0,3):
 
 
 
-        '''fig1, axes = plt2.subplots(nrows=4, ncols=1)
+        fig1, axes = plt2.subplots(nrows=4, ncols=1)
     
         plot_CFO.plot_CFO(time, list_of_floats_SDR1[ind:ind + min_l], list_of_floats_SDR2[ind:ind + min_l], axes[0], "Raw Values")
     
@@ -227,7 +245,7 @@ for a in range(0,3):
         #axes[1].plot(time2, SDR2_2bytes, color=f'C{i+4}', label=f'{i}bit_SDR2')
         axes[2].set_xlabel("Time Index")
         axes[2].set_ylabel("Quantized")
-        axes[2].legend()'''
+        axes[2].legend()
 
         SDR1_2, SDR2_2 = int2byte_conversion.intarray_to_bytearray(SDR1_2gbytes, SDR2_2gbytes, Quant_Range)
         #if a==0:
@@ -240,7 +258,7 @@ for a in range(0,3):
         num_errors_norm, error_dist_norm = erroranderror_distribution.error_distribution(SDR1_2bytes, SDR2_2bytes)
 
         # Set the positions of the bars
-        '''x = np.arange(len(error_dist))
+        x = np.arange(len(error_dist))
     
         bar_width = 0.5
         axes[1].bar(range(len(error_dist)), error_dist, bar_width, color=f'C{1}', label='Gray Code')
@@ -251,10 +269,10 @@ for a in range(0,3):
         axes[2].bar(range(len(error_dist_norm)), error_dist_norm, bar_width, color=f'C{0}', label='Normal')
         axes[2].set_xlabel("Time Index")
         axes[2].set_ylabel("Number of error bits")
-        axes[2].set_title('Number of errors using Normal Code')'''
+        axes[2].set_title('Number of errors using Normal Code')
 
-        '''plot_histogram.create_histogram(SDR1_2gbytes, 4, axes[3], 'norm')
-        plot_histogram.create_histogram(SDR2_2gbytes, 4, axes[3], 'Gray')'''
+        plot_histogram.create_histogram(SDR1_2gbytes, 4, axes[3], 'SDR1', 'blue')
+        plot_histogram.create_histogram(SDR2_2gbytes, 4, axes[3], 'SDR2', 'blue')
 
 
         # Adjust spacing between subplots
@@ -270,29 +288,35 @@ for a in range(0,3):
             if a==0:
                 err_values_gray.append(num_errors)
                 err_values.append(num_errors_norm)
-                quan_size.append(len(SDR1_2) * 8)
+                entropy.append(calculate_entropy.calculate_entropy_intarray(SDR1_2))
+                CR_rate.append(((calculate_entropy.calculate_entropy_intarray(SDR1_2)) * abs((1 - 2 * (num_errors / (Quant_Range * min_l))))))
+                quan_size.append(len(SDR1_2) * i)
                 label = f'{i}-bitNF'
                 #colorgray = f'C{j}'
                 colorgray = 'blue'
-                if i==8:
+                if i==16:
                     plot_histogram.create_histogram(SDR1_2, 4, axis11, label, colorgray)
 
             elif a==1:
                 err_values_unitstep_gray.append(num_errors)
                 err_values_unitstep.append(num_errors_norm)
+                entropy_US.append((calculate_entropy.calculate_entropy_intarray(SDR1_2)))
+                CR_rate_US.append((calculate_entropy.calculate_entropy_intarray(SDR1_2))*abs((1-2*(num_errors/(Quant_Range*min_l)))))
                 label = f'{i}-bitUS'
                 #colorgray = f'C{j+1}'
                 colorgray = 'red'
-                if i==8:
+                if i==16:
                     plot_histogram.create_histogram(SDR1_2, 4, axis11, label, colorgray)
 
             else:
                 err_values_gaus_gray.append(num_errors)
                 err_values_gaus.append(num_errors_norm)
+                entropy_gauss.append((calculate_entropy.calculate_entropy_intarray(SDR1_2)))
+                CR_rate_gauss.append((calculate_entropy.calculate_entropy_intarray(SDR1_2))*abs((1-2*(num_errors/(Quant_Range*min_l)))))
                 label = f'{i}-bitgauss'
                 #colorgray = f'C{j+2}'
                 colorgray = 'green'
-                if i==8:
+                if i==16:
                     plot_histogram.create_histogram(SDR1_2, 4, axis11, label, colorgray)
 
             #colorgray = f'C{j}'
@@ -339,6 +363,10 @@ plt3.grid()
 print("err1", err_values, quan_size)
 print("err1", err_values_unitstep, quan_size)
 print("err1", err_values_gaus, quan_size)
+
+print("entropy=", np.array(entropy))
+print("entropy US=", np.array(entropy_US))
+print("entropy Gauss=", np.array(entropy_gauss))
 
 simple_plot.percentage_plot_axis(np.array(err_values), np.array(quan_size), labelarray, axis3, 'r', "no filters", '')
 simple_plot.percentage_plot_axis(np.array(err_values_gray), np.array(quan_size), labelarray, axis3, 'b', "gray no filters", '')

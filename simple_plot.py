@@ -147,3 +147,34 @@ def percentage_plot_axis(values1, values2, labels, axis, c, leg, mark):
 
     # Add a legend to the plot
     axis.legend()
+
+
+def normal_plot_axis(values1, labels, axis, c, leg, mark):
+    #labels = ['2bit(Gray)', '2bit', '3bit(Gray)', '3bit', '4bit(Gray)', '4bit', '5bit(Gray)', '5bit', '6bit(Gray)',
+    #          '6bit', '7bit(Gray)', '7bit', '8bit(Gray)', '8bit', '16bit(Gray)', '16bit', '32bit(Gray)', '32bit', '64bit(Gray)', '64bit']
+
+    y=values1
+
+    # Set the position of the bars on the x-axis
+    x_pos = np.arange(len(labels))
+
+    # Create the first bar plot and set the color to blue
+    if c=='r':
+        col='red'
+    elif c=='b':
+        col='blue'
+    axis.plot(x_pos, y, linestyle='-', marker=mark, color=c, label=leg)
+
+    # Add x-axis and y-axis labels
+    axis.set_xlabel('Order of Quantization', fontsize=40, fontname='Times New Roman')
+    axis.set_ylabel('% error', fontsize=40, fontname='Times New Roman')
+
+    # Add a title to the plot
+    #axis.set_title('Percentage plot', fontsize=40, fontname='Times New Roman')
+
+    # Add x-axis ticks and labels
+    axis.set_xticks(x_pos)
+    axis.set_xticklabels(labels)
+
+    # Add a legend to the plot
+    axis.legend()

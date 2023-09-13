@@ -25,7 +25,6 @@ def error_distribution(arr1, arr2):
 
     return num_errors, error_dist
 
-
 def plot_error_distribution(error_dist):
     # Compute the cumulative sum of errors
     cum_sum = [sum(error_dist[:i]) for i in range(1, len(error_dist) + 1)]

@@ -25,11 +25,21 @@ def window_smoothening(signal, window_size):
 
 
 # Method 3: Gaussian filtering
-def gaussian_filtering(signal):
+def gaussian_filtering(signal, window):
+    trunc=4
+    sig=window/trunc
     from scipy.ndimage import gaussian_filter1d
-    filtered_signal = gaussian_filter1d(signal, sigma=16, truncate=4)
+    filtered_signal = gaussian_filter1d(signal, sigma=sig, truncate=trunc)
 
     return filtered_signal
+
+def savgold_filter(signal, win_len):
+    # Apply the Savitzky-Golay filter with a filter length of 1024
+    from scipy.signal import savgol_filter
+    filtered_y = savgol_filter(signal, window_length=win_len-1, polyorder=1)
+
+
+    return filtered_y
 
 
 '''signal=x

@@ -48,11 +48,11 @@ def multi_bit_quantization(list_of_floats_SDR1, list_of_floats_SDR2, min_length,
 
     return SDR1_bytes, SDR2_bytes
 
-def multi_bit_quantization_corrplot(list_of_floats_SDR1, list_of_floats_SDR2, min_length, window_size, Quant_Range, gray_state):
+def multi_bit_quantization_corrplot(list_of_floats_SDR1, list_of_floats_SDR2, min_length, window_size, Quant_Range, gray_state, clip):
     uniform_quantized_bytes_SDR1 = uniform_quantization.uniform_quantization_window(list_of_floats_SDR1[0:min_length],
-                                                                                    Quant_Range, window_size)
+                                                                                    Quant_Range, window_size, clip)
     uniform_quantized_bytes_SDR2 = uniform_quantization.uniform_quantization_window(list_of_floats_SDR2[0:min_length],
-                                                                                    Quant_Range, window_size)
+                                                                                    Quant_Range, window_size, clip)
 
     if gray_state == True:
         uniform_graycode_SDR1 = bintogrey.array_conversion_togray(uniform_quantized_bytes_SDR1.astype(int))

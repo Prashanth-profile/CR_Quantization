@@ -17,13 +17,13 @@ def intarray_to_bytearray(quantized_int_SDR1, quantized_int_SDR2, Quant_Range):
     SDR1_string = stringify.stringify(SDR1_bincount.astype(int))
     SDR2_string = stringify.stringify(SDR2_bincount.astype(int))
 
-    SDR1_bytes = string_to_bytearray.string_to_bytearray_conversion(Quant_Range, SDR1_string)
-    SDR2_bytes = string_to_bytearray.string_to_bytearray_conversion(Quant_Range, SDR2_string)
+    SDR1_intbytes = string_to_bytearray.string_to_bytearray_conversion(Quant_Range, SDR1_string)
+    SDR2_intbytes = string_to_bytearray.string_to_bytearray_conversion(Quant_Range, SDR2_string)
 
-    print("SDR1 bytes", SDR1_bytes, "of size", len(SDR1_bytes))
-    print("SDR2 bytes", SDR2_bytes, "of size", len(SDR1_bytes))
+    #print("SDR1 bytes", SDR1_intbytes, "of size", len(SDR1_intbytes))
+    #print("SDR2 bytes", SDR2_intbytes, "of size", len(SDR2_intbytes))
 
-    return SDR1_bytes, SDR2_bytes
+    return SDR1_intbytes, SDR2_intbytes
 
 # Example usage
 string1 = "abcdefg"

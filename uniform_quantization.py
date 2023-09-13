@@ -1,6 +1,10 @@
 import numpy as np
 import math
 
+def convert_to_divisible_by_5(arr):
+    int_array = np.round(arr / 5) * 5
+    int_array = np.clip(int_array, 0, 255).astype(int)
+    return int_array
 
 def uniform_quantization(complete_data, min, Quant_Range, max):
     result = np.zeros(len(complete_data))
@@ -8,17 +12,25 @@ def uniform_quantization(complete_data, min, Quant_Range, max):
         result[i] = round(((complete_data[i] - min) * ((2 ** Quant_Range) - 1)) / (max - min))
     return result
 
-def uniform_quantization_window(complete_data, Quant_Range, window_size):
-    result=np.zeros(len(complete_data))
+def uniform_quantization_window(complete_data, Quant_Range, window_size, clipping):
+    #normalised=np.zeros(len(complete_data))
+    result = np.empty(len(complete_data))
+    #print("Length of complete data", len(complete_data))
+    #print("Window size", window_size)
     for i in range(0, len(complete_data), window_size):
         #print("i", i)
-        minimum_window = np.min(complete_data[i:i+window_size])
-        maximum_window = np.max(complete_data[i:i+window_size])
+        if clipping==False:
+            minimum_window = np.min(complete_data[i:i+window_size])
+            maximum_window = np.max(complete_data[i:i+window_size])
+        else:
+            intervalsize = np.std(complete_data[i:i+window_size])
+
+            minimum_window = 10
+            maximum_window = 1024
+
+        #print("Max and min values are", maximum_window, minimum_window)
 
         #intervalsize=(maximum_window-minimum_window)/ (2 ** Quant_Range)
-
-        #minimum_window=minimum_window-(intervalsize/2)
-        #maximum_window=maximum_window+(intervalsize/2)
 
 
         #print("minimum", minimum_window, "maximum value", maximum_window, "at",np.argmax(complete_data[i:i+window_size]), " and ", np.argmin(complete_data[i:i+window_size]), "respectively")
@@ -31,9 +43,42 @@ def uniform_quantization_window(complete_data, Quant_Range, window_size):
                 result[i+j] = (2**Quant_Range) - 1
 
             else:
-                result[i+j] = np.floor(((complete_data[i+j] - minimum_window) * ((2 ** Quant_Range) - 1)) / (maximum_window - minimum_window))
+                #normalised[i+j] = int(((complete_data[i+j] - minimum_window) * ((2 ** Quant_Range) - 1)) / (maximum_window - minimum_window))
+                result[i+j]=np.round(((complete_data[i+j] - minimum_window) * ((2 ** Quant_Range) - 1)) / (maximum_window - minimum_window))
     return result
 
+
+def uniform_quantization_window_clipped(complete_data, Quant_Range, window_size):
+    #normalised=np.zeros(len(complete_data))
+    result = np.zeros(len(complete_data))
+    #print("Length of complete data", len(complete_data))
+    #print("Window size", window_size)
+    for i in range(0, len(complete_data), window_size):
+        #print("i", i)
+        minimum_window = np.min(complete_data[i:i+window_size])
+        maximum_window = np.max(complete_data[i:i+window_size])
+
+        #print("Max and min values are", maximum_window, minimum_window)
+
+        intervalsize=(maximum_window-minimum_window)/ (2 ** Quant_Range)
+
+        minimum_window=minimum_window+(intervalsize*4)
+        maximum_window=maximum_window-(intervalsize*4)
+
+
+        #print("minimum", minimum_window, "maximum value", maximum_window, "at",np.argmax(complete_data[i:i+window_size]), " and ", np.argmin(complete_data[i:i+window_size]), "respectively")
+        for j in range(0, window_size):
+            #print("i+j", i+j)
+            if minimum_window >= complete_data[i+j]:
+                result[i+j] = 0
+
+            elif maximum_window <= complete_data[i+j]:
+                result[i+j] = (2**Quant_Range) - 1
+
+            else:
+                #normalised[i+j] = int(((complete_data[i+j] - minimum_window) * ((2 ** Quant_Range) - 1)) / (maximum_window - minimum_window))
+                result[i+j]=int(((complete_data[i+j] - minimum_window) * ((2 ** Quant_Range) - 1)) / (maximum_window - minimum_window))
+    return result
 
 def uniform_dynamic_quantization(arr, num_levels):
     quantized_arr = np.zeros_like(arr, dtype=int)
@@ -76,7 +121,7 @@ def uniform_dynamic_quantization(arr, num_levels):
                 if lower <= arr[i] <= upper:
                     quantized_arr[i] = j
                     break
-    ranges.clear()
+    #ranges.clear()
 
     #signed_quantized_array=
 
