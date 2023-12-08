@@ -113,7 +113,7 @@ list_of_floats_SDR2 = list(map(lambda x: x * -1 if x < 0 else x, list_of_floats_
 CFO_SDR1=Common_Source(list_of_floats_SDR1)
 CFO_SDR2=Common_Source(list_of_floats_SDR2)
 
-min_length=16
+min_length=32
 
 #Change this for size of kernel and window
 min_l = min_length
@@ -149,7 +149,7 @@ SDR2_1_norm = noise_removal.savgold_filter(CFO_SDR2.raw_samples[0:0 + min_l], wi
 j = 0
 labelarray = []
 count = 0
-Quantseteps = 8
+Quantseteps = 4
 
 Quant_Range = Quantseteps
 SDR1_2gbytes, SDR2_2gbytes = lossless_quantization.multi_bit_quantization_corrplot(SDR1_1_norm,
@@ -193,8 +193,6 @@ mark_cap='^'
 
 SDR1_bincount = binary_count.intarray2binarray(SDR1_2, Quant_Range)
 SDR2_bincount = binary_count.intarray2binarray(SDR2_2, Quant_Range)
-print("SDR1 binary array", SDR1_bincount, len(SDR1_bincount))
-print("SDR2 binary array", SDR2_bincount, len(SDR2_bincount))
 
 greycode_stringSDR1 = stringify.stringify(SDR1_bincount.astype(int))
 greycode_stringSDR2 = stringify.stringify(SDR2_bincount.astype(int))
@@ -207,13 +205,12 @@ print("greycode SDR1", greycodeSDR1_bytes, "of length", len(greycodeSDR1_bytes))
 print("greycode SDR2", greycodeSDR2_bytes, "of length", len(greycodeSDR2_bytes))
 
 
-
-segment_size=16
-parity_size=8
+segment_size=32
+parity_size=20
 
 number_of_segments=1
 
-RS_encode = reedsolomon_codec.RS_encoding(list(greycodeSDR1_bytes[0:segment_size * number_of_segments]), segment_size,
+RS_encode = reedsolomon_codec.RS_encoding(list(greycodeSDR1_bytes[0:segment_size * number_of_segments ]), segment_size,
                                           parity_size, number_of_segments)
 print("RS encoding for gray coding is ", list(RS_encode), " with parity byte length ", len(RS_encode))
 # RS Decode
@@ -223,8 +220,10 @@ print("Decoding status with gray codes ", RS_decode == list(greycodeSDR1_bytes[0
 print("decoded bytes with gray codes ", list(RS_decode), " with byte length ", len(RS_decode))
 
 
-#SDR1_bincount = binary_count.intarray2binarray(SDR1_2, Quant_Range)
-SDR2_bincount = binary_count.intarray2binarray(RS_decode, Quant_Range)
+SDR1_bincount = binary_count.intarray2binarray(SDR1_2, Quant_Range)
+SDR2_bincount = binary_count.intarray2binarray(list(RS_decode), 8)
+print("SDR1 binary array", SDR1_bincount, len(SDR1_bincount))
+print("SDR2 binary array", SDR2_bincount, len(SDR2_bincount))
 
 
 # Create a simple bar plot
@@ -236,10 +235,10 @@ plt3.plot(x, [int(x) for x in SDR2_bincount], label="SDR2")
 plt3.xlabel('Index')
 
 # Label the y-axis
-plt3.ylabel('Key bits')
+plt3.ylabel('Bits')
 
 # Set the title of the plot
-plt3.title('Array containing 1s and 0s')
+plt3.title('Secret Key')
 plt3.legend()
 
 # Show the plot

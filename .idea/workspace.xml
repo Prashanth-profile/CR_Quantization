@@ -2,32 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="93ded42d-dba7-41e4-8fd9-b6acae1c0569" name="Changes" comment="UPDATE: Histogram plot for error distribution added to quantization main">
-      <change afterPath="$PROJECT_DIR$/calculate_entropy.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cr_rate_plot.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/demo_main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/float_to_bytearray.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/float_to_bytearray_main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/kalman_filter.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/multibitquant_SoAcomparison.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/multibitquant_clipping.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/reed_sol_codec2.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/wavelet_transform.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/add_two_num.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/labviewdemo.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lowdensityparitycheck.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/confidence_interval.py" beforeDir="false" afterPath="$PROJECT_DIR$/confidence_interval.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/erroranderror_distribution.py" beforeDir="false" afterPath="$PROJECT_DIR$/erroranderror_distribution.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extract_CFO_PO_RSS.py" beforeDir="false" afterPath="$PROJECT_DIR$/extract_CFO_PO_RSS.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/int2byte_conversion.py" beforeDir="false" afterPath="$PROJECT_DIR$/int2byte_conversion.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lossless_quantization.py" beforeDir="false" afterPath="$PROJECT_DIR$/lossless_quantization.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/multibit_quant_main2.py" beforeDir="false" afterPath="$PROJECT_DIR$/multibit_quant_main2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/multibitquant_confidenceinterval_main.py" beforeDir="false" afterPath="$PROJECT_DIR$/multibitquant_confidenceinterval_main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/multibits_quant_main.py" beforeDir="false" afterPath="$PROJECT_DIR$/multibits_quant_main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/noise_removal.py" beforeDir="false" afterPath="$PROJECT_DIR$/noise_removal.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plot_histogram.py" beforeDir="false" afterPath="$PROJECT_DIR$/plot_histogram.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demo_main.py" beforeDir="false" afterPath="$PROJECT_DIR$/demo_main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/multibitquant_SoAcomparison.py" beforeDir="false" afterPath="$PROJECT_DIR$/multibitquant_SoAcomparison.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pyplot_errors.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyplot_errors.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/reedsolomon_codec.py" beforeDir="false" afterPath="$PROJECT_DIR$/reedsolomon_codec.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/simple_plot.py" beforeDir="false" afterPath="$PROJECT_DIR$/simple_plot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/string_to_bytearray.py" beforeDir="false" afterPath="$PROJECT_DIR$/string_to_bytearray.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uniform_quantization.py" beforeDir="false" afterPath="$PROJECT_DIR$/uniform_quantization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wavelet_transform.py" beforeDir="false" afterPath="$PROJECT_DIR$/wavelet_transform.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -258,6 +241,13 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/labviewdemo.py</url>
+          <line>180</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
           <properties notifyOnTerminate="true" exception="BaseException">
