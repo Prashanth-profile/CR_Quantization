@@ -7,10 +7,11 @@ import correlation_calculation
 import plot_correlation
 import noise_removal
 
-fontsz=40
+fontsz=50
 min_length=1024
 time=range(min_length)
-ind=0
+ind=220
+win=64
 
 #########################################RSSI########################################
 #Read the text file
@@ -45,12 +46,13 @@ list_of_strings_SDR2 = data_read_SDR2.split('\n')
 list_of_floats_SDR1 = [float(x) for x in list_of_strings_SDR1]
 list_of_floats_SDR2 = [float(x) for x in list_of_strings_SDR2]
 
-#SDR1_1_norm=noise_removal.window_smoothening(list_of_floats_SDR1[ind:ind+min_length], 64)
-#SDR2_1_norm=noise_removal.window_smoothening(list_of_floats_SDR2[ind:ind+min_length], 64)
+#SDR1_1_norm=noise_removal.window_smoothening(list_of_floats_SDR1[ind:ind+min_length], win)
+#SDR2_1_norm=noise_removal.window_smoothening(list_of_floats_SDR2[ind:ind+min_length], win)
 
 
 #fig2, (ax1, ax2, ax3) = plt2.subplots(3, 1)
 #fig3, (ax1, ax2) = plt2.subplot(2,1)
+plt2.rcParams['text.usetex'] = True
 plt2.rcParams.update({'font.family': 'Times New Roman', 'font.size': fontsz})
 fig2, axis = plt2.subplots()
 plt2.grid()
@@ -92,8 +94,8 @@ list_of_floats_SDR1 = list(map(lambda x: x*-1 if x < 0 else x, list_of_floats_SD
 list_of_floats_SDR2 = list(map(lambda x: x*-1 if x < 0 else x, list_of_floats_SDR2))
 
 
-#SDR1_1_norm=noise_removal.window_smoothening(list_of_floats_SDR1[ind:ind+min_length], 64)
-#SDR2_1_norm=noise_removal.window_smoothening(list_of_floats_SDR2[ind:ind+min_length], 64)
+#SDR1_1_norm=noise_removal.window_smoothening(list_of_floats_SDR1[ind:ind+min_length], win)
+#SDR2_1_norm=noise_removal.window_smoothening(list_of_floats_SDR2[ind:ind+min_length], win)
 
 print("length", len(list_of_floats_SDR1))
 
@@ -135,8 +137,8 @@ list_of_floats_SDR1 = list(map(lambda x: x*-1 if x < 0 else x, list_of_floats_SD
 list_of_floats_SDR2 = list(map(lambda x: x*-1 if x < 0 else x, list_of_floats_SDR2))
 
 
-#SDR1_1_norm=noise_removal.window_smoothening(list_of_floats_SDR1[ind:ind+min_length], 64)
-#SDR2_1_norm=noise_removal.window_smoothening(list_of_floats_SDR2[ind:ind+min_length], 64)
+#SDR1_1_norm=noise_removal.window_smoothening(list_of_floats_SDR1[ind:ind+min_length], win)
+#SDR2_1_norm=noise_removal.window_smoothening(list_of_floats_SDR2[ind:ind+min_length], win)
 
 print("length", len(list_of_floats_SDR1))
 
@@ -179,8 +181,8 @@ list_of_floats_SDR1 = list(map(lambda x: x*-1 if x < 0 else x, list_of_floats_SD
 list_of_floats_SDR2 = list(map(lambda x: x*-1 if x < 0 else x, list_of_floats_SDR2))
 
 
-#SDR1_1_norm=noise_removal.gaussian_filtering(list_of_floats_SDR1[ind:ind+min_length], 64)
-#SDR2_1_norm=noise_removal.gaussian_filtering(list_of_floats_SDR2[ind:ind+min_length], 64)
+#SDR1_1_norm=noise_removal.window_smoothening(list_of_floats_SDR1[ind:ind+min_length], win)
+#SDR2_1_norm=noise_removal.window_smoothening(list_of_floats_SDR2[ind:ind+min_length], win)
 
 print("length", len(list_of_floats_SDR1))
 
@@ -191,11 +193,14 @@ corr_coeff_vol, number_of_samples_vol = correlation_calculation.complete_correla
 #corr_coeff_smoothvol, number_of_samples_smoothvol = correlation_calculation.complete_correlation(min_length, SDR1_1_norm,
 #                                                                             SDR2_1_norm)
 
-
-plot_correlation.correlation_plot(number_of_samples_rssi, corr_coeff_rssi, axis, 'r-', "RSSI")
+#plot_correlation.correlation_plot(number_of_samples_smoothcfo, corr_coeff_smoothcfo, axis, 'b--', "CFO smoothened")
+#plot_correlation.correlation_plot(number_of_samples_smoothrssi, corr_coeff_smoothrssi, axis, 'r--', "RSSI smoothened")
+#plot_correlation.correlation_plot(number_of_samples_smoothvol, corr_coeff_smoothvol, axis, 'k--', "Voltage smoothened")
+#plot_correlation.correlation_plot(number_of_samples_smoothpo, corr_coeff_smoothpo, axis, 'g--', "Phase Offset smoothened")
 plot_correlation.correlation_plot(number_of_samples_cfo, corr_coeff_cfo, axis, 'b-', "CFO")
-plot_correlation.correlation_plot(number_of_samples_po, corr_coeff_po, axis, 'g-', "Phase Offset")
+plot_correlation.correlation_plot(number_of_samples_rssi, corr_coeff_rssi, axis, 'r-', "RSSI")
 plot_correlation.correlation_plot(number_of_samples_vol, corr_coeff_vol, axis, 'k-', "Voltage")
+plot_correlation.correlation_plot(number_of_samples_po, corr_coeff_po, axis, 'g-', "Phase Offset")
 #plot_correlation.correlation_plot(number_of_samples_smoothrssi, corr_coeff_smoothrssi, axis, 'r--', "RSSI smoothened")
 #plot_correlation.correlation_plot(number_of_samples_smoothcfo, corr_coeff_smoothcfo, axis, 'b--', "CFO smoothened")
 #plot_correlation.correlation_plot(number_of_samples_smoothpo, corr_coeff_smoothpo, axis, 'g--', "Phase Offset smoothened")
@@ -203,7 +208,7 @@ plot_correlation.correlation_plot(number_of_samples_vol, corr_coeff_vol, axis, '
 
 #######################################PO##############################################
 #Read the text file
-plt2.rcParams['font.family'] = 'Times New Roman'  # Specify the font family
+#plt2.rcParams['font.family'] = 'Times New Roman'  # Specify the font family
 plt2.rcParams['font.size'] = fontsz  # Specify the font size
 plt2.xticks(fontsize=fontsz)  # Specify the font size for x-axis tick labels
 plt2.yticks(fontsize=fontsz)  # Specify the font size for y-axis tick labels

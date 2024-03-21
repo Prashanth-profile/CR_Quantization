@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy.stats
 plt.grid()
-plt.rcParams.update({'font.family': 'Times New Roman', 'font.size': 24, })
+plt.rcParams.update({'font.family': 'Times New Roman', 'font.size': 50, })
 def calculate_confidence_interval(matrix, value2):
     means = np.mean(matrix, axis=1)
     print("mean", means)
@@ -21,12 +21,12 @@ def calculate_confidence_interval(matrix, value2):
     #print("lower bound", lower_bounds)
 
     #Enable this for percentage error
-    mean = [(x / y) for x, y in zip(means, value2)]
-    lower_bound = [(x / y) for x, y in zip(lower_bounds, value2)]
-    upper_bound = [(x / y) for x, y in zip(upper_bounds, value2)]
+    #mean = [(x / y) for x, y in zip(means, value2)]
+    #lower_bound = [(x / y) for x, y in zip(lower_bounds, value2)]
+    #upper_bound = [(x / y) for x, y in zip(upper_bounds, value2)]
 
-    return mean, lower_bound, upper_bound
-    #return means, lower_bounds, upper_bounds
+    #return mean, lower_bound, upper_bound
+    return means, lower_bounds, upper_bounds
 
 def plot_confidence_interval(matrix, value2, labl, axis, leg, col, mark):
 
@@ -41,8 +41,8 @@ def plot_confidence_interval(matrix, value2, labl, axis, leg, col, mark):
     axis.fill_between(x_pos, lower_bound, upper_bound, alpha=0.3, color=col)
 
     # Add x-axis and y-axis labels
-    axis.set_xlabel('Order of Quantization', fontsize=24, fontname='Times New Roman')
-    axis.set_ylabel('Bit error probability', fontsize=24, fontname='Times New Roman')
+    axis.set_xlabel('Order of Quantization', fontsize=50, fontname='Times New Roman')
+    axis.set_ylabel('Bits per observation', fontsize=50, fontname='Times New Roman')
 
     # Add a title to the plot
     #axis.set_title('Percentage plot', fontsize=40, fontname='Times New Roman')

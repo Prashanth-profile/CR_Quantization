@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy import signal
 
 '''# Generate a random variable with noise
 x = [50.666, 48.335, 37.652, 40.685, 49.161, 55.556, 56.462, 66.53, 66.534, 79.038, 77.693, 77.901, 78.491, 91.122, 101.485, 104.146, 109.774, 99.834, 109.715, 82.134, 109.215, 107.394, 108.314, 103.003, 109.05, 104.564, 107.025, 110.0, 116.517, 123.881, 130.932, 135.712, 132.474, 132.148, 135.366, 139.558, 140.576, 142.728, 118.756, 117.384, 118.991, 149.788, 147.238, 317.632, 145.665, 53.621, 57.865, 75.079, 125.886, 123.332, 114.101, 117.856, 115.685, 314.21, 137.078, 133.558, 113.115, 130.133, 133.38, 127.788, 116.971, 113.828, 9.82, 129.071, 124.232, 121.441, 119.299, 109.535, 103.367, 108.401, 113.571, 102.452, 99.288, 89.503, 87.285, 74.247, 70.043, 67.837, 63.658, 60.987, 67.999, -0.0, 59.801, 72.219, 239.122, 230.003, 54.32, 48.0, 53.733, 11.039, 43.136, 37.005, 204.28, 211.465, 216.471, 217.0, 217.7, 220.399, 235.302, 282.927]
@@ -41,7 +42,32 @@ def savgold_filter(signal, win_len):
 
     return filtered_y
 
+def butterworth_filter(signal_input):
+    # Design a Butterworth filter
+    order = 2  # filter order
+    cutoff_frequency = 0.005  # cutoff frequency in Hz
+    b, a = signal.butter(order, cutoff_frequency, 'low', analog=False, fs=0.1)
 
+    # Apply the Butterworth filter
+    filtered_signal = signal.filtfilt(b, a, signal_input)
+
+    return filtered_signal
+
+def chebyshev_filter(signal_input):
+    # Design a Chebyshev Type I filter
+    order=2
+    ripple = 0.5  # maximum ripple in the passband in dB
+    cutoff_frequency = 0.005  # cutoff frequency in Hz
+    b, a = signal.cheby1(order, ripple, cutoff_frequency, 'low', analog=False, fs=0.1)
+
+    # Apply the Chebyshev filter
+    filtered_signal_cheby = signal.filtfilt(b, a, signal_input)
+
+    return filtered_signal_cheby
+
+
+x=[0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0]
+print(gaussian_filtering(x, len(x)))
 '''signal=x
 
 # Plot the noisy signal

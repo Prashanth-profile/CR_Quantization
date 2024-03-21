@@ -1,41 +1,64 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
-def kalman_filter(input_array):
-    # Initial parameters
-    initial_state = noisy_data[0]
-    initial_covariance = 1.0
-    process_variance = 0.01
-    measurement_variance = 1.0
+def kalman_filter_1d(signal, kalman_gain_scaling=1.0):
+    A = np.array([[1, 1], [0, 1]])  # State transition matrix
+    H = np.array([[1, 0]])          # Measurement matrix
+    Q = np.array([[0.001, 0], [0, 0.001]])  # Process noise covariance
+    R = np.array([[0.5]])                 # Measurement noise covariance
+    x0 = np.array([0, 0])  # Initial position and velocity
+    P0 = np.eye(2)         # Initial covariance matrix
 
-    filtered_state_estimates = []
-    filtered_state_covariances = []
+    num_steps = len(signal)
 
-    current_state_estimate = initial_state
-    current_covariance = initial_covariance
+    x_hat = np.zeros((2, num_steps))
+    P = np.zeros((2, 2, num_steps))
+    K = np.zeros((2, 1, num_steps))
 
-    for measurement in input_array:
+    x_hat[:, 0] = x0
+    #x_hat[:,0] = np.array(list(range(num_steps)))
+    P[:, :, 0] = P0
+
+    # Kalman filter loop
+    for k in range(1, num_steps):
         # Prediction step
-        predicted_state = current_state_estimate
-        predicted_covariance = current_covariance + process_variance
+        x_hat[:, k] = np.dot(A, x_hat[:, k - 1])
+        P[:, :, k] = np.dot(np.dot(A, P[:, :, k - 1]), A.T) + Q
 
-        # Update step
-        kalman_gain = predicted_covariance / (predicted_covariance + measurement_variance)
-        current_state_estimate = predicted_state + kalman_gain * (measurement - predicted_state)
-        current_covariance = (1 - kalman_gain) * predicted_covariance
+        # Update step with scaled Kalman gain
+        K[:, :, k] = kalman_gain_scaling * np.dot(np.dot(P[:, :, k], H.T), np.linalg.inv(np.dot(np.dot(H, P[:, :, k]), H.T) + R))
+        x_hat[:, k] = x_hat[:, k] + np.dot(K[:, :, k], signal[k] - np.dot(H, x_hat[:, k]))
+        P[:, :, k] = np.dot((np.eye(2) - np.dot(K[:, :, k], H)), P[:, :, k])
 
-        filtered_state_estimates.append(current_state_estimate)
-        filtered_state_covariances.append(current_covariance)
+    # RTS Smoother
+    x_smooth = np.zeros((2, num_steps))
+    P_smooth = np.zeros((2, 2, num_steps))
 
-    return filtered_state_estimates
+    x_smooth[:, -1] = x_hat[:, -1]
+    P_smooth[:, :, -1] = P[:, :, -1]
 
-# Generate some example noisy data
-np.random.seed(0)
-true_values = np.linspace(0, 10, num=100)
-noisy_data = true_values + np.random.normal(0, 1, size=len(true_values))
+    for k in range(num_steps - 2, -1, -1):
+        J = np.dot(np.dot(P[:, :, k], A.T), np.linalg.inv(P[:, :, k + 1]))
+        x_smooth[:, k] = x_hat[:, k] + np.dot(J, (x_smooth[:, k + 1] - np.dot(A, x_hat[:, k])))
+        P_smooth[:, :, k] = P[:, :, k] + np.dot(np.dot(J, (P_smooth[:, :, k + 1] - P[:, :, k + 1])), J.T)
 
-# Apply Kalman filter
-filtered_estimates = kalman_filter(noisy_data)
+    return x_smooth[0, :]
 
-print("True Values:", true_values, np.shape(true_values))
-print("Noisy Data:", noisy_data, np.shape(noisy_data))
-print("Filtered Estimates:", filtered_estimates, np.shape(filtered_estimates))
+# Example with a 2048-sample signal
+signal_2048_samples = np.random.randn(2048)  # Replace this with your own signal
+
+# Apply Kalman filter and RTS smoother to the noisy signal
+filtered_signal_rts = kalman_filter_1d(signal_2048_samples)
+
+# Plotting results
+plt.figure(figsize=(10, 6))
+
+plt.plot(signal_2048_samples, label='Noisy Signal', linestyle='--', marker='x')
+plt.plot(filtered_signal_rts, label='Filtered Signal with RTS Smoother', linestyle='-', marker='s')
+
+plt.title('Kalman Filter with RTS Smoother - 1D Signal Filtering')
+plt.xlabel('Time Steps')
+plt.ylabel('Signal')
+plt.legend()
+plt.grid(True)
+plt.show()

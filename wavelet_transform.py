@@ -3,15 +3,17 @@ import matplotlib.pyplot as plt
 import pywt
 
 def wavelet_transform_haar(random_signal, win):
+    print(pywt.wavelist(kind='discrete'))
     wavelet = 'haar'  # You can choose other wavelets too
     #custom_wavelet = np.ones(1024) / 1024
     #custom_wavelet = pywt.Wavelet(custom_wavelet)
     #wavelet = custom_wavelet
-    level = pywt.dwt_max_level(len(random_signal), win)
+    #level = pywt.dwt_max_level(len(random_signal), win)
     #print("Nr of useful levels", level)
 
     # Perform the DWT
     coeffs = pywt.dwt(random_signal, wavelet, mode='smooth')
+    print("Coeffs", coeffs)
 
     #coeffs[-1] = np.zeros_like(coeffs[-1])
     #coeffs[-2] = np.zeros_like(coeffs[-2])

@@ -23,13 +23,13 @@ import hash_encrypt
 
 ##### Make sure appropriate values is choosen. Setting more than one value to True can cause unexpected behavior
 fontsz=38
-min_length=16384
+min_length=1024
 time=range(min_length)
 ind=0
 
 #########This variable is the window size: This is used in both lossy and lossless quantization
 window_size=1024
-subset=1024
+subset=64
 
 #######################################CFO##############################################
 #Read the text file
@@ -71,17 +71,20 @@ remind=len(list_of_floats_SDR1)%min_length
 alpha = 0.0001
 mean_medbar=True
 
-SDR1_1_norm=list_of_floats_SDR1
-SDR2_1_norm=list_of_floats_SDR2
+#SDR1_1_norm=list_of_floats_SDR1
+#SDR2_1_norm=list_of_floats_SDR2
 
-#SDR1_1_norm=noise_removal.gaussian_filtering(list_of_floats_SDR1)
-#SDR2_1_norm=noise_removal.gaussian_filtering(list_of_floats_SDR2)
+SDR1_1_norm=noise_removal.gaussian_filtering(list_of_floats_SDR1, 64)
+SDR2_1_norm=noise_removal.gaussian_filtering(list_of_floats_SDR2, 64)
 
 #SDR1_1_norm=noise_removal.window_smoothening(list_of_floats_SDR1, 64)
 #SDR2_1_norm=noise_removal.window_smoothening(list_of_floats_SDR2, 64)
 
 #print("Raw samples SDR1", SDR1_1_norm, len(SDR1_1_norm))
 #print("Raw samples SDR2", SDR2_1_norm, len(SDR2_1_norm))
+
+#SDR1_1_norm=noise_removal.savgold_filter(list_of_floats_SDR1, 64)
+#SDR2_1_norm=noise_removal.savgold_filter(list_of_floats_SDR2, 64)
 
 '''SDR1_bytes, SDR2_bytes=lossy_quantization.lossy_quantization(SDR1_1_norm, SDR2_1_norm, min_length, window_size, True, alpha)
 print("After 1 bit lossy mean ", SDR1_bytes, SDR2_bytes)

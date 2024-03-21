@@ -19,7 +19,6 @@ class Category_CR:
     def __init__(self):
         self.entropy=[]
         self.CR_rate=[]
-        self.error_bits=[]
         self.error_bits_gray=[]
         self.floor_diff=[]
 
@@ -84,7 +83,7 @@ def generate_secret_keys(num_of_observations, Quant):
 
     CFO_SDR1=Common_Source(list_of_floats_SDR1)
     CFO_SDR2=Common_Source(list_of_floats_SDR2)
-
+    ind=512
     min_length=num_of_observations
 
     #Change this for size of kernel and window
@@ -109,8 +108,8 @@ def generate_secret_keys(num_of_observations, Quant):
     quan_size = []
     mode = 0
 
-    SDR1_1_norm = noise_removal.savgold_filter(CFO_SDR1.raw_samples[0:0 + min_l], win)
-    SDR2_1_norm = noise_removal.savgold_filter(CFO_SDR2.raw_samples[0:0 + min_l], win)
+    SDR1_1_norm = noise_removal.savgold_filter(CFO_SDR1.raw_samples[ind:ind + min_l], win)
+    SDR2_1_norm = noise_removal.savgold_filter(CFO_SDR2.raw_samples[ind:ind + min_l], win)
 
     #SDR1_1_norm = CFO_SDR1.raw_samples[0:0 + min_l]
     #SDR2_1_norm = CFO_SDR2.raw_samples[0:0 + min_l]
@@ -118,7 +117,7 @@ def generate_secret_keys(num_of_observations, Quant):
     j = 0
     labelarray = []
     count = 0
-    Quantseteps = 4
+    Quantseteps = maxQuantrange
 
     Quant_Range = Quantseteps
     SDR1_2gbytes, SDR2_2gbytes = lossless_quantization.multi_bit_quantization_corrplot(SDR1_1_norm,
@@ -129,24 +128,16 @@ def generate_secret_keys(num_of_observations, Quant):
                                                                                        True, False)
 
 
-    SDR1_2bytes, SDR2_2bytes = lossless_quantization.multi_bit_quantization_corrplot(SDR1_1_norm,
-                                                                                     SDR2_1_norm,
-                                                                                     min_l,
-                                                                                     window_size,
-                                                                                     Quant_Range,
-                                                                                     False, False)
 
 
 
     SDR1_2, SDR2_2 = int2byte_conversion.intarray_to_bytearray(SDR1_2gbytes, SDR2_2gbytes, Quant_Range)
     #plot_histogram.create_histogram(SDR2_2, 4, ax4)
     num_errors, error_dist = erroranderror_distribution.error_distribution(SDR1_2gbytes, SDR2_2gbytes)
-    num_errors_norm, error_dist_norm = erroranderror_distribution.error_distribution(SDR1_2bytes, SDR2_2bytes)
 
     floor_diff=[abs(x - y) for x, y in zip(SDR1_2, SDR2_2)]
 
     Savgol.error_bits_gray.append(num_errors)
-    Savgol.error_bits.append(num_errors_norm)
     Savgol.entropy.append(calculate_entropy.calculate_entropy(SDR1_2))
     Savgol.CR_rate.append((calculate_entropy.calculate_entropy(SDR1_2)) * abs(1 - 2 * (num_errors / (Quant_Range * min_l))))
 
@@ -171,8 +162,10 @@ def generate_secret_keys(num_of_observations, Quant):
     greycodeSDR2_bytes = string_to_bytearray.string_to_bytearray_conversion(8, greycode_stringSDR2)
 
     number_of_segments = 1
-    segment_size=int(num_of_observations * number_of_segments * (Quant_Range/8))
-    parity_size=20
+    segment_size=int(num_of_observations * (Quant_Range/8)/number_of_segments)
+    parity_size=24
+
+    print("before rs codec", greycodeSDR1_bytes, greycodeSDR2_bytes)
 
     RS_encode = reedsolomon_codec.RS_encoding(list(greycodeSDR1_bytes[0:segment_size * number_of_segments]), segment_size,
                                               parity_size, number_of_segments)
@@ -185,6 +178,8 @@ def generate_secret_keys(num_of_observations, Quant):
 
     SDR1_bincount = binary_count.intarray2binarray(SDR1_2, Quant_Range)
     SDR2_bincount = binary_count.intarray2binarray(list(RS_decode), 8)
+
+    print(list(greycodeSDR1_bytes), list(RS_decode))
 
     # Create a simple bar plot
     x = range(0, len(SDR1_bincount))
@@ -211,4 +206,4 @@ def generate_secret_keys(num_of_observations, Quant):
     return result
 
 
-print(generate_secret_keys(64, 4))
+print(generate_secret_keys(256, 8))

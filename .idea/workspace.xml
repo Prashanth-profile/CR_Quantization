@@ -2,14 +2,25 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="93ded42d-dba7-41e4-8fd9-b6acae1c0569" name="Changes" comment="UPDATE: Histogram plot for error distribution added to quantization main">
-      <change afterPath="$PROJECT_DIR$/add_two_num.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/labviewdemo.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lowdensityparitycheck.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dct.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/generate_CR.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/histogram_equalization.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kltransform.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/labview_demo_continuous.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/log_likelihood_filter.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/post_shannon_plot_compare.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/confidence_interval.py" beforeDir="false" afterPath="$PROJECT_DIR$/confidence_interval.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/demo_main.py" beforeDir="false" afterPath="$PROJECT_DIR$/demo_main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extract_CFO_PO_RSS.py" beforeDir="false" afterPath="$PROJECT_DIR$/extract_CFO_PO_RSS.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kalman_filter.py" beforeDir="false" afterPath="$PROJECT_DIR$/kalman_filter.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/labviewdemo.py" beforeDir="false" afterPath="$PROJECT_DIR$/labviewdemo.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/multibitquant_SoAcomparison.py" beforeDir="false" afterPath="$PROJECT_DIR$/multibitquant_SoAcomparison.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/noise_removal.py" beforeDir="false" afterPath="$PROJECT_DIR$/noise_removal.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/onebitquantization_main.py" beforeDir="false" afterPath="$PROJECT_DIR$/onebitquantization_main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plot_correlation.py" beforeDir="false" afterPath="$PROJECT_DIR$/plot_correlation.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pyplot_errors.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyplot_errors.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reedsolomon_codec.py" beforeDir="false" afterPath="$PROJECT_DIR$/reedsolomon_codec.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/uniform_quantization.py" beforeDir="false" afterPath="$PROJECT_DIR$/uniform_quantization.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/wavelet_transform.py" beforeDir="false" afterPath="$PROJECT_DIR$/wavelet_transform.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -49,7 +60,49 @@
       <recent name="C:\Users\prashanth\Documents\GitHub\CR_Quantization" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.sp800_22_tests">
+    <configuration name="dct" type="PythonConfigurationType" factoryName="Python">
+      <module name="CR_Quantization" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/dct.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="dct" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="CR_Quantization" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="C:\Users\prashanth\Documents\GitHub\CR_Quantization\dct.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="demo_main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="CR_Quantization" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -84,6 +137,27 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/extract_CFO_PO_RSS.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="klt" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="CR_Quantization" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/klt.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -168,7 +242,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../../NIST test/sp800_22_tests-master/sp800_22_tests.py" />
-      <option name="PARAMETERS" value="C:\Users\prashanth\Desktop\alice.bin" />
+      <option name="PARAMETERS" value="C:\Users\prashanth\Desktop\1byte_array_postscrambling.bin" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -243,8 +317,8 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/labviewdemo.py</url>
-          <line>180</line>
+          <url>file://$PROJECT_DIR$/kalman_filter.py</url>
+          <line>14</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>

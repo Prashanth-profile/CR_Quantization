@@ -25,8 +25,8 @@ def uniform_quantization_window(complete_data, Quant_Range, window_size, clippin
         else:
             intervalsize = np.std(complete_data[i:i+window_size])
 
-            minimum_window = 10
-            maximum_window = 1024
+            minimum_window = np.min(complete_data[i:i+window_size]) + (intervalsize/(2**Quant_Range-1))
+            maximum_window = np.max(complete_data[i:i+window_size]) - (intervalsize/(2**Quant_Range+1))
 
         #print("Max and min values are", maximum_window, minimum_window)
 

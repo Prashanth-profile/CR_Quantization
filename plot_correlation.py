@@ -14,16 +14,16 @@ def correlation_plot_lossy(time, corr_coeff, ax, colour, lbl):
     ax.plot(time, corr_coeff, colour, label=lbl)
     #ax.scatter(time, corr_coeff, color='red')
     ax.legend(loc='upper right')
-    ax.set(xlabel="Time Index", ylabel="Correlation coefficient of lossy quantization", fontsize=30)
+    ax.set(xlabel="Time Index", ylabel="Correlation coefficient of lossy quantization", fontsize=40)
 
 def correlation_plot_lossless(time, corr_coeff, ax, colour, lbl):
     ax.plot(time, corr_coeff, colour, label=lbl)
     #ax.scatter(time, corr_coeff, color='red')
     ax.legend(loc='upper right')
-    ax.set(xlabel="Time Index", ylabel="Correlation coefficient of 1 bit quantization", fontsize=30)
+    ax.set(xlabel="Time Index", ylabel="Correlation coefficient of 1 bit quantization", fontsize=40)
 
 def correlation_plot_multibit(time, corr_coeff, ax, colour, lbl):
     ax.plot(time, corr_coeff, colour, label=lbl)
     #ax.scatter(time, corr_coeff, color='red')
     ax.legend(loc='upper right', fontsize=25)
-    ax.set(xlabel="Time Index", ylabel="Correlation coefficient of several quantization techniques", fontsize=30)
+    ax.set(xlabel="Time Index", ylabel="Correlation coefficient of several quantization techniques", fontsize=40)
