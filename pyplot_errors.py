@@ -3,22 +3,22 @@ import numpy as np
 from matplotlib import font_manager
 
 plt.rcParams['text.usetex'] = True
-plt.rcParams.update({'font.family': 'Times New Roman', 'font.size': 50, })
+plt.rcParams.update({'font.family': 'Times New Roman', 'font.size': 40, })
 
 # Sample data
-#x = ['RSSI Mean', 'RSSI Median', 'CFO Mean', 'CFO Median', 'QE']
-x= ['NF\nMean', 'NF\nMedian', 'US\nMean', 'US\nMedian', 'Gauss\nMean', 'Gauss\nMedian', 'SavGol\nMean', 'SavGol\nMedian']
+x = ['RSSI Mean', 'RSSI Median', 'CFO Mean', 'CFO Median']
+#x= ['NF\nMean', 'NF\nMedian', 'US\nMean', 'US\nMedian', 'Gauss\nMean', 'Gauss\nMedian', 'SavGol\nMean', 'SavGol\nMedian']
 #x= ['2bit NF', '2bit US', '2bit Gaus', '8bit NF', '8bit US', '8bit Gaus', '16bit NF', '16bit US', '16bit Gaus']
 #Cost function
 #x=["No Filter", "Unit Step", "Gauss", "DWT", "SavGol"]
 #x=["No Filter", "Unit Step", "Gauss", "SavGol"]
 #y1 = [165, 174, 154]
 #y2= [1024, 1024, 1024]
-'''y00med=[279, 208, 260, 430, 480, 315, 503, 510, 431, 230, 325, 317, 265, 240, 281, 231]
+y00med=[279, 208, 260, 430, 480, 315, 503, 510, 431, 230, 325, 317, 265, 240, 281, 231]
 y00men=[276, 202, 261, 337, 325, 273, 367, 329, 300, 202, 293, 285, 242, 250, 243, 198]
 y1=[86, 76, 137, 85, 117, 92, 102, 127, 111, 93, 85, 50, 82, 91, 79, 89]
 y2=[62, 80, 118, 98, 110, 84, 112, 142, 102, 92, 96, 52, 76, 74, 90, 94]
-y3= [91, 103, 88, 93, 118, 93, 104, 104, 86, 94, 96, 93, 107, 80, 83, 93]'''
+y3= [91, 103, 88, 93, 118, 93, 104, 104, 86, 94, 96, 93, 107, 80, 83, 93]
 #Quantization 8
 #y1=[3325, 1843, 1578, 2109, 3496, 3460, 3666, 1857, 2697, 3764, 3022, 3027, 1818, 3751, 2590, 2044]
 #y2=[1644, 1430, 2604, 1852, 1592, 1881, 2151, 2754, 2316, 1536, 1743, 1470, 1810, 1960, 2299, 1803]
@@ -31,14 +31,14 @@ y3=[17, 22, 24, 16, 31, 9, 39, 42, 50, 34, 27, 13, 14, 36, 45, 13]'''
 
 
 #Quantization 1
-y1_mean=[23, 20, 32, 29, 53, 28, 45, 39, 35, 24, 26, 16, 30, 22, 19, 49]
+'''y1_mean=[23, 20, 32, 29, 53, 28, 45, 39, 35, 24, 26, 16, 30, 22, 19, 49]
 y1_median=[28, 26, 28, 34, 48, 30, 46, 38, 52, 30, 28, 10, 36, 28, 18, 36]
 y2_mean=[2, 3, 1, 21, 1, 0, 5, 0, 1, 0, 16, 2, 0, 0, 0, 0]
 y3_mean=[3, 1, 1, 3, 2, 0, 0, 0, 1, 0, 2, 2, 0, 0, 0, 1]
 y2_median=[0, 4, 10, 22, 2, 2, 0, 2, 0, 0, 8, 4, 0, 0, 0, 0]
 y3_median=[6, 2, 10, 2, 2, 0, 0, 2, 0, 0, 4, 2, 0, 0, 0, 0]
 y4_median= [0, 2, 10, 18, 2, 4, 2, 2, 0, 0, 12, 2, 0, 0, 0, 0]
-y4_mean=[0, 2, 1, 17, 3, 4, 0, 1, 1, 0, 17, 2, 0, 0, 0, 1]
+y4_mean=[0, 2, 1, 17, 3, 4, 0, 1, 1, 0, 17, 2, 0, 0, 0, 1]'''
 
 #CR Rate
 '''y1=[0.5774299696421278, 0.6140046484714721, 0.5151897715991678, 0.41876665875094893, 0.4710722363655379, 0.5421631605563811, 0.5590146258986616, 0.3040029952592252, 0.6450401671707505, 0.33156517898849946, 0.49463213543577034, 0.5132662293984313, 0.6036429950488245, 0.562194305466448, 0.7298406714536945, 0.5590619764580668]
@@ -78,9 +78,9 @@ fontsz=50
 
 # Create a box plot
 colors = ['red', 'green', 'blue']
-#data = [y00med, y00men, y1, y2, y3]
+data = [y00med, y00men, y1, y2]
 #data=[y1, y2, y3]
-data=[y1_mean, y1_median, y2_mean, y2_median, y3_mean, y3_median, y4_mean, y4_median]
+#data=[y1_mean, y1_median, y2_mean, y2_median, y3_mean, y3_median, y4_mean, y4_median]
 #data=[y1, y2, y3, y4, y5]
 plt.boxplot(data, labels=x, patch_artist=True)
 

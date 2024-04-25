@@ -19,6 +19,7 @@ import stringify
 import string_to_bytearray
 import reedsolomon_codec
 import save_to_bin
+from scipy import fftpack, ndimage
 
 class Category_CR:
     def __init__(self):
@@ -31,20 +32,20 @@ class Category_CR:
         self.avg_cost=[]
 
 fontsz=50
-min_length=32768
-min_l=min_length
+min_length=1024
+min_l=1024
 time=range(min_length)
 ind=0
 
 Savgol=Category_CR()
 
-with open('C:/Users/prashanth/Desktop/CFO_SC_212_SDR1.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/all_CFO_logs_SDR1.txt', 'r') as fin:
     data_read_SDR1 = fin.read()
     last_char_SDR1 = data_read_SDR1[-1]
     if last_char_SDR1 == '\n':
         print("last next line character detected in first sample file")
         data_read_SDR1 = data_read_SDR1[:-1]
-with open('C:/Users/prashanth/Desktop/CFO_SC_212_SDR2.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/all_CFO_logs_SDR2.txt', 'r') as fin:
     data_read_SDR2 = fin.read()
     last_char_SDR2 = data_read_SDR2[-1]
     if last_char_SDR2 == '\n':
@@ -79,7 +80,7 @@ Quant_Range = Quantseteps
 
 SDR1_2gbytes, SDR2_2gbytes = lossless_quantization.multi_bit_quantization_corrplot(SDR1_1_norm,
                                                                                    SDR2_1_norm,
-                                                                                   min_l,
+                                                                                   min_length,
                                                                                    min_l,
                                                                                    Quant_Range,
                                                                                    True, False)
@@ -88,7 +89,7 @@ SDR1_2gbytes, SDR2_2gbytes = lossless_quantization.multi_bit_quantization_corrpl
 
 SDR1_2, SDR2_2 = int2byte_conversion.intarray_to_bytearray(SDR1_2gbytes, SDR2_2gbytes, Quant_Range)
 #plot_histogram.create_histogram(SDR2_2, 4, ax4)
-num_errors, error_dist = erroranderror_distribution.error_distribution(SDR1_2gbytes, SDR2_2gbytes)
+num_errors, error_dist = erroranderror_distribution.error_distribution(SDR1_2gbytes, SDR2_2gbytes, Quant_Range)
 
 Savgol.error_bits_gray.append(num_errors)
 Savgol.entropy.append(calculate_entropy.calculate_entropy(SDR1_2))
@@ -110,7 +111,7 @@ greycodeSDR2_bytes = string_to_bytearray.string_to_bytearray_conversion(8, greyc
 print("greycode SDR1", greycodeSDR1_bytes, "of length", len(greycodeSDR1_bytes))
 print("greycode SDR2", greycodeSDR2_bytes, "of length", len(greycodeSDR2_bytes))
 
-number_of_segments=256
+number_of_segments=1
 segment_size=int(min_length*Quant_Range/(8*number_of_segments))
 parity_size=1
 
@@ -133,20 +134,80 @@ while parity_size <= int(32*(min_length*Quant_Range)/(8*number_of_segments)):
         break
 
 print("Size of complete parity", len(RS_encode))
-print("Decoding status with gray codes ", RS_decode == list(greycodeSDR1_bytes[0:segment_size * number_of_segments]))
-print("decoded bytes with gray codes ", list(RS_decode), " with byte length ", len(RS_decode))
+#print("Decoding status with gray codes ", RS_decode == list(greycodeSDR1_bytes[0:segment_size * number_of_segments]))
+#print("decoded bytes with gray codes ", list(RS_decode), " with byte length ", len(RS_decode))
 
 
-SDR1_bincount = binary_count.intarray2binarray(SDR1_2, Quant_Range)
+#SDR1_bincount = binary_count.intarray2binarray(SDR1_2, Quant_Range)
 SDR2_bincount = binary_count.intarray2binarray(list(RS_decode), 8)
-print("SDR1 CR", list(greycodeSDR1_bytes))
-print("SDR2 CR", list(RS_decode))
+#print("SDR1 CR", SDR1_bincount)
+#print("SDR2 CR", SDR2_bincount)
 
-file_path = r'C:\Users\prashanth\Desktop\1byte_array_prescrambling.bin'
-save_to_bin.save_byte_array(bytearray(greycodeSDR1_bytes), file_path)
+#file_path = r'C:\Users\prashanth\Desktop\1byte_array_prescrambling.bin'
+#save_to_bin.save_byte_array(bytearray(greycodeSDR1_bytes), file_path)
 
 
-random.shuffle(greycodeSDR1_bytes)
-file_path = r'C:\Users\prashanth\Desktop\1byte_array_postscrambling.bin'
-save_to_bin.save_byte_array(bytearray(greycodeSDR1_bytes), file_path)
+import matplotlib.pyplot as plt
+plt.rcParams['text.usetex'] = True
+plt.rcParams.update({'font.family': 'Times New Roman', 'font.size': 50, })
+
+
+# Plotting
+#plt.plot(array2, label='Array 2')
+
+minimumsize=min(len(SDR1_bincount), len(SDR2_bincount))
+
+random.Random(4).shuffle(SDR1_bincount[0:minimumsize])
+random.Random(4).shuffle(SDR2_bincount[0:minimumsize])
+
+#plt.plot(SDR1_bincount, label='Alice')
+#plt.plot(SDR2_bincount, label='Bob')
+#file_path = r'C:\Users\prashanth\Desktop\1byte_array_postscrambling.bin'
+#save_to_bin.save_byte_array(bytearray(greycodeSDR1_bytes), file_path)
+mean_value = np.mean(greycodeSDR1_bytes)
+fft_result = np.fft.fft(np.array(greycodeSDR1_bytes-mean_value))
+fftData = np.fft.fftshift(fft_result)
+print(np.abs(fftData))
+# Frequency axis
+sampling_rate = 1  # Assuming unit sampling rate for simplicity
+frequencies = np.fft.fftfreq(min_length, d=1/sampling_rate)
+freq = np.fft.fftshift(frequencies)
+
+plt.plot(freq, np.abs(fftData), label='Before Shuffling')
+#plt.specgram(greycodeSDR1_bytes)
+random.Random(4).shuffle(greycodeSDR1_bytes)
+#plt.specgram(greycodeSDR1_bytes)
+mean_value = np.mean(greycodeSDR1_bytes)
+fft_result = np.fft.fft(np.array(greycodeSDR1_bytes-mean_value))
+fftData = np.fft.fftshift(fft_result)
+
+# Frequency axis
+#sampling_rate = 1  # Assuming unit sampling rate for simplicity
+#frequencies = np.fft.fftfreq(min_length, d=1/sampling_rate)
+
+plt.plot(freq, np.abs(fftData), label='After Shuffling')
+#plt.plot(greycodeSDR1_bytes, label='After shuffling', color='beige')
+
+# Adding labels and title
+plt.xlabel('Normalised frequency')
+plt.ylabel('Power')
+#plt.title('Plot of two arrays')
+
+# Adding legend
+plt.legend()
+
+# Displaying the plot
+plt.show()
+
+#mat=np.reshape(SDR1_bincount.astype(int), (-1, 64))
+#print(np.size(np.reshape(SDR1_bincount.astype(int), (-1, 64))))
+#file_path = r'C:\Users\prashanth\Desktop\CRforAlINC1MB.txt'
+#np.savetxt(file_path, mat, fmt='%d')
+
+
+#mat=np.reshape(SDR2_bincount.astype(int), (-1, 64))
+#print(np.size(np.reshape(SDR2_bincount.astype(int), (-1, 64))))
+#file_path = r'C:\Users\prashanth\Desktop\CRforNCBoB1MB.txt'
+#np.savetxt(file_path, mat, fmt='%d')
+
 

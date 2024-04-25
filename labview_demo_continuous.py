@@ -37,12 +37,24 @@ def ECC(SDR1_bincount, SDR2_bincount, Quant_Range, num_of_observations, parity):
 
     #print("before rs codec", greycodeSDR1_bytes, greycodeSDR2_bytes)
 
-    RS_encode = reedsolomon_codec.RS_encoding(list(greycodeSDR1_bytes[0:segment_size * number_of_segments]), segment_size,
-                                              parity_size, number_of_segments)
-
+    parity_complete = 0
     # RS Decode
-    RS_decode = reedsolomon_codec.RS_decoding(list(greycodeSDR2_bytes[0:segment_size * number_of_segments]), RS_encode,
-                                              segment_size, parity_size, number_of_segments)
+    while parity_size <= 255:
+        try:
+            RS_encode = reedsolomon_codec.RS_encoding(list(greycodeSDR1_bytes[0:segment_size * number_of_segments]),
+                                                      segment_size,
+                                                      parity_size, number_of_segments)
+            #print("RS encoding for gray coding is ", list(RS_encode), " with parity byte length ", len(RS_encode))
+            RS_decode = reedsolomon_codec.RS_decoding(list(greycodeSDR2_bytes[0:segment_size * number_of_segments]),
+                                                      RS_encode,
+                                                      segment_size, parity_size, number_of_segments)
+        except:
+            parity_size = parity_size + 1
+            #print("parity size", parity_size)
+
+        else:
+            #print("Size of parity", parity_size)
+            break
 
 
 
@@ -51,7 +63,8 @@ def ECC(SDR1_bincount, SDR2_bincount, Quant_Range, num_of_observations, parity):
     results=[]
     results.extend(SDR1_bincount)
     results.extend(SDR2_bincount)
-
+    results.append(len(RS_encode))
+    
     return results
 
 def multi_bit_Quantization(SDR1_1_norm, SDR2_1_norm, min_l, window_size, Quant_Range):
@@ -64,7 +77,7 @@ def multi_bit_Quantization(SDR1_1_norm, SDR2_1_norm, min_l, window_size, Quant_R
 
     SDR1_2, SDR2_2 = int2byte_conversion.intarray_to_bytearray(SDR1_2gbytes, SDR2_2gbytes, Quant_Range)
 
-    num_errors, error_dist = erroranderror_distribution.error_distribution(SDR1_2gbytes, SDR2_2gbytes)
+    num_errors, error_dist = erroranderror_distribution.error_distribution(SDR1_2gbytes, SDR2_2gbytes, Quant_Range)
 
     entropy = calculate_entropy.calculate_entropy(SDR1_2)
     CR_rate=entropy * abs(1 - 2 * (num_errors / (Quant_Range * min_l)))
@@ -74,10 +87,10 @@ def multi_bit_Quantization(SDR1_1_norm, SDR2_1_norm, min_l, window_size, Quant_R
 
     #ECC(SDR1_bincount, SDR2_bincount, Quant_Range, min_l, 10)
 
-    print("SDR1 bin", SDR1_bincount)
-    print("SDR2 bin", SDR2_bincount)
+    #print("SDR1 bin", SDR1_bincount)
+    #print("SDR2 bin", SDR2_bincount)
 
-    print(SDR1_bincount==SDR2_bincount)
+    #print(SDR1_bincount==SDR2_bincount)
 
     result=[]
     result.append(CR_rate)
@@ -86,4 +99,4 @@ def multi_bit_Quantization(SDR1_1_norm, SDR2_1_norm, min_l, window_size, Quant_R
     return result
 
 
-print(multi_bit_Quantization([0,2,3,4,5,10,11,12,13,10,10,10,10], [1,2,3,4,5,10,11,12,13,10,10,10,11], 13, 13, 4))
+#print(multi_bit_Quantization([0,2,3,4,5,10,11,12,13,10,10,10,10], [1,2,3,4,5,10,11,12,13,10,10,10,11], 13, 13, 4))

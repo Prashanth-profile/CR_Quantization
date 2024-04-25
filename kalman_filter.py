@@ -1,10 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from filterpy.kalman import KalmanFilter
 
 def kalman_filter_1d(signal, kalman_gain_scaling=1.0):
     A = np.array([[1, 1], [0, 1]])  # State transition matrix
     H = np.array([[1, 0]])          # Measurement matrix
-    Q = np.array([[0.001, 0], [0, 0.001]])  # Process noise covariance
+    Q = np.array([[10e-6, 0], [0, 10e-6]])  # Process noise covariance
     R = np.array([[0.5]])                 # Measurement noise covariance
     x0 = np.array([0, 0])  # Initial position and velocity
     P0 = np.eye(2)         # Initial covariance matrix
@@ -43,6 +44,21 @@ def kalman_filter_1d(signal, kalman_gain_scaling=1.0):
         P_smooth[:, :, k] = P[:, :, k] + np.dot(np.dot(J, (P_smooth[:, :, k + 1] - P[:, :, k + 1])), J.T)
 
     return x_smooth[0, :]
+
+def kalman_filter2_1d(signal):
+    f = KalmanFilter(dim_x=2, dim_z=1)
+
+    f.x = f.x = np.array([2., 0.])
+    f.F = np.array([[1., 1.],
+                    [0., 1.]])
+    f.H = np.array([[1., 0.]])
+    f.P = np.array([[1000., 0.],
+                    [0., 1000.]])
+    f.R = 0.5
+    f.predict()
+    f.update(signal)
+
+    return f.x
 
 # Example with a 2048-sample signal
 signal_2048_samples = np.random.randn(2048)  # Replace this with your own signal

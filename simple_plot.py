@@ -178,3 +178,18 @@ def normal_plot_axis(values1, labels, axis, c, leg, mark):
 
     # Add a legend to the plot
     axis.legend()
+
+
+def plot_pdf_error(array):
+    """
+    Plot the given array.
+
+    Parameters:
+        array (list or numpy array): The input array to be plotted.
+    """
+    plt.plot(array)
+    plt.xlabel('Index position')
+    plt.ylabel('Normalised error')
+    #plt.title('Plot of Input Array')
+    plt.grid(True)
+    plt.show()

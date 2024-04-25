@@ -2,18 +2,20 @@ import numpy as np
 from scipy.fftpack import dct, idct
 import matplotlib.pyplot as plt
 
-def adaptive_dct_filter(input_signal, threshold_percentage=50):
+def adaptive_dct_filter(input_signal):
     # Apply Discrete Cosine Transform (DCT)
     dct_coefficients = dct(input_signal, type=2)
 
     # Calculate adaptive threshold
-    threshold = threshold_percentage / 100.0 * np.max(np.abs(dct_coefficients))
+    threshold = (5 / 100.0) * np.max(np.abs(dct_coefficients))
 
     # Modify coefficients using adaptive threshold
     dct_coefficients_filtered = dct_coefficients * (np.abs(dct_coefficients) > threshold)
 
     # Apply Inverse Discrete Cosine Transform (IDCT)
     filtered_signal = idct(dct_coefficients_filtered, type=2)
+
+    print("DCT filtered", filtered_signal)
 
     return filtered_signal
 

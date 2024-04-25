@@ -42,7 +42,7 @@ def plot_confidence_interval(matrix, value2, labl, axis, leg, col, mark):
 
     # Add x-axis and y-axis labels
     axis.set_xlabel('Order of Quantization', fontsize=50, fontname='Times New Roman')
-    axis.set_ylabel('Bits per observation', fontsize=50, fontname='Times New Roman')
+    axis.set_ylabel('Bits per sample', fontsize=50, fontname='Times New Roman')
 
     # Add a title to the plot
     #axis.set_title('Percentage plot', fontsize=40, fontname='Times New Roman')

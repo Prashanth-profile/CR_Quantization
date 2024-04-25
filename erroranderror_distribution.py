@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-def error_distribution(arr1, arr2):
+def error_distribution(arr1, arr2, quant):
     # Ensure the arrays are of equal length
     if len(arr1) != len(arr2):
         raise ValueError("Arrays must be of equal length which is not in", len(arr1), len(arr2))
@@ -8,13 +8,22 @@ def error_distribution(arr1, arr2):
     # Initialize variables to store error count and distribution
     num_errors = 0
     error_dist = []
+    error_dist_perbit=[]
 
     # Iterate over the elements of the arrays and compare each bit
     for i in range(len(arr1)):
         # XOR the corresponding bytes and count the number of set bits in the result
         xor_result = arr1[i] ^ arr2[i]
+        #print(xor_result)
+        binary_number = bin(xor_result)[2:]
+        zeros_add = [0] * (quant-len(binary_number))
+        binarray=[int(bit) for bit in binary_number]
+        binary_number=zeros_add+binarray
+        #print(binary_number, arr1[i])
+
         num_bits_not_equal = bin(xor_result).count('1')
-        error_dist.append(num_bits_not_equal)
+        #error_dist.append(num_bits_not_equal)
+        error_dist_perbit.extend(binary_number)
 
         # Update the error count and distribution
         num_errors += num_bits_not_equal
@@ -23,7 +32,7 @@ def error_distribution(arr1, arr2):
                 #print(xor_result >> j)
                 error_dist[i * 8 + j] += 1'''
 
-    return num_errors, error_dist
+    return num_errors, error_dist_perbit
 
 def plot_error_distribution(error_dist):
     # Compute the cumulative sum of errors
@@ -41,11 +50,11 @@ def plot_error_distribution(error_dist):
     plt.grid()
     plt.show()
 
-#arr1 = b'\x51\x52\x53\x54\x52'
-#arr2 = b'\x52\x52\x52\x54\x54'
+arr1 = b'\x51\x52\x53\x54\x52'
+arr2 = b'\x52\x52\x52\x54\x54'
 
-'''arr1=[7, 5, 12]
-arr2=[7, 6, 13]
+arr1=[7, 5, 12]
+arr2=[7, 6, 1]
 
-error, error_dis=error_distribution(arr1, arr2)
-print("Number of errors", error, error_dis)'''
+error, error_dis=error_distribution(arr1, arr2, 4)
+print("Number of errors", error, error_dis)
