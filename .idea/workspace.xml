@@ -3,17 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="93ded42d-dba7-41e4-8fd9-b6acae1c0569" name="Changes" comment="UPDATE: Histogram plot for error distribution added to quantization main">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/confidence_interval.py" beforeDir="false" afterPath="$PROJECT_DIR$/confidence_interval.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dct.py" beforeDir="false" afterPath="$PROJECT_DIR$/dct.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/erroranderror_distribution.py" beforeDir="false" afterPath="$PROJECT_DIR$/erroranderror_distribution.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/extract_CFO_PO_RSS.py" beforeDir="false" afterPath="$PROJECT_DIR$/extract_CFO_PO_RSS.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/generate_CR.py" beforeDir="false" afterPath="$PROJECT_DIR$/generate_CR.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kalman_filter.py" beforeDir="false" afterPath="$PROJECT_DIR$/kalman_filter.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/labview_demo_continuous.py" beforeDir="false" afterPath="$PROJECT_DIR$/labview_demo_continuous.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/multibitquant_SoAcomparison.py" beforeDir="false" afterPath="$PROJECT_DIR$/multibitquant_SoAcomparison.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plot_correlation.py" beforeDir="false" afterPath="$PROJECT_DIR$/plot_correlation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyplot_errors.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyplot_errors.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/simple_plot.py" beforeDir="false" afterPath="$PROJECT_DIR$/simple_plot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/onebitquantization_main.py" beforeDir="false" afterPath="$PROJECT_DIR$/onebitquantization_main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tradeoff_plot.py" beforeDir="false" afterPath="$PROJECT_DIR$/tradeoff_plot.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,7 +46,7 @@
       <recent name="C:\Users\prashanth\Documents\GitHub\CR_Quantization" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.dct">
+  <component name="RunManager">
     <configuration name="dct" type="PythonConfigurationType" factoryName="Python">
       <module name="CR_Quantization" />
       <option name="INTERPRETER_OPTIONS" value="" />

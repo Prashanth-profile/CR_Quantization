@@ -32,20 +32,20 @@ class Category_CR:
         self.avg_cost=[]
 
 fontsz=50
-min_length=1024
-min_l=1024
+min_length=2048
+min_l=2048
 time=range(min_length)
 ind=0
 
 Savgol=Category_CR()
 
-with open('C:/Users/prashanth/Desktop/all_CFO_logs_SDR1.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/CFO_SC_805_SDR1.txt', 'r') as fin:
     data_read_SDR1 = fin.read()
     last_char_SDR1 = data_read_SDR1[-1]
     if last_char_SDR1 == '\n':
         print("last next line character detected in first sample file")
         data_read_SDR1 = data_read_SDR1[:-1]
-with open('C:/Users/prashanth/Desktop/all_CFO_logs_SDR2.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/CFO_SC_805_SDR2.txt', 'r') as fin:
     data_read_SDR2 = fin.read()
     last_char_SDR2 = data_read_SDR2[-1]
     if last_char_SDR2 == '\n':
@@ -71,10 +71,13 @@ list_of_floats_SDR2 = list(map(lambda x: x*-1 if x < 0 else x, list_of_floats_SD
 SDR1_1_norm=noise_removal.savgold_filter(list_of_floats_SDR1[ind:ind+min_length], min_l)
 SDR2_1_norm=noise_removal.savgold_filter(list_of_floats_SDR2[ind:ind+min_length], min_l)
 
+#SDR1_1_norm=list_of_floats_SDR1[ind:ind+min_length]
+#SDR2_1_norm=list_of_floats_SDR2[ind:ind+min_length]
+
 j = 0
 labelarray = []
 count = 0
-Quantseteps = 8
+Quantseteps = 1
 
 Quant_Range = Quantseteps
 
@@ -111,7 +114,7 @@ greycodeSDR2_bytes = string_to_bytearray.string_to_bytearray_conversion(8, greyc
 print("greycode SDR1", greycodeSDR1_bytes, "of length", len(greycodeSDR1_bytes))
 print("greycode SDR2", greycodeSDR2_bytes, "of length", len(greycodeSDR2_bytes))
 
-number_of_segments=1
+number_of_segments=2
 segment_size=int(min_length*Quant_Range/(8*number_of_segments))
 parity_size=1
 
@@ -157,13 +160,15 @@ plt.rcParams.update({'font.family': 'Times New Roman', 'font.size': 50, })
 
 minimumsize=min(len(SDR1_bincount), len(SDR2_bincount))
 
-random.Random(4).shuffle(SDR1_bincount[0:minimumsize])
-random.Random(4).shuffle(SDR2_bincount[0:minimumsize])
+#random.Random(4).shuffle(SDR1_bincount[0:minimumsize])
+#random.Random(4).shuffle(SDR2_bincount[0:minimumsize])
 
 #plt.plot(SDR1_bincount, label='Alice')
 #plt.plot(SDR2_bincount, label='Bob')
 #file_path = r'C:\Users\prashanth\Desktop\1byte_array_postscrambling.bin'
 #save_to_bin.save_byte_array(bytearray(greycodeSDR1_bytes), file_path)
+
+'''
 mean_value = np.mean(greycodeSDR1_bytes)
 fft_result = np.fft.fft(np.array(greycodeSDR1_bytes-mean_value))
 fftData = np.fft.fftshift(fft_result)
@@ -190,7 +195,7 @@ plt.plot(freq, np.abs(fftData), label='After Shuffling')
 
 # Adding labels and title
 plt.xlabel('Normalised frequency')
-plt.ylabel('Power')
+plt.ylabel('Power')'''
 #plt.title('Plot of two arrays')
 
 # Adding legend
