@@ -7,21 +7,21 @@ import correlation_calculation
 import plot_correlation
 import noise_removal
 
-fontsz=40
-min_length=8192
+fontsz=50
+min_length=1024
 time=range(min_length)
 ind=0
 win=1024
 
 #########################################RSSI########################################
 #Read the text file
-with open('C:/Users/prashanth/Desktop/RSSI_SC_805_SDR1.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/RSSI_SC_317_SDR1.txt', 'r') as fin:
     data_read_SDR1 = fin.read()
     last_char_SDR1 = data_read_SDR1[-1]
     if last_char_SDR1 == '\n':
         print("last next line character detected in first sample file")
         data_read_SDR1 = data_read_SDR1[:-1]
-with open('C:/Users/prashanth/Desktop/RSSI_SC_805_SDR2.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/RSSI_SC_317_SDR2.txt', 'r') as fin:
     data_read_SDR2 = fin.read()
     last_char_SDR2 = data_read_SDR2[-1]
     if last_char_SDR2 == '\n':
@@ -55,6 +55,8 @@ SDR2_1_norm=noise_removal.window_smoothening(list_of_floats_SDR2[ind:ind+min_len
 plt2.rcParams['text.usetex'] = True
 plt2.rcParams.update({'font.family': 'Times New Roman', 'font.size': fontsz})
 fig2, axis = plt2.subplots()
+#fig, axis = plt2.subplot_mosaic([['top', 'top']],
+#                                  empty_sentinel="BLANK")
 plt2.grid()
 
 #plot_RSSI.plot_RSSI(time, list_of_floats_SDR1[ind:ind+min_length], list_of_floats_SDR2[ind:ind+min_length], ax1)
@@ -65,13 +67,13 @@ corr_coeff_smoothrssi, number_of_samples_smoothrssi = correlation_calculation.co
                                                                              SDR2_1_norm)
 #######################################CFO##############################################
 #Read the text file
-with open('C:/Users/prashanth/Desktop/CFO_SC_805_SDR1.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/CFO_SC_317_SDR1.txt', 'r') as fin:
     data_read_SDR1 = fin.read()
     last_char_SDR1 = data_read_SDR1[-1]
     if last_char_SDR1 == '\n':
         print("last next line character detected in first sample file")
         data_read_SDR1 = data_read_SDR1[:-1]
-with open('C:/Users/prashanth/Desktop/CFO_SC_805_SDR2.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/CFO_SC_317_SDR2.txt', 'r') as fin:
     data_read_SDR2 = fin.read()
     last_char_SDR2 = data_read_SDR2[-1]
     if last_char_SDR2 == '\n':
@@ -108,13 +110,13 @@ corr_coeff_smoothcfo, number_of_samples_smoothcfo = correlation_calculation.comp
 
 #######################################PO##############################################
 #Read the text file
-with open('C:/Users/prashanth/Desktop/PO_SC_805_SDR1.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/PO_SC_317_SDR1.txt', 'r') as fin:
     data_read_SDR1 = fin.read()
     last_char_SDR1 = data_read_SDR1[-1]
     if last_char_SDR1 == '\n':
         print("last next line character detected in first sample file")
         data_read_SDR1 = data_read_SDR1[:-1]
-with open('C:/Users/prashanth/Desktop/PO_SC_805_SDR2.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/PO_SC_317_SDR2.txt', 'r') as fin:
     data_read_SDR2 = fin.read()
     last_char_SDR2 = data_read_SDR2[-1]
     if last_char_SDR2 == '\n':
@@ -152,13 +154,13 @@ corr_coeff_smoothpo, number_of_samples_smoothpo = correlation_calculation.comple
 
 #######################################POW##############################################
 #Read the text file
-with open('C:/Users/prashanth/Desktop/AMP_SC_805_SDR1.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/AMP_SC_317_SDR1.txt', 'r') as fin:
     data_read_SDR1 = fin.read()
     last_char_SDR1 = data_read_SDR1[-1]
     if last_char_SDR1 == '\n':
         print("last next line character detected in first sample file")
         data_read_SDR1 = data_read_SDR1[:-1]
-with open('C:/Users/prashanth/Desktop/AMP_SC_805_SDR2.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/AMP_SC_317_SDR2.txt', 'r') as fin:
     data_read_SDR2 = fin.read()
     last_char_SDR2 = data_read_SDR2[-1]
     if last_char_SDR2 == '\n':
@@ -194,7 +196,7 @@ corr_coeff_smoothvol, number_of_samples_smoothvol = correlation_calculation.comp
                                                                              SDR2_1_norm)
 
 #plot_correlation.correlation_plot(number_of_samples_smoothcfo, corr_coeff_smoothcfo, axis, 'b--', "CFO smooth")
-plot_correlation.correlation_plot(number_of_samples_cfo, corr_coeff_cfo, axis, 'b-', "CFO 40dB")
+plot_correlation.correlation_plot(number_of_samples_cfo, corr_coeff_cfo, axis, 'b-', "CFO")
 #plot_correlation.correlation_plot(number_of_samples_cfo_0dB, corr_coeff_cfo_0dB, axis, 'c-', "CFO 0dB")
 #plot_correlation.correlation_plot(number_of_samples_smoothrssi, corr_coeff_smoothrssi, axis, 'r--', "RSSI smooth")
 plot_correlation.correlation_plot(number_of_samples_rssi, corr_coeff_rssi, axis, 'r-', "RSSI")

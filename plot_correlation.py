@@ -7,7 +7,10 @@ def correlation_plot(time, corr_coeff, ax, colour, lbl):
     else:
         ax.plot(time, corr_coeff, colour, label=lbl, linewidth=3)
         #ax.scatter(time, corr_coeff, color='blue')
-    ax.legend(loc='center right')
+    #xOffset = 1.5  # Adjust the x-coordinate as needed
+    #ax.legend(loc='lower right', bbox_transform=ax.transFigure)
+    ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc='lower left',
+                          ncols=4, mode="expand", borderaxespad=0.)
     ax.set(xlabel="Number n of samples", ylabel="Correlation coefficient")
 
 def correlation_plot_lossy(time, corr_coeff, ax, colour, lbl):

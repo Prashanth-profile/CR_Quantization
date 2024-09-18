@@ -91,12 +91,12 @@ RSSI_SDR1=Common_Source(list_of_floats_SDR1)
 RSSI_SDR2=Common_Source(list_of_floats_SDR2)
 
 
-with open('C:/Users/prashanth/Desktop/CFO_SC_805_SDR1.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/CFO_SC_317_SDR1.txt', 'r') as fin:
     data_read_SDR1 = fin.read()
     last_char_SDR1 = data_read_SDR1[-1]
     if last_char_SDR1 == '\n':
         data_read_SDR1 = data_read_SDR1[:-1]
-with open('C:/Users/prashanth/Desktop/CFO_SC_805_SDR2.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/CFO_SC_317_SDR2.txt', 'r') as fin:
     data_read_SDR2 = fin.read()
     last_char_SDR2 = data_read_SDR2[-1]
     if last_char_SDR2 == '\n':
@@ -123,7 +123,7 @@ CFO_SDR2=Common_Source(list_of_floats_SDR2)
 min_length=32768
 
 #Change this for size of kernel and window
-min_l = 1024
+min_l = 2048
 window_size = min_l
 # Plot Original
 time = range(min_l)
@@ -162,7 +162,7 @@ No_Filter=Category_CR() #Freq offset, with gray code
 Unit_Step=Category_CR()
 Gaussian=Category_CR()
 Megha=Category_CR()
-#Ali=Category_CR()  #Golay Filter, no gray
+Ali=Category_CR()  #Golay Filter, no gray
 Jana=Category_CR()  #No Filter
 Aman=Category_CR()  #CFO no gray code
 DWT=Category_CR()
@@ -194,7 +194,7 @@ SDR2_2_histeq=[]
 
 pdf_error_dist=np.zeros(min_l*8)
 
-mode=7
+mode=0
 pdf_count=0
 
 for ind in range(0, min_length, min_l):
@@ -212,8 +212,11 @@ for ind in range(0, min_length, min_l):
 
         #No filter
         elif mode == 1:
+
             SDR1_1_norm = CFO_SDR1.raw_samples[ind:ind + min_l]
             SDR2_1_norm = CFO_SDR2.raw_samples[ind:ind + min_l]
+            #SDR1_1_norm=noise_removal.savgold_filter_ali(CFO_SDR1.raw_samples[ind:ind + min_l], win, 2)
+            #SDR2_1_norm=noise_removal.savgold_filter_ali(CFO_SDR2.raw_samples[ind:ind + min_l], win, 2)
 
         #Unit Step Kernel
         elif mode == 2:
@@ -236,19 +239,23 @@ for ind in range(0, min_length, min_l):
 
         #DWT with CFO
         elif mode == 5:
+            '''
             SDR1_1_norm_klt = noise_removal.window_smoothening(CFO_SDR1.raw_samples[ind:ind + min_l], win)
             SDR2_1_norm_klt = noise_removal.window_smoothening(CFO_SDR2.raw_samples[ind:ind + min_l], win)
 
             SDR1_1_norm = kltransform.klt_transform(SDR1_1_norm_klt, int(math.sqrt(min_l)))
-            SDR2_1_norm = kltransform.klt_transform(SDR2_1_norm_klt, int(math.sqrt(min_l)))
+            SDR2_1_norm = kltransform.klt_transform(SDR2_1_norm_klt, int(math.sqrt(min_l)))'''
+
+            SDR1_1_norm=noise_removal.savgold_filter_ali(CFO_SDR1.raw_samples[ind:ind + min_l], win, 4)
+            SDR2_1_norm=noise_removal.savgold_filter_ali(CFO_SDR2.raw_samples[ind:ind + min_l], win, 4)
 
             #SDR1_1_norm = histogram_equalization.hist_equalization(SDR1_1_norm)
             #SDR2_1_norm = histogram_equalization.hist_equalization(SDR2_1_norm)
 
         #Mode 6 means clipping
         elif mode == 6:
-            SDR1_1_norm = CFO_SDR1.raw_samples[ind:ind + min_l]
-            SDR2_1_norm = CFO_SDR2.raw_samples[ind:ind + min_l]
+            SDR1_1_norm=noise_removal.savgold_filter_ali(CFO_SDR1.raw_samples[ind:ind + min_l], win, 3)
+            SDR2_1_norm=noise_removal.savgold_filter_ali(CFO_SDR2.raw_samples[ind:ind + min_l], win, 3)
 
         elif mode == 7:
             SDR1_1_norm=noise_removal.savgold_filter(CFO_SDR1.raw_samples[ind:ind + min_l], win)
@@ -256,8 +263,11 @@ for ind in range(0, min_length, min_l):
 
 
         elif mode == 8:
+            '''
             SDR1_1_norm = dct.adaptive_dct_filter(CFO_SDR1.raw_samples[ind:ind + min_l])
-            SDR2_1_norm = dct.adaptive_dct_filter(CFO_SDR2.raw_samples[ind:ind + min_l])
+            SDR2_1_norm = dct.adaptive_dct_filter(CFO_SDR2.raw_samples[ind:ind + min_l])'''
+            SDR1_1_norm=noise_removal.savgold_filter_ali(CFO_SDR1.raw_samples[ind:ind + min_l], win, 5)
+            SDR2_1_norm=noise_removal.savgold_filter_ali(CFO_SDR2.raw_samples[ind:ind + min_l], win, 5)
 
             #SDR1_1_norm = histogram_equalization.hist_equalization(SDR1_1_norm)
             #SDR2_1_norm = histogram_equalization.hist_equalization(SDR2_1_norm)
@@ -277,32 +287,32 @@ for ind in range(0, min_length, min_l):
             # Output is an integer array/list
             # SDR1_2gbytes, SDR2_2gbytes=lossless_quantization.multi_bit_dynamic_quantization_corrplot(list_of_floats_SDR1, list_of_floats_SDR2, min_length, Quant_Range, True, ind)
 
-            if (mode!=6):
-                SDR1_2gbytes, SDR2_2gbytes = lossless_quantization.multi_bit_quantization_corrplot(SDR1_1_norm,
-                                                                                                   SDR2_1_norm,
-                                                                                                   min_l,
-                                                                                                   window_size,
-                                                                                                   Quant_Range,
-                                                                                                   True, False)
-                #print("After", Quant_Range, " bit gray code quantization", SDR1_2gbytes, " and ", SDR2_2gbytes, "of length",
-                #      len(SDR1_2gbytes), "and", len(SDR2_2gbytes))
+            #if (mode!=6):
+            SDR1_2gbytes, SDR2_2gbytes = lossless_quantization.multi_bit_quantization_corrplot(SDR1_1_norm,
+                                                                                               SDR2_1_norm,
+                                                                                               min_l,
+                                                                                               window_size,
+                                                                                               Quant_Range,
+                                                                                               True, False)
+            #print("After", Quant_Range, " bit gray code quantization", SDR1_2gbytes, " and ", SDR2_2gbytes, "of length",
+            #      len(SDR1_2gbytes), "and", len(SDR2_2gbytes))
 
-                # Output is an integer array/list
-                # SDR1_2bytes, SDR2_2bytes=lossless_quantization.multi_bit_dynamic_quantization_corrplot(list_of_floats_SDR1, list_of_floats_SDR2, min_length, Quant_Range, False, ind)
-                SDR1_2bytes, SDR2_2bytes = lossless_quantization.multi_bit_quantization_corrplot(SDR1_1_norm,
-                                                                                                 SDR2_1_norm,
-                                                                                                 min_l,
-                                                                                                 window_size,
-                                                                                                 Quant_Range,
-                                                                                                 False, False)
+            # Output is an integer array/list
+            # SDR1_2bytes, SDR2_2bytes=lossless_quantization.multi_bit_dynamic_quantization_corrplot(list_of_floats_SDR1, list_of_floats_SDR2, min_length, Quant_Range, False, ind)
+            SDR1_2bytes, SDR2_2bytes = lossless_quantization.multi_bit_quantization_corrplot(SDR1_1_norm,
+                                                                                             SDR2_1_norm,
+                                                                                             min_l,
+                                                                                             window_size,
+                                                                                             Quant_Range,
+                                                                                             False, False)
+            '''
             else:
                 SDR1_2gbytes, SDR2_2gbytes = lossless_quantization.multi_bit_quantization_corrplot(SDR1_1_norm,
                                                                                                    SDR2_1_norm,
                                                                                                    min_l,
                                                                                                    window_size,
                                                                                                    Quant_Range,
-                                                                                                   True, False)
-
+                                                                                                   True, False)'''
             #print("After", Quant_Range, " two bit code", SDR1_2bytes, " and ", SDR2_2bytes, "of length", len(SDR1_2bytes), "and",
             #      len(SDR2_2bytes))
 
@@ -406,15 +416,15 @@ for ind in range(0, min_length, min_l):
                     KLT.cost_func.append(cost_func)
 
             elif mode == 6:
-                Clipping.error_bits_gray.append(num_errors)
+                Ali.error_bits_gray.append(num_errors)
                 #Clipping.error_bits.append(num_errors_norm)
                 entropy = calculate_entropy.calculate_entropy(SDR1_2)
-                Clipping.entropy.append(entropy)
-                Clipping.CR_rate.append((entropy) * abs(1 - 2 * (num_errors / (Quant_Range * min_l))))
+                Ali.entropy.append(entropy)
+                Ali.CR_rate.append((entropy) * abs(1 - 2 * (num_errors / (Quant_Range * min_l))))
                 cost_func = ((1 - (entropy / Quant_Range)) * cost_per_unit_entropy) + (
                         (num_errors / (k * min_l)) * cost_per_unit_biterrors) + (
                                         (1 - (k / math.log2(min_l))) * cost_optimum_n)
-                Clipping.cost_func.append(cost_func)
+                Ali.cost_func.append(cost_func)
 
             elif mode == 7:
                 Savgol.error_bits_gray.append(num_errors)
@@ -438,17 +448,21 @@ for ind in range(0, min_length, min_l):
 
             elif mode == 8:
                 DCT.error_bits_gray.append(num_errors)
+                sample_entropy = calculate_entropy.calculate_entropy(list_of_floats_SDR1[ind:ind + min_l])
+                DCT.entropy.append(sample_entropy)
+                entropy = calculate_entropy.calculate_entropy(SDR1_2)
+                DCT.CR_rate.append((entropy) * abs(1 - 2 * (num_errors / (Quant_Range * min_l))))
+                '''
+                DCT.error_bits_gray.append(num_errors)
                 entropy = calculate_entropy.calculate_entropy(SDR1_2)
                 DCT.entropy.append(entropy)
                 DCT.CR_rate.append((entropy) * abs(1 - 2 * (num_errors / (Quant_Range * min_l))))
                 #print("CR rate DCT", DCT.CR_rate)
                 #if (k == 8) & (ind==min_l):
-                    #plot_histogram.create_histogram(SDR1_2, 4, ax1, f'{k}-HistEqual', 'black')
-
+                    #plot_histogram.create_histogram(SDR1_2, 4, ax1, f'{k}-HistEqual', 'black')'''
 
             label = f'{k}'
             labelarray.append(label)
-
 
 mark='D'
 mark_cap='^'
@@ -456,7 +470,7 @@ mark_cap='^'
 print("Jana CR rate", Jana.CR_rate)
 print("No Filter", No_Filter.CR_rate)
 
-simple_plot.plot_pdf_error(np.array(pdf_error_dist)/pdf_count)
+#simple_plot.plot_pdf_error(np.array(pdf_error_dist)/pdf_count)
 
 #confidence_interval.plot_confidence_interval(np.array(No_Filter.error_bits_gray).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3,  "NF", 'blue', mark)
 #confidence_interval.plot_confidence_interval(np.array(Gaussian.error_bits_gray).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "Gaussian", 'green', mark)
@@ -473,12 +487,16 @@ simple_plot.plot_pdf_error(np.array(pdf_error_dist)/pdf_count)
 #confidence_interval.plot_confidence_interval(np.array(Jana.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3,  "Jana CRrate", 'red', mark)
 #confidence_interval.plot_confidence_interval(np.array(Jana.entropy).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3,  "Jana Capacity", 'red', mark_cap)
 
-#confidence_interval.plot_confidence_interval(np.array(Savgol.entropy).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "CR Capacity", 'magenta', mark_cap)
-confidence_interval.plot_confidence_interval(np.array(Savgol.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "Savgol CRrate", 'cyan', mark)
+confidence_interval.plot_confidence_interval(np.array(Savgol.entropy).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "CR Capacity", 'red', mark_cap)
+confidence_interval.plot_confidence_interval(np.array(Savgol.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "Practically acheived CRrate", 'cyan', mark)
+#confidence_interval.plot_confidence_interval(np.array(Unit_Step.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "US CRrate", 'red', mark)
+#confidence_interval.plot_confidence_interval(np.array(Gaussian.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "Gauss CRrate", 'green', mark)
+#confidence_interval.plot_confidence_interval(np.array(No_Filter.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "NF CRrate", 'blue', mark)
+#confidence_interval.plot_confidence_interval(np.array(DCT.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "Savgol Pol5 ", 'brown', mark)
 #confidence_interval.plot_confidence_interval(np.array(Unit_Step.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "US CRrate", 'red', mark)
 #confidence_interval.plot_confidence_interval(np.array(Gaussian.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "Gauss CRrate", 'green', mark)
 #confidence_interval.plot_confidence_interval(np.array(DCT.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "DCT CRrate", 'brown', mark)
-confidence_interval.plot_confidence_interval(np.array(No_Filter.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "NF CRrate", 'blue', mark)
+#confidence_interval.plot_confidence_interval(np.array(No_Filter.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "Savgol X-2 CRrate", 'blue', mark)
 #confidence_interval.plot_confidence_interval(np.array(DWT.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "DWT CRrate", 'black', mark)
 #confidence_interval.plot_confidence_interval(np.array(Jana.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "NF(RSSI) CRrate", 'yellow', mark)
 
@@ -522,6 +540,6 @@ print("Cost HistEqual", KLT.cost_func)
 print("Cost Savgol", Savgol.cost_func)
 print("Cost DCT", DCT.cost_func)
 
-plt2.show()
-plt4.show()
+#plt2.show()
+#plt4.show()
 plt3.show()

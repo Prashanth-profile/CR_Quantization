@@ -4,7 +4,7 @@ import pywt
 
 def wavelet_transform_haar(random_signal, win):
     print(pywt.wavelist(kind='discrete'))
-    wavelet = 'haar'  # You can choose other wavelets too
+    wavelet = 'db4'  # You can choose other wavelets too
     #custom_wavelet = np.ones(1024) / 1024
     #custom_wavelet = pywt.Wavelet(custom_wavelet)
     #wavelet = custom_wavelet

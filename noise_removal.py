@@ -42,6 +42,14 @@ def savgold_filter(signal, win_len):
 
     return filtered_y
 
+def savgold_filter_ali(signal, win_len, ord):
+    # Apply the Savitzky-Golay filter with a filter length of 1024
+    from scipy.signal import savgol_filter
+    filtered_y = savgol_filter(signal, window_length=win_len, polyorder=ord)
+
+
+    return filtered_y
+
 def butterworth_filter(signal_input):
     # Design a Butterworth filter
     order = 2  # filter order

@@ -11,14 +11,14 @@ def RS_encoding(complete_data, segment_size, parity_size, number_of_segments):
     rs_encoded=bytearray()
     parity_bytes_complete=bytearray()
     for i in range(0, segment_size*number_of_segments, segment_size):
-        print("Complete data to be encoded", complete_data[i:i+segment_size])
+        #print("Complete data to be encoded", complete_data[i:i+segment_size])
         segmentencode=rsc.encode(complete_data[i:i+segment_size])
-        print("segment code", segmentencode)
+        #print("segment code", segmentencode)
         parity_bytes=segmentencode[len(segmentencode)-parity_size:]
         rs_encoded.extend(segmentencode)
         parity_bytes_complete.extend(parity_bytes)
         #print("Complete_parity_bytes",parity_bytes_complete)
-    print("Complete_parity_bytes", parity_bytes_complete)
+    #print("Complete_parity_bytes", parity_bytes_complete)
     return parity_bytes_complete
 
 
@@ -33,7 +33,7 @@ def RS_decoding(complete_data, parity_bytes, segment_size, parity_size, number_o
         decoded_bytes_per_segment=rsc.decode(encoded_bytes)[0]
         j=j+parity_size
         decoded_bytes.extend(decoded_bytes_per_segment)
-    print("decoded bytes", decoded_bytes)
+    #print("decoded bytes", decoded_bytes)
     return decoded_bytes
 
 
