@@ -3,6 +3,7 @@ import random
 import matplotlib.pyplot as plt2
 import numpy as np
 
+import dct
 import plot_RSSI
 import plot_CFO
 import plot_PO
@@ -34,8 +35,8 @@ class Category_CR:
         self.avg_cost=[]
 
 fontsz=50
-min_length=256
-min_l=256
+min_length=1024
+min_l=1024
 time=range(min_length)
 ind=0
 
@@ -85,10 +86,13 @@ SDR2_1_norm=noise_removal.savgold_filter(list_of_floats_SDR2[ind:ind+min_length]
 #SDR1_1_norm=noise_removal.savgold_filter_ali(list_of_floats_SDR1[ind:ind+min_length], 9,5)
 #SDR2_1_norm=noise_removal.savgold_filter_ali(list_of_floats_SDR2[ind:ind+min_length], 9,5)
 
+SDR1_1_norm=dct.adaptive_dct_filter(list_of_floats_SDR1[ind:ind+min_length])
+SDR2_1_norm=dct.adaptive_dct_filter(list_of_floats_SDR2[ind:ind+min_length])
+
 j = 0
 labelarray = []
 count = 0
-Quantseteps = 8
+Quantseteps = 2
 
 Quant_Range = Quantseteps
 
@@ -125,7 +129,7 @@ greycodeSDR2_bytes = string_to_bytearray.string_to_bytearray_conversion(8, greyc
 print("greycode SDR1", greycodeSDR1_bytes, "of length", len(greycodeSDR1_bytes))
 print("greycode SDR2", greycodeSDR2_bytes, "of length", len(greycodeSDR2_bytes))
 
-number_of_segments=3
+number_of_segments=4
 segment_size=int(min_length*Quant_Range/(8*number_of_segments))
 parity_size=1
 

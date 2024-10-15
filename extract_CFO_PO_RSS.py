@@ -8,20 +8,20 @@ import plot_correlation
 import noise_removal
 
 fontsz=50
-min_length=1024
+min_length=2048
 time=range(min_length)
 ind=0
-win=1024
+win=2048
 
 #########################################RSSI########################################
 #Read the text file
-with open('C:/Users/prashanth/Desktop/RSSI_SC_317_SDR1.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/RSSI_SC_212_SDR1.txt', 'r') as fin:
     data_read_SDR1 = fin.read()
     last_char_SDR1 = data_read_SDR1[-1]
     if last_char_SDR1 == '\n':
         print("last next line character detected in first sample file")
         data_read_SDR1 = data_read_SDR1[:-1]
-with open('C:/Users/prashanth/Desktop/RSSI_SC_317_SDR2.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/RSSI_SC_212_SDR2.txt', 'r') as fin:
     data_read_SDR2 = fin.read()
     last_char_SDR2 = data_read_SDR2[-1]
     if last_char_SDR2 == '\n':
@@ -67,13 +67,13 @@ corr_coeff_smoothrssi, number_of_samples_smoothrssi = correlation_calculation.co
                                                                              SDR2_1_norm)
 #######################################CFO##############################################
 #Read the text file
-with open('C:/Users/prashanth/Desktop/CFO_SC_317_SDR1.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/CFO_SC_212_SDR1.txt', 'r') as fin:
     data_read_SDR1 = fin.read()
     last_char_SDR1 = data_read_SDR1[-1]
     if last_char_SDR1 == '\n':
         print("last next line character detected in first sample file")
         data_read_SDR1 = data_read_SDR1[:-1]
-with open('C:/Users/prashanth/Desktop/CFO_SC_317_SDR2.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/CFO_SC_212_SDR2.txt', 'r') as fin:
     data_read_SDR2 = fin.read()
     last_char_SDR2 = data_read_SDR2[-1]
     if last_char_SDR2 == '\n':
@@ -110,13 +110,13 @@ corr_coeff_smoothcfo, number_of_samples_smoothcfo = correlation_calculation.comp
 
 #######################################PO##############################################
 #Read the text file
-with open('C:/Users/prashanth/Desktop/PO_SC_317_SDR1.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/PO_SC_212_SDR1.txt', 'r') as fin:
     data_read_SDR1 = fin.read()
     last_char_SDR1 = data_read_SDR1[-1]
     if last_char_SDR1 == '\n':
         print("last next line character detected in first sample file")
         data_read_SDR1 = data_read_SDR1[:-1]
-with open('C:/Users/prashanth/Desktop/PO_SC_317_SDR2.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/PO_SC_212_SDR2.txt', 'r') as fin:
     data_read_SDR2 = fin.read()
     last_char_SDR2 = data_read_SDR2[-1]
     if last_char_SDR2 == '\n':
@@ -154,13 +154,13 @@ corr_coeff_smoothpo, number_of_samples_smoothpo = correlation_calculation.comple
 
 #######################################POW##############################################
 #Read the text file
-with open('C:/Users/prashanth/Desktop/AMP_SC_317_SDR1.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/VOL_SC_212_SDR1.txt', 'r') as fin:
     data_read_SDR1 = fin.read()
     last_char_SDR1 = data_read_SDR1[-1]
     if last_char_SDR1 == '\n':
         print("last next line character detected in first sample file")
         data_read_SDR1 = data_read_SDR1[:-1]
-with open('C:/Users/prashanth/Desktop/AMP_SC_317_SDR2.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/VOL_SC_212_SDR2.txt', 'r') as fin:
     data_read_SDR2 = fin.read()
     last_char_SDR2 = data_read_SDR2[-1]
     if last_char_SDR2 == '\n':

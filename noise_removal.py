@@ -45,7 +45,7 @@ def savgold_filter(signal, win_len):
 def savgold_filter_ali(signal, win_len, ord):
     # Apply the Savitzky-Golay filter with a filter length of 1024
     from scipy.signal import savgol_filter
-    filtered_y = savgol_filter(signal, window_length=win_len, polyorder=ord)
+    filtered_y = savgol_filter(signal, window_length=win_len-1, polyorder=ord)
 
 
     return filtered_y

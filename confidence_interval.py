@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy.stats
 plt.grid()
+plt.rcParams['text.usetex'] = True
 plt.rcParams.update({'font.family': 'Times New Roman', 'font.size': 50, })
 def calculate_confidence_interval(matrix, value2):
     means = np.mean(matrix, axis=1)
@@ -42,7 +43,8 @@ def plot_confidence_interval(matrix, value2, labl, axis, leg, col, mark):
 
     # Add x-axis and y-axis labels
     axis.set_xlabel('Order of Quantization', fontsize=50, fontname='Times New Roman')
-    axis.set_ylabel('Bits per channel observations', fontsize=50, fontname='Times New Roman')
+    axis.set_ylabel('Bits per sample', fontsize=50, fontname='Times New Roman')
+    #axis.set_ylabel('Bit discrepancy rate', fontsize=50, fontname='Times New Roman')
 
     # Add a title to the plot
     #axis.set_title('Percentage plot', fontsize=40, fontname='Times New Roman')
