@@ -9,20 +9,20 @@ import noise_removal
 import calculate_entropy
 
 fontsz=50
-min_length=256
+min_length=1024
 time=range(min_length)
 ind=0
 win=256
 
 #########################################RSSI########################################
 #Read the text file
-with open('C:/Users/prashanth/Desktop/RSSI_SC_1109_SDR1_5s.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/RSSI_8bitSDR1.txt', 'r') as fin:
     data_read_SDR1 = fin.read()
     last_char_SDR1 = data_read_SDR1[-1]
     if last_char_SDR1 == '\n':
         print("last next line character detected in first sample file")
         data_read_SDR1 = data_read_SDR1[:-1]
-with open('C:/Users/prashanth/Desktop/RSSI_SC_1109_SDR2_5s.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/RSSI_8bitSDR2.txt', 'r') as fin:
     data_read_SDR2 = fin.read()
     last_char_SDR2 = data_read_SDR2[-1]
     if last_char_SDR2 == '\n':
@@ -67,13 +67,13 @@ entropy = calculate_entropy.calculate_entropy(list_of_floats_SDR1[ind:ind+min_le
 
 #######################################RSSI HighRes##############################################
 #Read the text file
-with open('C:/Users/prashanth/Desktop/RSSI_SC_1109_SDR1_highres_5s.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/RSSI_32bitSDR1.txt', 'r') as fin:
     data_read_SDR1 = fin.read()
     last_char_SDR1 = data_read_SDR1[-1]
     if last_char_SDR1 == '\n':
         print("last next line character detected in first sample file")
         data_read_SDR1 = data_read_SDR1[:-1]
-with open('C:/Users/prashanth/Desktop/RSSI_SC_1109_SDR2_highres_5s.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/RSSI_32bitSDR2.txt', 'r') as fin:
     data_read_SDR2 = fin.read()
     last_char_SDR2 = data_read_SDR2[-1]
     if last_char_SDR2 == '\n':

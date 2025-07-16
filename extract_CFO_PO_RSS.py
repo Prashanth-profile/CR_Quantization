@@ -10,7 +10,7 @@ import noise_removal
 fontsz=50
 min_length=2048
 time=range(min_length)
-ind=0
+ind=500
 win=2048
 
 #########################################RSSI########################################
@@ -110,7 +110,7 @@ corr_coeff_smoothcfo, number_of_samples_smoothcfo = correlation_calculation.comp
 
 #######################################PO##############################################
 #Read the text file
-with open('C:/Users/prashanth/Desktop/PO_SC_212_SDR1.txt', 'r') as fin:
+'''with open('C:/Users/prashanth/Desktop/PO_SC_212_SDR1.txt', 'r') as fin:
     data_read_SDR1 = fin.read()
     last_char_SDR1 = data_read_SDR1[-1]
     if last_char_SDR1 == '\n':
@@ -184,7 +184,7 @@ list_of_floats_SDR2 = list(map(lambda x: x*-1 if x < 0 else x, list_of_floats_SD
 
 
 SDR1_1_norm=noise_removal.window_smoothening(list_of_floats_SDR1[ind:ind+min_length], win)
-SDR2_1_norm=noise_removal.window_smoothening(list_of_floats_SDR2[ind:ind+min_length], win)
+SDR2_1_norm=noise_removal.window_smoothening(list_of_floats_SDR2[ind:ind+min_length], win)'''
 
 print("length", len(list_of_floats_SDR1))
 
@@ -201,9 +201,9 @@ plot_correlation.correlation_plot(number_of_samples_cfo, corr_coeff_cfo, axis, '
 #plot_correlation.correlation_plot(number_of_samples_smoothrssi, corr_coeff_smoothrssi, axis, 'r--', "RSSI smooth")
 plot_correlation.correlation_plot(number_of_samples_rssi, corr_coeff_rssi, axis, 'r-', "RSSI")
 #plot_correlation.correlation_plot(number_of_samples_smoothvol, corr_coeff_smoothvol, axis, 'k--', "Amplitude smooth")
-plot_correlation.correlation_plot(number_of_samples_vol, corr_coeff_vol, axis, 'k-', "Amplitude")
+#plot_correlation.correlation_plot(number_of_samples_vol, corr_coeff_vol, axis, 'k-', "Amplitude")
 #plot_correlation.correlation_plot(number_of_samples_smoothpo, corr_coeff_smoothpo, axis, 'g--', "Phase Offset smooth")
-plot_correlation.correlation_plot(number_of_samples_po, corr_coeff_po, axis, 'g-', "Phase Offset")
+#plot_correlation.correlation_plot(number_of_samples_po, corr_coeff_po, axis, 'g-', "Phase Offset")
 #plot_correlation.correlation_plot(number_of_samples_smoothrssi, corr_coeff_smoothrssi, axis, 'r--', "RSSI smoothened")
 #plot_correlation.correlation_plot(number_of_samples_smoothcfo, corr_coeff_smoothcfo, axis, 'b--', "CFO smoothened")
 #plot_correlation.correlation_plot(number_of_samples_smoothpo, corr_coeff_smoothpo, axis, 'g--', "Phase Offset smoothened")

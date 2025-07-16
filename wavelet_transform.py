@@ -4,7 +4,7 @@ import pywt
 
 def wavelet_transform_haar(random_signal, win):
     print(pywt.wavelist(kind='discrete'))
-    wavelet = 'db4'  # You can choose other wavelets too
+    wavelet = 'haar'  # You can choose other wavelets too
     #custom_wavelet = np.ones(1024) / 1024
     #custom_wavelet = pywt.Wavelet(custom_wavelet)
     #wavelet = custom_wavelet
@@ -19,8 +19,8 @@ def wavelet_transform_haar(random_signal, win):
     #coeffs[-2] = np.zeros_like(coeffs[-2])
 
     # Apply a scaling filter to approximate coefficients
-    #filtered_coeffs = [coeffs[0]] + [np.zeros_like(c) for c in coeffs[4:]]
-    filtered_coeffs = [p for p in coeffs[0:4]] + [np.zeros_like(c) for c in coeffs[4:]]
+    filtered_coeffs = [coeffs[0]] + [np.zeros_like(c) for c in coeffs[1:]]
+    #filtered_coeffs = [p for p in coeffs[0:4]] + [np.zeros_like(c) for c in coeffs[4:]]
     reconstructed_signal = pywt.waverec(filtered_coeffs, wavelet, mode='smooth', axis=-1)
 
     #print("Filtered coeffs", filtered_coeffs)

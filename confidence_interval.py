@@ -38,23 +38,31 @@ def plot_confidence_interval(matrix, value2, labl, axis, leg, col, mark):
 
 
     #plt.figure(figsize=(10, 6))
-    axis.plot(x_pos, means, alpha=0.7, label=leg, color=col, linestyle='-', marker=mark)
+    if col=='red':
+        axis.plot(x_pos, means, alpha=0.7, label=leg, color=col, marker=mark)
+    else:
+        axis.plot(x_pos, means, alpha=0.7, label=leg, color=col, marker=mark)
     axis.fill_between(x_pos, lower_bound, upper_bound, alpha=0.3, color=col)
 
     # Add x-axis and y-axis labels
     axis.set_xlabel('Order of Quantization', fontsize=50, fontname='Times New Roman')
-    axis.set_ylabel('Bits per sample', fontsize=50, fontname='Times New Roman')
+    axis.set_ylabel('Bits per obserervation', fontsize=50, fontname='Times New Roman')
     #axis.set_ylabel('Bit discrepancy rate', fontsize=50, fontname='Times New Roman')
 
     # Add a title to the plot
     #axis.set_title('Percentage plot', fontsize=40, fontname='Times New Roman')
 
     # Add x-axis ticks and labels
+    lb=x_pos[::3]
     axis.set_xticks(x_pos)
+    #for index, label in enumerate(axis.xaxis.get_ticklabels()):
+        #if index%3!=0:
+            #label.set_visible(False)
+    #print("ticks", x_pos[::3])
     axis.set_xticklabels(labl)
 
     # Add a legend to the plot
-    axis.legend()
+    axis.legend(fontsize=40)
 
 #Plot Confidence interval and return mean
 def mean_of_the_matrix(matrix):
@@ -86,7 +94,7 @@ def plot_confidence_interval_crrate(matrix, value2, labl, axis, leg, col, mark):
     axis.set_xticklabels(labl)
 
     # Add a legend to the plot
-    axis.legend()
+    axis.legend(fontsize=40)
 
 # Example usage:
 #matrix = np.random.randn(100, 10)  # Replace this with your actual matrix

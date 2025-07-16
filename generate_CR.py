@@ -35,20 +35,20 @@ class Category_CR:
         self.avg_cost=[]
 
 fontsz=50
-min_length=1024
-min_l=1024
+min_length=4096
+min_l=4096
 time=range(min_length)
 ind=0
 
 Savgol=Category_CR()
 
-with open('C:/Users/prashanth/Desktop/CFO_SC_805_SDR1.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/CFO_SC_212_SDR1.txt', 'r') as fin:
     data_read_SDR1 = fin.read()
     last_char_SDR1 = data_read_SDR1[-1]
     if last_char_SDR1 == '\n':
         print("last next line character detected in first sample file")
         data_read_SDR1 = data_read_SDR1[:-1]
-with open('C:/Users/prashanth/Desktop/CFO_SC_805_SDR2.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/CFO_SC_212_SDR2.txt', 'r') as fin:
     data_read_SDR2 = fin.read()
     last_char_SDR2 = data_read_SDR2[-1]
     if last_char_SDR2 == '\n':
@@ -71,11 +71,11 @@ list_of_floats_SDR1 = list(map(lambda x: x*-1 if x < 0 else x, list_of_floats_SD
 list_of_floats_SDR2 = list(map(lambda x: x*-1 if x < 0 else x, list_of_floats_SDR2))
 
 
-SDR1_1_norm=noise_removal.savgold_filter(list_of_floats_SDR1[ind:ind+min_length], min_l)
-SDR2_1_norm=noise_removal.savgold_filter(list_of_floats_SDR2[ind:ind+min_length], min_l)
+#SDR1_1_norm=noise_removal.savgold_filter(list_of_floats_SDR1[ind:ind+min_length], min_l)
+#SDR2_1_norm=noise_removal.savgold_filter(list_of_floats_SDR2[ind:ind+min_length], min_l)
 
-#SDR1_1_norm=noise_removal.window_smoothening(list_of_floats_SDR1[ind:ind+min_length], min_l)
-#SDR2_1_norm=noise_removal.window_smoothening(list_of_floats_SDR2[ind:ind+min_length], min_l)
+#SDR1_1_norm=noise_removal.window_smoothening(list_of_floats_SDR1[ind:ind+min_length], 2046)
+#SDR2_1_norm=noise_removal.window_smoothening(list_of_floats_SDR2[ind:ind+min_length], 2046)
 
 #SDR1_1_norm = wavelet_transform.wavelet_transform_haar(list_of_floats_SDR1[ind:ind+min_length], min_l)
 #SDR2_1_norm = wavelet_transform.wavelet_transform_haar(list_of_floats_SDR2[ind:ind+min_length], min_l)
@@ -83,16 +83,16 @@ SDR2_1_norm=noise_removal.savgold_filter(list_of_floats_SDR2[ind:ind+min_length]
 #SDR1_1_norm=list_of_floats_SDR1[ind:ind+min_length]
 #SDR2_1_norm=list_of_floats_SDR2[ind:ind+min_length]
 
-#SDR1_1_norm=noise_removal.savgold_filter_ali(list_of_floats_SDR1[ind:ind+min_length], 9,5)
-#SDR2_1_norm=noise_removal.savgold_filter_ali(list_of_floats_SDR2[ind:ind+min_length], 9,5)
+SDR1_1_norm=noise_removal.savgold_filter_ali(list_of_floats_SDR1[ind:ind+min_length], 9,5)
+SDR2_1_norm=noise_removal.savgold_filter_ali(list_of_floats_SDR2[ind:ind+min_length], 9,5)
 
-SDR1_1_norm=dct.adaptive_dct_filter(list_of_floats_SDR1[ind:ind+min_length])
-SDR2_1_norm=dct.adaptive_dct_filter(list_of_floats_SDR2[ind:ind+min_length])
+#SDR1_1_norm=dct.adaptive_dct_filter(list_of_floats_SDR1[ind:ind+min_length])
+#SDR2_1_norm=dct.adaptive_dct_filter(list_of_floats_SDR2[ind:ind+min_length])
 
 j = 0
 labelarray = []
 count = 0
-Quantseteps = 2
+Quantseteps = 1
 
 Quant_Range = Quantseteps
 
@@ -129,7 +129,7 @@ greycodeSDR2_bytes = string_to_bytearray.string_to_bytearray_conversion(8, greyc
 print("greycode SDR1", greycodeSDR1_bytes, "of length", len(greycodeSDR1_bytes))
 print("greycode SDR2", greycodeSDR2_bytes, "of length", len(greycodeSDR2_bytes))
 
-number_of_segments=4
+number_of_segments=2
 segment_size=int(min_length*Quant_Range/(8*number_of_segments))
 parity_size=1
 
@@ -198,11 +198,14 @@ plt2.plot(freq, np.abs(fftData)/(maxfft), label='Before Shuffling $K_A^I$')
 
 greycode_stringSDR1 = stringify.stringify(SDR1_bincount.astype(int))
 greycodeSDR1_bytes = string_to_bytearray.string_to_bytearray_conversion(8, greycode_stringSDR1)
+print("gray code SDR1 bytes", greycodeSDR1_bytes)
 raw_data=greycodeSDR1_bytes[0:256]
 
 after_PA=[]
 for ind in range(0, 256, 64):
-    shaoutput=list(hash_encrypt.encrypt_bytes(bytearray(greycodeSDR1_bytes[ind:ind+8192])))
+    print("Length", len(bytearray(greycodeSDR1_bytes[ind:ind+96])))
+    shaoutput=list(hash_encrypt.encrypt_bytes(bytearray(greycodeSDR1_bytes[ind:ind+64])))
+    print("shaoutput", len(shaoutput), shaoutput)
     after_PA.extend(shaoutput)
 print("Size of PA", len(after_PA))
 mean_value = np.mean(after_PA)
@@ -211,8 +214,10 @@ fftData = np.fft.fftshift(fft_result)
 #plt2.plot(freq, np.abs(fftData)/(maxfft), label='After SHA512')
 
 
-random.Random(4).shuffle(raw_data)
+#random.Random(4).shuffle(raw_data)
 #random.Random(4).shuffle(SDR2_bincount[0:minimumsize])
+
+#np.savetxt('my_list.txt', SDR2_bincount[0:minimumsize], fmt='%d')  # Use '%d' for integers, '%f' for floats
 
 #plt.plot(list(greycodeSDR1_bytes), label='After Shuffling')
 #plt2.specgram(greycodeSDR1_bytes)

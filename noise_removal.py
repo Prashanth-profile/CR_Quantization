@@ -37,7 +37,7 @@ def gaussian_filtering(signal, window):
 def savgold_filter(signal, win_len):
     # Apply the Savitzky-Golay filter with a filter length of 1024
     from scipy.signal import savgol_filter
-    filtered_y = savgol_filter(signal, window_length=win_len-1, polyorder=1)
+    filtered_y = savgol_filter(signal, window_length=win_len, polyorder=1)
 
 
     return filtered_y
