@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.stats
+from scipy import stats
 plt.grid()
 plt.rcParams['text.usetex'] = True
 plt.rcParams.update({'font.family': 'Times New Roman', 'font.size': 50, })
@@ -10,7 +11,8 @@ def calculate_confidence_interval(matrix, value2):
     std_errors = np.std(matrix, axis=1) / np.sqrt(matrix.shape[1])
     print("stad dev", std_errors)
     alph=1-0.95
-    critical_value= scipy.stats.norm.ppf(1-alph /2)
+    critical_value= scipy.stats.norm.ppf(1-(alph /2))
+    #critical_value = stats.t.ppf(1 - alph / 2, 4)
     moe=critical_value*(std_errors/np.sqrt(len(means)))
     #confidence_interval = std_errors * scipy.stats.t.ppf((1 + 0.95) / 2., matrix.size-1)
     print("confidence interval",moe)
@@ -29,12 +31,36 @@ def calculate_confidence_interval(matrix, value2):
     #return mean, lower_bound, upper_bound
     return means, lower_bounds, upper_bounds
 
+def calculate_confidence_interval_cdf(matrix):
+    means = np.mean(matrix, axis=0)
+    print("mean", means, len(means))
+    std_errors = np.std(matrix, axis=0) / np.sqrt(matrix.shape[0])
+    print("stad dev", std_errors, len(std_errors), np.sqrt(matrix.shape[1]))
+    alph=1-0.95
+    #critical_value= scipy.stats.norm.ppf(1-(alph /2))
+    critical_value = stats.t.ppf(1 - alph / 2, 4)
+    moe=critical_value*(std_errors/np.sqrt(len(means)))
+    #confidence_interval = std_errors * scipy.stats.t.ppf((1 + 0.95) / 2., matrix.size-1)
+    print("confidence interval",moe)
+    #confidence_interval = 1.96 * std_errors  # 95% confidence interval
+
+    upper_bounds = means + moe
+    print("upper bound", upper_bounds, len(upper_bounds))
+    lower_bounds = means - moe
+    print("lower bound", lower_bounds, len(lower_bounds))
+
+    return means, lower_bounds, upper_bounds
+
 def plot_confidence_interval(matrix, value2, labl, axis, leg, col, mark):
+
+    print("label array", value2)
 
     means, lower_bound, upper_bound = calculate_confidence_interval(matrix, value2)
 
     #num_rows = len(means)
-    x_pos = np.arange(len(labl))
+    x_pos = labl
+    print("xpos", x_pos, len(x_pos))
+    print("mean", means, len(means))
 
 
     #plt.figure(figsize=(10, 6))
@@ -46,8 +72,10 @@ def plot_confidence_interval(matrix, value2, labl, axis, leg, col, mark):
 
     # Add x-axis and y-axis labels
     axis.set_xlabel('Order of Quantization', fontsize=50, fontname='Times New Roman')
-    axis.set_ylabel('Bits per obserervation', fontsize=50, fontname='Times New Roman')
+    #axis.set_xlabel('CDF', fontsize=50, fontname='Times New Roman')
+    axis.set_ylabel('Bits per observation', fontsize=50, fontname='Times New Roman')
     #axis.set_ylabel('Bit discrepancy rate', fontsize=50, fontname='Times New Roman')
+    #axis.set_ylabel('Repitition Count $\\theta$', fontsize=50, fontname='Times New Roman')
 
     # Add a title to the plot
     #axis.set_title('Percentage plot', fontsize=40, fontname='Times New Roman')
@@ -63,6 +91,47 @@ def plot_confidence_interval(matrix, value2, labl, axis, leg, col, mark):
 
     # Add a legend to the plot
     axis.legend(fontsize=40)
+
+    return
+
+def plot_confidence_interval_cdf(matrix, labl, axis, leg, col):
+
+
+    means, lower_bound, upper_bound = calculate_confidence_interval_cdf(matrix)
+
+    #num_rows = len(means)
+    x_pos = labl
+    print("xpos", x_pos, len(x_pos))
+    print("mean", means, len(means))
+
+
+    #plt.figure(figsize=(10, 6))
+    axis.plot(x_pos, means, alpha=0.7, label=leg, color=col)
+    #axis.fill_between(x_pos, lower_bound, upper_bound, alpha=0.3, color=col)
+
+    # Add x-axis and y-axis labels
+    #axis.set_xlabel('Order of Quantization', fontsize=50, fontname='Times New Roman')
+    axis.set_xlabel('CDF', fontsize=50, fontname='Times New Roman')
+    #axis.set_ylabel('Bits per obserervation', fontsize=50, fontname='Times New Roman')
+    #axis.set_ylabel('Bit discrepancy rate', fontsize=50, fontname='Times New Roman')
+    axis.set_ylabel('Repitition Count $\\theta$', fontsize=50, fontname='Times New Roman')
+
+    # Add a title to the plot
+    #axis.set_title('Percentage plot', fontsize=40, fontname='Times New Roman')
+
+    # Add x-axis ticks and labels
+    #lb=x_pos[::3]
+    #axis.set_xticks(x_pos)
+    #for index, label in enumerate(axis.xaxis.get_ticklabels()):
+        #if index%3!=0:
+            #label.set_visible(False)
+    #print("ticks", x_pos[::3])
+    #axis.set_xticklabels(labl)
+
+    # Add a legend to the plot
+    axis.legend(fontsize=50)
+
+    return
 
 #Plot Confidence interval and return mean
 def mean_of_the_matrix(matrix):

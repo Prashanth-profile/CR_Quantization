@@ -12,7 +12,30 @@ def uniform_quantization(complete_data, min, Quant_Range, max):
         result[i] = round(((complete_data[i] - min) * ((2 ** Quant_Range) - 1)) / (max - min))
     return result
 
+
 def uniform_quantization_window(complete_data, Quant_Range, window_size, clipping):
+    data = np.asarray(complete_data, dtype=float)
+    levels = 2 ** Quant_Range
+
+    # Reshape into windows
+    n_windows = len(data) // window_size
+    windows = data[:n_windows * window_size].reshape(n_windows, window_size)
+
+    if clipping is False:
+        min_vals = windows.min(axis=1, keepdims=True)
+        max_vals = windows.max(axis=1, keepdims=True)
+    else:
+        intervalsize = windows.std(axis=1, keepdims=True)
+        min_vals = windows.min(axis=1, keepdims=True) + (intervalsize / (levels - 1))
+        max_vals = windows.max(axis=1, keepdims=True) - (intervalsize / (levels + 1))
+
+    # Vectorized quantization
+    quantized = np.round((windows - min_vals) * (levels - 1) / (max_vals - min_vals))
+    quantized = np.clip(quantized, 0, levels - 1)
+
+    return quantized.reshape(-1)
+
+'''def uniform_quantization_window(complete_data, Quant_Range, window_size, clipping):
     #normalised=np.zeros(len(complete_data))
     result = np.empty(len(complete_data))
     #print("Length of complete data", len(complete_data))
@@ -45,7 +68,40 @@ def uniform_quantization_window(complete_data, Quant_Range, window_size, clippin
             else:
                 #normalised[i+j] = int(((complete_data[i+j] - minimum_window) * ((2 ** Quant_Range) - 1)) / (maximum_window - minimum_window))
                 result[i+j]=np.round(((complete_data[i+j] - minimum_window) * ((2 ** Quant_Range) - 1)) / (maximum_window - minimum_window))
-    return result
+    return result'''
+
+'''def uniform_quantization_window(complete_data, Quant_Range, window_size, clipping):
+    #normalised=np.zeros(len(complete_data))
+    result = np.empty(len(complete_data))
+    levels = 2 ** Quant_Range
+    #print("Length of complete data", len(complete_data))
+    #print("Window size", window_size)
+    for i in range(0, len(complete_data), window_size):
+        window = complete_data[i:i + window_size]
+        #print("i", i)
+        if clipping==False:
+            minimum_window = np.min(complete_data[i:i+window_size])
+            maximum_window = np.max(complete_data[i:i+window_size])
+        else:
+            intervalsize = np.std(complete_data[i:i+window_size])
+
+            minimum_window = np.min(complete_data[i:i+window_size]) + (intervalsize/(2**Quant_Range-1))
+            maximum_window = np.max(complete_data[i:i+window_size]) - (intervalsize/(2**Quant_Range+1))
+
+        #print("Max and min values are", maximum_window, minimum_window)
+
+        #intervalsize=(maximum_window-minimum_window)/ (2 ** Quant_Range)
+
+
+        #print("minimum", minimum_window, "maximum value", maximum_window, "at",np.argmax(complete_data[i:i+window_size]), " and ", np.argmin(complete_data[i:i+window_size]), "respectively")
+            # Vectorized quantization for the whole window
+        quantized = np.clip(
+                np.round((window - minimum_window) * (levels - 1) / (maximum_window - minimum_window)),
+                0, levels - 1
+            )
+
+        result[i:i + window_size] = quantized
+    return result'''
 
 
 def uniform_quantization_window_clipped(complete_data, Quant_Range, window_size):

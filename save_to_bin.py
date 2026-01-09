@@ -1,6 +1,6 @@
 def save_byte_array(byte_array, file_path):
     # Write the byte array to a binary file
-    with open(file_path, 'wb') as file:
+    with open(file_path, 'ab') as file:
         file.write(byte_array)
 
 # Example usage

@@ -35,20 +35,20 @@ class Category_CR:
         self.avg_cost=[]
 
 fontsz=50
-min_length=4096
-min_l=4096
+min_length=8192
+min_l=256
 time=range(min_length)
 ind=0
 
 Savgol=Category_CR()
 
-with open('C:/Users/prashanth/Desktop/CFO_SC_212_SDR1.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/SDR1_RSSI_8bit.txt', 'r') as fin:
     data_read_SDR1 = fin.read()
     last_char_SDR1 = data_read_SDR1[-1]
     if last_char_SDR1 == '\n':
         print("last next line character detected in first sample file")
         data_read_SDR1 = data_read_SDR1[:-1]
-with open('C:/Users/prashanth/Desktop/CFO_SC_212_SDR2.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/SDR2_RSSI_8bit.txt', 'r') as fin:
     data_read_SDR2 = fin.read()
     last_char_SDR2 = data_read_SDR2[-1]
     if last_char_SDR2 == '\n':
@@ -67,8 +67,14 @@ list_of_strings_SDR2 = data_read_SDR2.split('\n')
 #Convert string to float
 list_of_floats_SDR1 = [float(x) for x in list_of_strings_SDR1]
 list_of_floats_SDR2 = [float(x) for x in list_of_strings_SDR2]
-list_of_floats_SDR1 = list(map(lambda x: x*-1 if x < 0 else x, list_of_floats_SDR1))
-list_of_floats_SDR2 = list(map(lambda x: x*-1 if x < 0 else x, list_of_floats_SDR2))
+new_list1, new_list2 = zip(*[
+    (a, b) for a, b in zip(list_of_floats_SDR1, list_of_floats_SDR2) if a <= 0
+])
+#list_of_int_SDR1 = list(map(lambda x: x * -1 if x < 0 else x, list_of_int_SDR1))
+list_of_floats_SDR1 = list(new_list1)
+list_of_floats_SDR2 = list(new_list2)
+#list_of_floats_SDR1 = list(map(lambda x: x*-1 if x < 0 else x, list_of_floats_SDR1))
+#list_of_floats_SDR2 = list(map(lambda x: x*-1 if x < 0 else x, list_of_floats_SDR2))
 
 
 #SDR1_1_norm=noise_removal.savgold_filter(list_of_floats_SDR1[ind:ind+min_length], min_l)
@@ -83,11 +89,11 @@ list_of_floats_SDR2 = list(map(lambda x: x*-1 if x < 0 else x, list_of_floats_SD
 #SDR1_1_norm=list_of_floats_SDR1[ind:ind+min_length]
 #SDR2_1_norm=list_of_floats_SDR2[ind:ind+min_length]
 
-SDR1_1_norm=noise_removal.savgold_filter_ali(list_of_floats_SDR1[ind:ind+min_length], 9,5)
-SDR2_1_norm=noise_removal.savgold_filter_ali(list_of_floats_SDR2[ind:ind+min_length], 9,5)
+#SDR1_1_norm=noise_removal.savgold_filter_ali(list_of_floats_SDR1[ind:ind+min_length], 9,5)
+#SDR2_1_norm=noise_removal.savgold_filter_ali(list_of_floats_SDR2[ind:ind+min_length], 9,5)
 
-#SDR1_1_norm=dct.adaptive_dct_filter(list_of_floats_SDR1[ind:ind+min_length])
-#SDR2_1_norm=dct.adaptive_dct_filter(list_of_floats_SDR2[ind:ind+min_length])
+SDR1_1_norm=dct.adaptive_dct_filter(list_of_floats_SDR1[ind:ind+min_length])
+SDR2_1_norm=dct.adaptive_dct_filter(list_of_floats_SDR2[ind:ind+min_length])
 
 j = 0
 labelarray = []

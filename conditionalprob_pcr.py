@@ -3,6 +3,15 @@ import numpy as np
 import math
 import matplotlib.pyplot as plt
 
+import hashlib
+
+def sha256_from_int_array(arr):
+    """Generate a SHA-256 digest (bytes) from a list of integers."""
+    # Convert list of integers (0–255) into bytes
+    data = bytes(arr)
+    # Compute SHA-256 hash and return digest (in bytes)
+    return hashlib.sha256(data).digest()
+
 
 # Generate `num_sequences` reference sequences with different seeds
 def generate_multiple_sequences(num_sequences=32, sequence_length=256):
@@ -18,8 +27,6 @@ num_sequences = 32
 sequence_length = 256
 original_sequences = generate_multiple_sequences(num_sequences, sequence_length)
 
-
-# Function to calculate the conditional probability of each sequence
 def calculate_conditional_probabilities(num_sequences, num_checks, sequence):
     match_counts = np.zeros(num_sequences)  # Track matches per sequence
 
@@ -28,15 +35,49 @@ def calculate_conditional_probabilities(num_sequences, num_checks, sequence):
         #random.seed(i % num_sequences)  # Cycle through the 32 seeds
         #test_sequence = [random.randint(0, 2 ** 32 - 1) for _ in range(sequence_length)]
         test_sequence=sequence[i]
-
+        #print("sequence", sequence)
+        #print("test sequ", sequence[i])
         # Check which reference sequence matches
         for j in range(num_sequences):
-            print("First sequence", test_sequence, "original sequence", original_sequences[j])
+            print("First sequence", test_sequence)
             if test_sequence == sequence[j]:
+                print("First sequence", test_sequence, "\n original sequence", sequence[j], "\n at index", i, j)
                 match_counts[j] += 1
 
     # Convert counts to probabilities
     probabilities = match_counts / num_sequences
+    print("prob", match_counts, num_sequences)
+    return probabilities
+
+# Function to calculate the conditional probability of each sequence
+def calculate_conditional_probabilities_sha(num_sequences, length, sequence):
+    match_counts = np.zeros(num_sequences)  # Track matches per sequence
+    inputsequence=np.array(sequence).reshape(num_sequences, length)
+    for i in range(0, num_sequences):
+        #random.seed(i % num_sequences)  # Cycle through the 32 seeds
+        #test_sequence = [random.randint(0, 2 ** 32 - 1) for _ in range(sequence_length)]
+        test_sequence=inputsequence[i]
+        testSHA=test_sequence
+        #tesSHA=sha256_from_int_array(test_sequence)
+        k=0
+        #print("sequence", sequence)
+        #print("test sequ", sequence[i])
+        # Check which reference sequence matches
+        for j in range(0, num_sequences):
+            #print("First sequence", len(sequence[i:i+length]))
+            #print("Compare sequence", len(sequence[j:j+length]))
+            comparesequence=inputsequence[j]
+            compSHA=comparesequence
+            #compSHA=sha256_from_int_array(comparesequence)
+            if np.array_equal(testSHA, compSHA):
+                #print("First sequence", test_sequence, "\n original sequence", sequence[j], "\n at index", i, j)
+                match_counts[j] += 1
+                #print('\n',k)
+
+    # Convert counts to probabilities
+    #probabilities = match_counts / num_sequences
+    probabilities = match_counts
+    #print("prob", match_counts, num_sequences)
     return probabilities
 
 def calculate_conditional_probabilities_priori(num_sequences, num_checks, eve_sequence, legit_sequence):

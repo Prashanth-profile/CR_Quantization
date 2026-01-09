@@ -2,34 +2,29 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="93ded42d-dba7-41e4-8fd9-b6acae1c0569" name="Changes" comment="UPDATE: Histogram plot for error distribution added to quantization main">
-      <change afterPath="$PROJECT_DIR$/RIP_coherence_calc.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/conditional_prob.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/conditional_prob_eve.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/conditionalprob_pcr.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/conditionalprob_pcr_cr.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/conditionaprob_MT.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/crrate32bvs8b.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/crratedct.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/datasetanalysis.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lineplot_time.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/parity_byte_check.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rand_ber.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/randfft.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/seeded_mt19937.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/temporalrate.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/temporalrate_pcrvscfocr.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tobssimul.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/videocompression.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CDF.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ecdf.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/empericalcdf.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/find_entropy.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/freqspectrum_dctvssg.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/generateCR_DCT.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/justdct.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/justdct_pe.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/multibit_8vs16.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/multibit_crrate8v16v32v64.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/conditionalprob_pcr.py" beforeDir="false" afterPath="$PROJECT_DIR$/conditionalprob_pcr.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/conditionalprob_pcr_cr.py" beforeDir="false" afterPath="$PROJECT_DIR$/conditionalprob_pcr_cr.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/confidence_interval.py" beforeDir="false" afterPath="$PROJECT_DIR$/confidence_interval.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dct.py" beforeDir="false" afterPath="$PROJECT_DIR$/dct.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/crratedct.py" beforeDir="false" afterPath="$PROJECT_DIR$/crratedct.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/extract_CFO_PO_RSS.py" beforeDir="false" afterPath="$PROJECT_DIR$/extract_CFO_PO_RSS.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractrssi_conf.py" beforeDir="false" afterPath="$PROJECT_DIR$/extractrssi_conf.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/generate_CR.py" beforeDir="false" afterPath="$PROJECT_DIR$/generate_CR.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/int2byte_conversion.py" beforeDir="false" afterPath="$PROJECT_DIR$/int2byte_conversion.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/multibitquant_SoAcomparison.py" beforeDir="false" afterPath="$PROJECT_DIR$/multibitquant_SoAcomparison.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/noise_removal.py" beforeDir="false" afterPath="$PROJECT_DIR$/noise_removal.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tradeoff_plot.py" beforeDir="false" afterPath="$PROJECT_DIR$/tradeoff_plot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/wavelet_transform.py" beforeDir="false" afterPath="$PROJECT_DIR$/wavelet_transform.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/save_to_bin.py" beforeDir="false" afterPath="$PROJECT_DIR$/save_to_bin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tobssimul.py" beforeDir="false" afterPath="$PROJECT_DIR$/tobssimul.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/uniform_quantization.py" beforeDir="false" afterPath="$PROJECT_DIR$/uniform_quantization.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,7 +63,7 @@
       <recent name="C:\Users\prashanth\Documents\GitHub\CR_Quantization" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.sp800_22_tests">
     <configuration name="dct" type="PythonConfigurationType" factoryName="Python">
       <module name="CR_Quantization" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -250,7 +245,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../../NIST test/sp800_22_tests-master/sp800_22_tests.py" />
-      <option name="PARAMETERS" value="C:\Users\prashanth\Desktop\1byte_array_prescrambling.bin" />
+      <option name="PARAMETERS" value="C:\Users\prashanth\Desktop\multibyte_array_postscrambling.bin" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -267,7 +262,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;$USER_HOME$/Desktop/multibyte_array_postscrambling.bin&quot;" />
       <option name="_new_target" value="&quot;$PROJECT_DIR$/../../NIST test/sp800_22_tests-master&quot;" />
       <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method v="2" />

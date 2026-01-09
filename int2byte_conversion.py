@@ -14,8 +14,12 @@ def intarray_to_bytearray(quantized_int_SDR1, quantized_int_SDR2, Quant_Range):
     SDR1_bincount = binary_count.intarray2binarray(quantized_int_SDR1, Quant_Range)
     SDR2_bincount = binary_count.intarray2binarray(quantized_int_SDR2, Quant_Range)
 
-    SDR1_string = stringify.stringify(SDR1_bincount.astype(int))
-    SDR2_string = stringify.stringify(SDR2_bincount.astype(int))
+    ####ENABLE FOR OTHER PROGRAMS
+    #SDR1_string = stringify.stringify(SDR1_bincount.astype(int))
+    #SDR2_string = stringify.stringify(SDR2_bincount.astype(int))
+
+    SDR1_string = stringify.stringify(np.array(SDR1_bincount).astype(np.uint16))
+    SDR2_string = stringify.stringify(np.array(SDR2_bincount).astype(np.uint16))
 
     SDR1_intbytes = string_to_bytearray.string_to_bytearray_conversion(Quant_Range, SDR1_string)
     SDR2_intbytes = string_to_bytearray.string_to_bytearray_conversion(Quant_Range, SDR2_string)
