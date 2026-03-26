@@ -77,12 +77,12 @@ class Common_Source:
 
 #################################### Legitimate parties ####################################################
 
-with open('C:/Users/prashanth/Desktop/SDR1_RSSI_32bit.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/SDR1_RSSI_8bit.txt', 'r') as fin:
     data_read_SDR1 = fin.read()
     last_char_SDR1 = data_read_SDR1[-1]
     if last_char_SDR1 == '\n':
         data_read_SDR1 = data_read_SDR1[:-1]
-with open('C:/Users/prashanth/Desktop/SDR2_RSSI_32bit.txt', 'r') as fin:
+with open('C:/Users/prashanth/Desktop/SDR2_RSSI_8bit.txt', 'r') as fin:
     data_read_SDR2 = fin.read()
     last_char_SDR2 = data_read_SDR2[-1]
     if last_char_SDR2 == '\n':
@@ -98,8 +98,8 @@ list_of_strings_SDR1 = RSSI_data_read_SDR1.split('\n')
 list_of_strings_SDR2 = RSSI_data_read_SDR2.split('\n')
 
 # Convert string to float
-list_of_floats_SDR1 = [float(x) for x in list_of_strings_SDR1]
-list_of_floats_SDR2 = [float(x) for x in list_of_strings_SDR2]
+list_of_floats_SDR1 = [np.int8(x) for x in list_of_strings_SDR1]
+list_of_floats_SDR2 = [np.int8(x) for x in list_of_strings_SDR2]
 #list_of_floats_SDR1 = list(map(lambda x: x * -1 if x < 0 else x, list_of_floats_SDR1))
 #list_of_floats_SDR2 = list(map(lambda x: x * -1 if x < 0 else x, list_of_floats_SDR2))
 new_list1, new_list2 = zip(*[
@@ -173,10 +173,10 @@ SG_CR_c15_x=[]
     #else:
         #maxQuantrange=15
 
-for mode in range(4, 5):
-    if mode==0 or mode==4 or mode==5:
+for mode in range(0, 6):
+    if mode==0 or mode==3 or mode==4:
         maxQuantrange = 8
-    elif mode==1 or mode==2 or mode==3:
+    elif mode==1 or mode==2 or mode==5:
         maxQuantrange=15
     for ind in range(0, min_length, min_l):
         print("Mode::::::::::::::::", ind)
@@ -190,16 +190,16 @@ for mode in range(4, 5):
 
         #SDR1_1_norm = dct.adaptive_dct_filter(list_of_floats_SDR1[ind:ind + min_l])
         #SDR2_1_norm = dct.adaptive_dct_filter(list_of_floats_SDR2[ind:ind + min_l])
-        if mode==3 or mode==4:
+        if mode==2 or mode==3:
             SDR1_1_norm = dct.adaptive_dct_filter(list_of_floats_SDR1[ind:ind + min_l])
             SDR2_1_norm = dct.adaptive_dct_filter(list_of_floats_SDR2[ind:ind + min_l])
 
-        if mode==2 or mode==5:
+        if mode==4 or mode==5:
             SDR1_1_norm = noise_removal.savgold_filter(list_of_floats_SDR1[ind:ind + min_l], min_l)
             SDR2_1_norm = noise_removal.savgold_filter(list_of_floats_SDR2[ind:ind + min_l], min_l)
 
-        #SDR1_1_norm = [round(x) for x in SDR1_1_norm]
-        #SDR2_1_norm = [round(x) for x in SDR2_1_norm]
+        SDR1_1_norm = [round(x) for x in SDR1_1_norm]
+        SDR2_1_norm = [round(x) for x in SDR2_1_norm]
 
         #SDR1_1_norm = SDR1_1_norm.round(decimals=3)
         #SDR2_1_norm = SDR2_1_norm.round(decimals=3)
@@ -267,18 +267,18 @@ for mode in range(4, 5):
     if mode==0 or mode==1:
         print("x,y DCT $I = n/2$", x, y)
         plt.plot(x, y, label="DCT $I = n/2$, $c = {}$".format(maxQuantrange), marker='.', linewidth=2)
-    elif mode==3 or mode==4:
+    elif mode==2 or mode==3:
         print("x,y DCT $I = 2$", x, y)
-        if mode==3:
+        if mode == 2:
             plt.plot(x, y, label="DCT $I = 2$, $c = {}$".format(maxQuantrange), marker='D', linewidth=2, color='green')
-        elif mode==4:
+        elif mode == 3:
             plt.plot(x, y, label="DCT $I = 2$, $c = {}$".format(maxQuantrange), marker='D', linewidth=2, color='red')
-    elif mode==2 or mode==5:
+    elif mode==4 or mode==5:
         print("x,y SG", x, y)
-        if mode==2:
-            plt.plot(x, y, label="Sav. Gol. $c = {}$".format(maxQuantrange), marker='v', linewidth=2, color='brown')
-        elif mode==5:
+        if mode == 4:
             plt.plot(x, y, label="Sav. Gol. $c = {}$".format(maxQuantrange), marker='v', linewidth=2, color='violet')
+        elif mode == 5:
+            plt.plot(x, y, label="Sav. Gol. $c = {}$".format(maxQuantrange), marker='v', linewidth=2, color='brown')
 
 
 #num_columns=len(y)

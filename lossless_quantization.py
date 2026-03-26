@@ -14,8 +14,8 @@ def one_bit_quantization(list_of_floats_SDR1, list_of_floats_SDR2, min_length, w
     SDR1_string = stringify.stringify(threshold_quantized_bits_SDR1)
     SDR2_string = stringify.stringify(threshold_quantized_bits_SDR2)
 
-    print("SDR1 string", SDR1_string)
-    print("SDR2 string", SDR2_string)
+    #print("SDR1 string", SDR1_string)
+    #print("SDR2 string", SDR2_string)
 
     #print("One bit non lossy quantization achieved using MEAN_MEDIANBAR", Quantization.MEAN_MEDIANBAR.value)
 

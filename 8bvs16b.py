@@ -188,49 +188,43 @@ for ind in range(0, min_length, min_l):
 
         #Unit Step Kernel
         elif mode == 2:
+            #SDR1_1_norm_1 = noise_removal.savgold_filter(RSSI_8bit_SDR1.raw_samples[ind:ind + min_l],
+            #                                             win)  # 8-bit Savgol
+            #SDR2_1_norm_2 = noise_removal.savgold_filter(RSSI_8bit_SDR2.raw_samples[ind:ind + min_l], win)
+            #SDR1_1_norm = [round(x) for x in SDR1_1_norm_1]
+            #SDR2_1_norm = [round(x) for x in SDR2_1_norm_2]
             SDR1_1_norm_1 = noise_removal.savgold_filter(RSSI_8bit_SDR1.raw_samples[ind:ind + min_l],
                                                          win)  # 8-bit Savgol
             SDR2_1_norm_2 = noise_removal.savgold_filter(RSSI_8bit_SDR2.raw_samples[ind:ind + min_l], win)
-            SDR1_1_norm = [round(x) for x in SDR1_1_norm_1]
-            SDR2_1_norm = [round(x) for x in SDR2_1_norm_2]
-            #SDR1_1_norm_1 = noise_removal.savgold_filter_ali(RSSI_8bit_SDR1.raw_samples[ind:ind + min_l],
-            #                                           9,5)  # 8-bit Savgol
-            #SDR2_1_norm_2 = noise_removal.savgold_filter_ali(RSSI_8bit_SDR2.raw_samples[ind:ind + min_l], 9, 5)
             #SDR1_1_norm = SDR1_1_norm_1.round(decimals=5)
             #SDR2_1_norm = SDR2_1_norm_2.round(decimals=5)
-            #SDR1_1_norm = (SDR1_1_norm_1.astype(np.int16) >> 8).astype(np.int8)
-            #SDR2_1_norm = (SDR2_1_norm_2.astype(np.int16) >> 8).astype(np.int8)
+            SDR1_1_norm = [np.int16(x) for x in SDR1_1_norm_1]
+            SDR2_1_norm = [np.int16(x) for x in SDR2_1_norm_2]
 
 
         #Gaussian Kernel
         elif mode == 3:
             SDR1_1_norm_1 = noise_removal.savgold_filter(RSSI_16bit_SDR1.raw_samples[ind:ind + min_l], win) #8-bit Savgol
             SDR2_1_norm_2 = noise_removal.savgold_filter(RSSI_16bit_SDR2.raw_samples[ind:ind + min_l], win)
+            #SDR1_1_norm = [np.float16(x) for x in SDR1_1_norm_1]
+            #SDR2_1_norm = [np.float16(x) for x in SDR2_1_norm_2]
             SDR1_1_norm = [np.float32(x) for x in SDR1_1_norm_1]
             SDR2_1_norm = [np.float32(x) for x in SDR2_1_norm_2]
-            #SDR1_1_norm = np.array(SDR1_1_norm_1).round(decimals=3)
-            #SDR2_1_norm = np.array(SDR2_1_norm_2).round(decimals=3)
 
         elif mode == 4:
             SDR1_1_norm_1 = dct.adaptive_dct_filter(RSSI_8bit_SDR1.raw_samples[ind:ind + min_l])  # 32bit DCT
             SDR2_1_norm_2 = dct.adaptive_dct_filter(RSSI_8bit_SDR2.raw_samples[ind:ind + min_l])
-            #SDR1_1_norm_1 = dct.adaptive_dct_filter_window(RSSI_8bit_SDR1.raw_samples[ind:ind + min_l], int(win/2)) #32bit DCT
-            #SDR2_1_norm_2 = dct.adaptive_dct_filter_window(RSSI_8bit_SDR2.raw_samples[ind:ind + min_l], int(win/2))
-            #SDR1_1_norm = (SDR1_1_norm_1.astype(np.int16) >> 8).astype(np.int8)
-            #SDR2_1_norm = (SDR2_1_norm_2.astype(np.int16) >> 8).astype(np.int8)
-            #SDR1_1_norm=SDR1_1_norm_1.round(decimals=5)
-            #SDR2_1_norm=SDR2_1_norm_2.round(decimals=5)
-            SDR1_1_norm = [round(x) for x in SDR1_1_norm_1]
-            SDR2_1_norm = [round(x) for x in SDR2_1_norm_2]
+            SDR1_1_norm = [np.int16(x) for x in SDR1_1_norm_1]
+            SDR2_1_norm = [np.int16(x) for x in SDR2_1_norm_2]
 
 
         elif mode == 5:
             SDR1_1_norm_1 = dct.adaptive_dct_filter(RSSI_16bit_SDR1.raw_samples[ind:ind + min_l]) #32bit DCT
             SDR2_1_norm_2 = dct.adaptive_dct_filter(RSSI_16bit_SDR2.raw_samples[ind:ind + min_l])
+            #SDR1_1_norm = [np.float16(x) for x in SDR1_1_norm_1]
+            #SDR2_1_norm = [np.float16(x) for x in SDR2_1_norm_2]
             SDR1_1_norm = [np.float32(x) for x in SDR1_1_norm_1]
             SDR2_1_norm = [np.float32(x) for x in SDR2_1_norm_2]
-            #SDR1_1_norm = np.array(SDR1_1_norm_1).round(decimals=3)
-            #SDR2_1_norm = np.array(SDR2_1_norm_2).round(decimals=3)
 
 
 
@@ -320,14 +314,14 @@ for ind in range(0, min_length, min_l):
 mark='.'
 mark_cap='D'
 
-confidence_interval.plot_confidence_interval(np.array(DCT_16.filtentropy).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "Eng. En. $H(K^{N1}_{A,32})$", 'magenta', mark_cap)
-confidence_interval.plot_confidence_interval(np.array(DCT_8.filtentropy).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "Eng. En. $H(K^{N1}_{A,16})$", 'orange', mark_cap)
+confidence_interval.plot_confidence_interval(np.array(DCT_16.filtentropy).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "CR Cap. $\eta = 16$", 'magenta', mark_cap)
+confidence_interval.plot_confidence_interval(np.array(DCT_8.filtentropy).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "CR Cap. $\eta = 8$", 'orange', mark_cap)
 #confidence_interval.plot_confidence_interval(np.array(Savgol_16.filtentropy).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "Eng. En. Sav. Gol. $H(K^{N1}_{A,16})$", 'brown', mark_cap)
 confidence_interval.plot_confidence_interval(np.array(DCT_16.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "DCT $\eta = 16$", 'cyan', mark)
-confidence_interval.plot_confidence_interval(np.array(DCT_8.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "DCT $\eta = 8$", 'blue', mark)
 confidence_interval.plot_confidence_interval(np.array(Savgol_16.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "Sav. Gol. $\eta = 16$", 'brown', mark)
 #confidence_interval.plot_confidence_interval(np.array(Savgol_8.filtentropy).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "Eng. En. Sav. Gol. $H(K^{N1}_{A,8})$", 'black', mark_cap)
 #confidence_interval.plot_confidence_interval(np.array(No_Filter_8.entropy).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "Eng. En. $\eta = 8$", 'orange', mark_cap)
+confidence_interval.plot_confidence_interval(np.array(DCT_8.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "DCT $\eta = 8$", 'blue', mark)
 confidence_interval.plot_confidence_interval(np.array(Savgol_8.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "Sav. Gol. $\eta = 8$", 'black', mark)
 confidence_interval.plot_confidence_interval(np.array(No_Filter_16.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "NF $\eta = 16$", 'red', mark)
 confidence_interval.plot_confidence_interval(np.array(No_Filter_8.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "NF $\eta = 8$", 'yellow', mark)

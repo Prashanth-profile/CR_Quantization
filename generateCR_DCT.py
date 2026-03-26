@@ -44,10 +44,10 @@ class Category_CR:
         self.avg_cost=[]
 
 fontsz=50
-min_length=70192
-min_l=70192
+min_length=65536
+min_l=65536
 time=range(min_length)
-ind=140384
+ind=0
 
 Savgol=Category_CR()
 
@@ -74,8 +74,8 @@ list_of_strings_SDR1 = data_read_SDR1.split('\n')
 list_of_strings_SDR2 = data_read_SDR2.split('\n')
 
 #Convert string to float
-list_of_floats_SDR1 = [float(x) for x in list_of_strings_SDR1]
-list_of_floats_SDR2 = [float(x) for x in list_of_strings_SDR2]
+list_of_floats_SDR1 = [np.float32(x) for x in list_of_strings_SDR1]
+list_of_floats_SDR2 = [np.float32(x) for x in list_of_strings_SDR2]
 new_list1, new_list2 = zip(*[
     (a, b) for a, b in zip(list_of_floats_SDR1, list_of_floats_SDR2) if a <= 0
 ])
@@ -105,7 +105,7 @@ list_of_floats_SDR2 = list(map(lambda x: x*-1 if x < 0 else x, list_of_floats_SD
 j = 0
 labelarray = []
 count = 0
-Quantseteps = 15
+Quantseteps = 16
 
 file_path = r'C:\Users\prashanth\Desktop\multibyte_array_postscrambling.bin'
 
@@ -113,18 +113,25 @@ Quant_Range = Quantseteps
 
 raw_data=bytearray()
 #for ind in range(0, min_length, min_l):
-#SDR1_1_norm = dct.adaptive_dct_filter(list_of_floats_SDR1[ind:ind + min_l])
-#SDR2_1_norm = dct.adaptive_dct_filter(list_of_floats_SDR2[ind:ind + min_l])
+SDR1_1_norm_1 = dct.adaptive_dct_filter(list_of_floats_SDR1[ind:ind + min_l])
+SDR2_1_norm_2 = dct.adaptive_dct_filter(list_of_floats_SDR2[ind:ind + min_l])
 
-#SDR1_1_norm = dct.adaptive_dct_filter_window(list_of_floats_SDR1[ind:ind + min_l], int(min_l/2)) #32bit DCT
-#SDR2_1_norm = dct.adaptive_dct_filter_window(list_of_floats_SDR2[ind:ind + min_l], int(min_l/2))
+#SDR1_1_norm_1 = dct.adaptive_dct_filter_window(list_of_floats_SDR1[ind:ind + min_l], int(min_l/2)) #32bit DCT
+#SDR2_1_norm_2 = dct.adaptive_dct_filter_window(list_of_floats_SDR2[ind:ind + min_l], int(min_l/2))
 
 
-SDR1_1_norm= noise_removal.savgold_filter(list_of_floats_SDR1[ind:ind + min_l], min_l)
-SDR2_1_norm=noise_removal.savgold_filter(list_of_floats_SDR2[ind:ind+min_l], min_l)
+#SDR1_1_norm_1= noise_removal.savgold_filter(list_of_floats_SDR1[ind:ind + min_l], min_l)
+#SDR2_1_norm_2=noise_removal.savgold_filter(list_of_floats_SDR2[ind:ind+min_l], min_l)
+
+print("Entropy RPE", calculate_entropy.calculate_entropy(list_of_floats_SDR1[ind:ind + min_l]))
+
+SDR1_1_norm = [np.float32(x) for x in SDR1_1_norm_1]
+SDR2_1_norm = [np.float32(x) for x in SDR2_1_norm_2]
 
 #SDR1_1_norm = np.array(SDR1_1_norm_1).round(decimals=3)
 #SDR2_1_norm = np.array(SDR2_1_norm_2).round(decimals=3)
+
+print("Entropy NR1", calculate_entropy.calculate_entropy(SDR1_1_norm))
 
 SDR1_2gbytes, SDR2_2gbytes = lossless_quantization.multi_bit_quantization_corrplot(SDR1_1_norm,
                                                                                    SDR2_1_norm,
@@ -133,9 +140,9 @@ SDR1_2gbytes, SDR2_2gbytes = lossless_quantization.multi_bit_quantization_corrpl
                                                                                    Quant_Range,
                                                                                    True, False)
 
-
-
+print("Entropy Quant", calculate_entropy.calculate_entropy(SDR1_2gbytes))
 SDR1_2, SDR2_2 = int2byte_conversion.intarray_to_bytearray(SDR1_2gbytes, SDR2_2gbytes, Quant_Range)
+print("Entropy NR2", calculate_entropy.calculate_entropy(SDR1_2))
 #plot_histogram.create_histogram(SDR2_2, 4, ax4)
 num_errors, error_dist = erroranderror_distribution.error_distribution(SDR1_2gbytes, SDR2_2gbytes, Quant_Range)
 
@@ -150,6 +157,8 @@ num_errors, error_dist = erroranderror_distribution.error_distribution(SDR1_2gby
 
 SDR1_bincount = binary_count.intarray2binarray(SDR1_2, Quant_Range)
 SDR2_bincount = binary_count.intarray2binarray(SDR2_2, Quant_Range)
+
+print("Entropy NR222222", calculate_entropy.calculate_entropy(SDR1_bincount))
 
 #random.Random(4).shuffle(SDR1_bincount)
 #random.Random(4).shuffle(SDR2_bincount)
@@ -214,7 +223,7 @@ with open(file_path, "wb") as f:
 # Displaying the plot
 #plt.show()
 #plt2.legend()
-#plt2.show()
+plt2.show()
 
 
 # Displaying the plot

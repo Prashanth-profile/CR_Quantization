@@ -43,7 +43,7 @@ def adaptive_dct_filter_window(input_signal, win):
     dct_coefficients_filtered=dct_coefficients
 
 
-    #print(dct_coefficients)
+    print(dct_coefficients)
 
     # Apply Inverse Discrete Cosine Transform (IDCT)
     filtered_signal = idct(dct_coefficients_filtered, type=2)

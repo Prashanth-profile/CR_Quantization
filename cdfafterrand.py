@@ -173,7 +173,7 @@ SG_CR_c15_x=[]
     #else:
         #maxQuantrange=15
 
-for mode in range(4, 5):
+for mode in range(0, 6):
     if mode==0 or mode==4 or mode==5:
         maxQuantrange = 8
     elif mode==1 or mode==2 or mode==3:
@@ -224,7 +224,7 @@ for mode in range(4, 5):
         # print("greycode string for SDR2", greycode_stringSDR2, " of length", len(greycode_stringSDR2))
 
         greycodeSDR1_bytes = string_to_bytearray.string_to_bytearray_conversion(8, greycode_stringSDR1)
-        #random.Random(4).shuffle(greycodeSDR1_bytes)
+        random.Random(4).shuffle(greycodeSDR1_bytes)
 
         #SDR1_quantized.append(greycodeSDR1_bytes)
         SDR1_quantized=greycodeSDR1_bytes
@@ -269,16 +269,10 @@ for mode in range(4, 5):
         plt.plot(x, y, label="DCT $I = n/2$, $c = {}$".format(maxQuantrange), marker='.', linewidth=2)
     elif mode==3 or mode==4:
         print("x,y DCT $I = 2$", x, y)
-        if mode==3:
-            plt.plot(x, y, label="DCT $I = 2$, $c = {}$".format(maxQuantrange), marker='D', linewidth=2, color='green')
-        elif mode==4:
-            plt.plot(x, y, label="DCT $I = 2$, $c = {}$".format(maxQuantrange), marker='D', linewidth=2, color='red')
+        plt.plot(x, y, label="DCT $I = 2$, $c = {}$".format(maxQuantrange), marker='D', linewidth=2)
     elif mode==2 or mode==5:
         print("x,y SG", x, y)
-        if mode==2:
-            plt.plot(x, y, label="Sav. Gol. $c = {}$".format(maxQuantrange), marker='v', linewidth=2, color='brown')
-        elif mode==5:
-            plt.plot(x, y, label="Sav. Gol. $c = {}$".format(maxQuantrange), marker='v', linewidth=2, color='violet')
+        plt.plot(x, y, label="Sav. Gol. $c = {}$".format(maxQuantrange), marker='v', linewidth=2)
 
 
 #num_columns=len(y)
@@ -298,9 +292,6 @@ for mode in range(4, 5):
 plt.xlabel("Repitition Count $\\theta$")
 plt.ylabel("CDF")
 plt.grid(True)
-leg=plt.legend()
-leg_lines = leg.get_lines()
-plt.setp(leg_lines, linewidth=4)
-leg_lines = leg.get_lines()
+plt.legend()
 plt.show()
 

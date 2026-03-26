@@ -62,6 +62,8 @@ class Category_CR:
         self.floor_diff=[]
         self.cost_func=[]
         self.avg_cost=[]
+        self.filtentropy=[]
+        self.quantentropy=[]
 
 
 #with open('C:/Users/prashanth/Desktop/RSSI_SC_212_SDR1.txt', 'r') as fin:
@@ -87,8 +89,8 @@ list_of_strings_SDR1 = RSSI_data_read_SDR1.split('\n')
 list_of_strings_SDR2 = RSSI_data_read_SDR2.split('\n')
 
 # Convert string to float
-list_of_int_SDR1 = [int(x) for x in list_of_strings_SDR1]
-list_of_int_SDR2 = [int(x) for x in list_of_strings_SDR2]
+list_of_int_SDR1 = [np.int8(x) for x in list_of_strings_SDR1]
+list_of_int_SDR2 = [np.int8(x) for x in list_of_strings_SDR2]
 new_list1, new_list2 = zip(*[
     (a, b) for a, b in zip(list_of_int_SDR1, list_of_int_SDR2) if a <= 0
 ])
@@ -171,7 +173,7 @@ for ind in range(0, min_length, min_l):
 
     for mode in range(6):
 
-        print("Mode::::::::::::::::", mode)
+        #print("Mode::::::::::::::::", mode)
         SDR1_1_norm=np.empty(min_l)
         SDR2_1_norm = np.empty(min_l)
 
@@ -180,12 +182,19 @@ for ind in range(0, min_length, min_l):
 
         #RSSI No filter
         if mode == 0:
-            SDR1_1_norm = RSSI_SDR1_8.raw_samples[ind:ind + min_l] #8bit
-            SDR2_1_norm = RSSI_SDR2_8.raw_samples[ind:ind + min_l]
+            SDR1_1_norm_1 = RSSI_SDR1_8.raw_samples[ind:ind + min_l] #8bit
+            SDR2_1_norm_2 = RSSI_SDR2_8.raw_samples[ind:ind + min_l]
             #SDR1_1_norm_1 = RSSI_SDR1_32.raw_samples[ind:ind + min_l]  # 32bit
             #SDR2_1_norm_2 = RSSI_SDR2_32.raw_samples[ind:ind + min_l]
             #SDR1_1_norm = np.array(SDR1_1_norm_1).round(decimals=3)
             #SDR2_1_norm = np.array(SDR2_1_norm_2).round(decimals=3)
+            #SDR1_1_norm = (np.array(SDR1_1_norm_1).astype(np.int16) >> 8).astype(np.int8)
+            #SDR2_1_norm = (np.array(SDR2_1_norm_2).astype(np.int16) >> 8).astype(np.int8)
+            SDR1_1_norm = [round(x) for x in SDR1_1_norm_1]
+            SDR2_1_norm = [round(x) for x in SDR2_1_norm_2]
+
+            #SDR1_1_norm = [np.float32(x) for x in SDR1_1_norm_1]
+            #SDR2_1_norm = [np.float32(x) for x in SDR2_1_norm_2]
 
         # RSSI 2 filter coeffs
         elif mode == 1:
@@ -194,9 +203,21 @@ for ind in range(0, min_length, min_l):
             SDR2_1_norm_2 = dct.adaptive_dct_filter(RSSI_SDR2_8.raw_samples[ind:ind + min_l])
             #SDR1_1_norm = np.array(SDR1_1_norm_1).round(decimals=3)
             #SDR2_1_norm = np.array(SDR2_1_norm_2).round(decimals=3)
+            #MSB
+            #SDR1_1_norm = (np.array(SDR1_1_norm_1).astype(np.int16) >> 8).astype(np.int8)
+            #SDR2_1_norm = (np.array(SDR2_1_norm_2).astype(np.int16) >> 8).astype(np.int8)
+            #LSB
+            #SDR1_1_norm = np.array(SDR1_1_norm_1).astype(np.int8)
+            #SDR2_1_norm = np.array(SDR2_1_norm_2).astype(np.int8)
 
-            SDR1_1_norm = [int(x) for x in SDR1_1_norm_1]
-            SDR2_1_norm = [int(x) for x in SDR2_1_norm_2]
+            SDR1_1_norm = [round(x) for x in SDR1_1_norm_1]
+            SDR2_1_norm = [round(x) for x in SDR2_1_norm_2]
+
+            #SDR1_1_norm = [np.float32(x) for x in SDR1_1_norm_1]
+            #SDR2_1_norm = [np.float32(x) for x in SDR2_1_norm_2]
+
+            #print("Unrounded", SDR1_1_norm_1)
+            #print("Filtered", SDR1_1_norm)
 
         ## RSSI 4 filter coeffs
         elif mode == 2:
@@ -204,9 +225,17 @@ for ind in range(0, min_length, min_l):
             SDR2_1_norm_2 = dct.adaptive_dct_filter_window(RSSI_SDR2_8.raw_samples[ind:ind + min_l],4)
             #SDR1_1_norm = np.array(SDR1_1_norm_1).round(decimals=3)
             #SDR2_1_norm = np.array(SDR2_1_norm_2).round(decimals=3)
+            #MSB
+            #SDR1_1_norm = (np.array(SDR1_1_norm_1).astype(np.int16) >> 8).astype(np.int8)
+            #SDR2_1_norm = (np.array(SDR2_1_norm_2).astype(np.int16) >> 8).astype(np.int8)
+            # LSB
+            #SDR1_1_norm = np.array(SDR1_1_norm_1).astype(np.int8)
+            #SDR2_1_norm = np.array(SDR2_1_norm_2).astype(np.int8)
 
-            SDR1_1_norm = [int(x) for x in SDR1_1_norm_1]
-            SDR2_1_norm = [int(x) for x in SDR2_1_norm_2]
+            SDR1_1_norm = [round(x) for x in SDR1_1_norm_1]
+            SDR2_1_norm = [round(x) for x in SDR2_1_norm_2]
+            #SDR1_1_norm = [np.float32(x) for x in SDR1_1_norm_1]
+            #SDR2_1_norm = [np.float32(x) for x in SDR2_1_norm_2]
 
         # RSSI 1/4 filter coeffs
         elif mode == 3:
@@ -216,8 +245,16 @@ for ind in range(0, min_length, min_l):
             #SDR1_1_norm = np.array(SDR1_1_norm_1).round(decimals=3)
             #SDR2_1_norm = np.array(SDR2_1_norm_2).round(decimals=3)
 
-            SDR1_1_norm = [int(x) for x in SDR1_1_norm_1]
-            SDR2_1_norm = [int(x) for x in SDR2_1_norm_2]
+            SDR1_1_norm = [round(x) for x in SDR1_1_norm_1]
+            SDR2_1_norm = [round(x) for x in SDR2_1_norm_2]
+            #SDR1_1_norm = [np.float32(x) for x in SDR1_1_norm_1]
+            #SDR2_1_norm = [np.float32(x) for x in SDR2_1_norm_2]
+            #MSB
+            #SDR1_1_norm = (np.array(SDR1_1_norm_1).astype(np.int16) >> 8).astype(np.int8)
+            #SDR2_1_norm = (np.array(SDR2_1_norm_2).astype(np.int16) >> 8).astype(np.int8)
+            # LSB
+            #SDR1_1_norm = np.array(SDR1_1_norm_1).astype(np.int8)
+            #SDR2_1_norm = np.array(SDR2_1_norm_2).astype(np.int8)
 
         # # RSSI 1/3 filter coeffs
         elif mode == 4:
@@ -225,9 +262,18 @@ for ind in range(0, min_length, min_l):
             SDR2_1_norm_2 = dct.adaptive_dct_filter_window(RSSI_SDR2_8.raw_samples[ind:ind + min_l],int(win / 3))
             #SDR1_1_norm = np.array(SDR1_1_norm_1).round(decimals=3)
             #SDR2_1_norm = np.array(SDR2_1_norm_2).round(decimals=3)
+            #MSB
+            #SDR1_1_norm = (np.array(SDR1_1_norm_1).astype(np.int16) >> 8).astype(np.int8)
+            #SDR2_1_norm = (np.array(SDR2_1_norm_2).astype(np.int16) >> 8).astype(np.int8)
+            # LSB
+            #SDR1_1_norm = np.array(SDR1_1_norm_1).astype(np.int8)
+            #SDR2_1_norm = np.array(SDR2_1_norm_2).astype(np.int8)
 
-            SDR1_1_norm = [int(x) for x in SDR1_1_norm_1]
-            SDR2_1_norm = [int(x) for x in SDR2_1_norm_2]
+            SDR1_1_norm = [round(x) for x in SDR1_1_norm_1]
+            SDR2_1_norm = [round(x) for x in SDR2_1_norm_2]
+
+            #SDR1_1_norm = [np.float32(x) for x in SDR1_1_norm_1]
+            #SDR2_1_norm = [np.float32(x) for x in SDR2_1_norm_2]
 
             #SDR1_1_norm = [round(x) for x in SDR1_1_norm_float]
             #SDR2_1_norm = [round(x) for x in SDR2_1_norm_float]
@@ -240,9 +286,17 @@ for ind in range(0, min_length, min_l):
                                                                int(win / 2))
             #SDR1_1_norm = np.array(SDR1_1_norm_1).round(decimals=3)
             #SDR2_1_norm = np.array(SDR2_1_norm_2).round(decimals=3)
+            #MSB
+            #SDR1_1_norm = (np.array(SDR1_1_norm_1).astype(np.int16) >> 8).astype(np.int8)
+            #SDR2_1_norm = (np.array(SDR2_1_norm_2).astype(np.int16) >> 8).astype(np.int8)
+            # LSB
+            #SDR1_1_norm = np.array(SDR1_1_norm_1).astype(np.int8)
+            #SDR2_1_norm = np.array(SDR2_1_norm_2).astype(np.int8)
 
-            SDR1_1_norm = [int(x) for x in SDR1_1_norm_1]
-            SDR2_1_norm = [int(x) for x in SDR2_1_norm_2]
+            SDR1_1_norm = [round(x) for x in SDR1_1_norm_1]
+            SDR2_1_norm = [round(x) for x in SDR2_1_norm_2]
+            #SDR1_1_norm = [np.float32(x) for x in SDR1_1_norm_1]
+            #SDR2_1_norm = [np.float32(x) for x in SDR2_1_norm_2]
 
 
         j = 0
@@ -267,8 +321,8 @@ for ind in range(0, min_length, min_l):
 
 
             if mode == 0:
-                #sample_entropy = calculate_entropy.calculate_entropy(SDR1_1_norm)
-                sample_entropy=4.54
+                sample_entropy = calculate_entropy.calculate_entropy(SDR1_1_norm)
+                #sample_entropy=4.54
                 No_Filter_32.error_bits_gray_32bit.append(num_errors)
                 No_Filter_32.entropy.append(sample_entropy)
                 entropy = calculate_entropy.calculate_entropy(SDR1_2)
@@ -280,12 +334,18 @@ for ind in range(0, min_length, min_l):
                 DCT_32.error_bits_gray_32bit.append(num_errors)
                 DCT_32.entropy.append(entropy)
                 DCT_32.CR_rate.append((entropy)*abs(1-(2*(num_errors/(Quant_Range*min_l)))))
+                DCT_32.filtentropy.append(calculate_entropy.calculate_entropy(SDR1_1_norm))
+                DCT_32.quantentropy.append(calculate_entropy.calculate_entropy(SDR1_2gbytes))
+                if k==4 or k==8 or k==16:
+                    print("CR rate for k", k, "is", ((entropy)*abs(1-(2*(num_errors/(Quant_Range*min_l))))))
 
             elif mode == 2:
                 entropy = calculate_entropy.calculate_entropy(SDR1_2)
                 DCT_32__4.error_bits_gray_32bit.append(num_errors)
                 DCT_32__4.entropy.append(entropy)
                 DCT_32__4.CR_rate.append((entropy)*abs(1-(2*(num_errors/(Quant_Range*min_l)))))
+                DCT_32__4.filtentropy.append(calculate_entropy.calculate_entropy(SDR1_1_norm))
+
 
 
             elif mode == 3:
@@ -293,6 +353,7 @@ for ind in range(0, min_length, min_l):
                 DCT_32_14.error_bits_gray_32bit.append(num_errors)
                 DCT_32_14.entropy.append(entropy)
                 DCT_32_14.CR_rate.append((entropy)*abs(1-(2*(num_errors/(Quant_Range*min_l)))))
+                DCT_32_14.filtentropy.append(calculate_entropy.calculate_entropy(SDR1_1_norm))
 
 
             elif mode == 4:
@@ -301,6 +362,7 @@ for ind in range(0, min_length, min_l):
                 #DCT_32_13.entropy.append(sample_entropy)
                 entropy = calculate_entropy.calculate_entropy(SDR1_2)
                 DCT_32_13.CR_rate.append((entropy) * abs(1 - (2 * (num_errors / (Quant_Range * min_l)))))
+                DCT_32_13.filtentropy.append(calculate_entropy.calculate_entropy(SDR1_1_norm))
 
             elif mode == 5:
                 #sample_entropy = calculate_entropy.calculate_entropy(RSSI_SDR1_32.raw_samples[ind:ind + min_l])
@@ -308,11 +370,12 @@ for ind in range(0, min_length, min_l):
                 #DCT_32_12.entropy.append(sample_entropy)
                 entropy = calculate_entropy.calculate_entropy(SDR1_2)
                 DCT_32_12.CR_rate.append((entropy) * abs(1 - (2 * (num_errors / (Quant_Range * min_l)))))
+                DCT_32_12.filtentropy.append(calculate_entropy.calculate_entropy(SDR1_1_norm))
 
             label = f'{k}'
             labelarray.append(label)
 
-mark='o'
+mark='.'
 mark_cap='D'
 
 fontsz=50
@@ -322,9 +385,14 @@ fig3, axis3 = plt3.subplots()
 plt3.rcParams.update({'font.family': 'Times New Roman', 'font.size': fontsz, })
 plt3.grid()
 
-
-#confidence_interval.plot_confidence_interval(np.array(No_Filter_32.entropy).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "CR Cap. $\eta = 16$", 'magenta', mark_cap)
-confidence_interval.plot_confidence_interval(np.array(No_Filter_32.entropy).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "CR Cap. $\eta = 8$", 'magenta', mark_cap)
+#Pyramid
+confidence_interval.plot_confidence_interval(np.array(DCT_32.filtentropy).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "Eng. En. $H(K^{N1}_{A,16})$ DCT, $I = 2$", 'magenta', mark_cap)
+confidence_interval.plot_confidence_interval(np.array(DCT_32.quantentropy).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "Eng. En. $H(K^{Q}_{A})$ DCT, $I = 2$", 'orange', mark_cap)
+#confidence_interval.plot_confidence_interval(np.array(DCT_32__4.filtentropy).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "Eng. En. DCT $I = 4$ $H(K^{N1}_{A,8})$", 'blue', mark_cap)
+#confidence_interval.plot_confidence_interval(np.array(DCT_32_14.filtentropy).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "Eng. En. DCT $I = n/4$ $H(K^{N1}_{A,8})$", 'brown', mark_cap)
+#confidence_interval.plot_confidence_interval(np.array(DCT_32_13.filtentropy).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "Eng. En. DCT $I = n/3$ $H(K^{N1}_{A,8})$", 'black', mark_cap)
+#confidence_interval.plot_confidence_interval(np.array(DCT_32_12.filtentropy).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "Eng. En. DCT $I = n/2$ $H(K^{N1}_{A,8})$", 'red', mark_cap)
+#confidence_interval.plot_confidence_interval(np.array(No_Filter_32.entropy).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "Eng. En. $\eta = 8$", 'magenta', mark_cap)
 confidence_interval.plot_confidence_interval(np.array(DCT_32.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "DCT $I = 2$", 'cyan', mark)
 confidence_interval.plot_confidence_interval(np.array(DCT_32__4.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "DCT $I = 4$", 'blue', mark)
 confidence_interval.plot_confidence_interval(np.array(DCT_32_14.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "DCT $I = n/4$", 'brown', mark)
@@ -332,14 +400,30 @@ confidence_interval.plot_confidence_interval(np.array(DCT_32_13.CR_rate).reshape
 confidence_interval.plot_confidence_interval(np.array(DCT_32_12.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "DCT $I = n/2$", 'red', mark)
 confidence_interval.plot_confidence_interval(np.array(No_Filter_32.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "NF RSSI", 'yellow', mark)
 
-
-
 '''confidence_interval.plot_confidence_interval(np.array(No_Filter_32.error_bits_gray_32bit).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3,  "NF RSSI", 'yellow', mark)
+confidence_interval.plot_confidence_interval(np.array(DCT_32.error_bits_gray_32bit).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "DCT $I = 2$", 'cyan', mark)
+confidence_interval.plot_confidence_interval(np.array(DCT_32__4.error_bits_gray_32bit).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "DCT $I = 4$", 'blue', mark)
 confidence_interval.plot_confidence_interval(np.array(DCT_32_12.error_bits_gray_32bit).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "DCT $I = n/2$", 'red', mark)
+confidence_interval.plot_confidence_interval(np.array(DCT_32_13.error_bits_gray_32bit).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "DCT $I = n/3$", 'black', mark)
+confidence_interval.plot_confidence_interval(np.array(DCT_32_14.error_bits_gray_32bit).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "DCT $I = n/4$", 'brown', mark)'''
+
+#MSB
+'''
+confidence_interval.plot_confidence_interval(np.array(DCT_32.filtentropy).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "Eng. En. DCT $H(K^{N1}_{A,8})$, $I = 2$", 'magenta', mark_cap)
+confidence_interval.plot_confidence_interval(np.array(DCT_32_13.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "DCT $I = n/3$", 'black', mark)
+confidence_interval.plot_confidence_interval(np.array(DCT_32_12.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "DCT $I = n/2$", 'red', mark)
+confidence_interval.plot_confidence_interval(np.array(DCT_32_14.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "DCT $I = n/4$", 'brown', mark)
+confidence_interval.plot_confidence_interval(np.array(No_Filter_32.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "NF RSSI", 'yellow', mark)
+confidence_interval.plot_confidence_interval(np.array(DCT_32.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "DCT $I = 2$", 'cyan', mark)
+confidence_interval.plot_confidence_interval(np.array(DCT_32__4.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "DCT $I = 4$", 'blue', mark)'''
+
+
+
+'''confidence_interval.plot_confidence_interval(np.array(DCT_32_12.error_bits_gray_32bit).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "DCT $I = n/2$", 'red', mark)
 confidence_interval.plot_confidence_interval(np.array(DCT_32_13.error_bits_gray_32bit).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "DCT $I = n/3$", 'black', mark)
 confidence_interval.plot_confidence_interval(np.array(DCT_32_14.error_bits_gray_32bit).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "DCT $I = n/4$", 'brown', mark)
 confidence_interval.plot_confidence_interval(np.array(DCT_32__4.error_bits_gray_32bit).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "DCT $I = 4$", 'blue', mark)
-confidence_interval.plot_confidence_interval(np.array(DCT_32.error_bits_gray_32bit).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "DCT $I = 2$", 'cyan', mark)'''
-
+confidence_interval.plot_confidence_interval(np.array(DCT_32.error_bits_gray_32bit).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "DCT $I = 2$", 'cyan', mark)
+confidence_interval.plot_confidence_interval(np.array(No_Filter_32.error_bits_gray_32bit).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3,  "NF RSSI", 'yellow', mark)'''
 
 plt3.show()

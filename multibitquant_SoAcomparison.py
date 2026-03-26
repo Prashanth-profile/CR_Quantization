@@ -60,6 +60,7 @@ class Category_CR:
         self.floor_diff=[]
         self.cost_func=[]
         self.avg_cost=[]
+        self.filtentropy = []
 
 
 #with open('C:/Users/prashanth/Desktop/RSSI_SC_212_SDR1.txt', 'r') as fin:
@@ -416,6 +417,7 @@ for ind in range(0, min_length, min_l):
                 entropy = calculate_entropy.calculate_entropy(SDR1_2)
                 #Gaussian.entropy.append(entropy)
                 Gaussian.CR_rate.append((entropy)*abs(1-2*(num_errors/(Quant_Range*min_l))))
+                Gaussian.filtentropy.append(calculate_entropy.calculate_entropy(SDR1_1_norm))
                 #if (k == 8) & (ind == 2*min_l):
                     #plot_histogram.create_histogram(SDR1_2, 4, ax1, f'{k}-Gauss', 'green')
                 if k==6:
@@ -429,6 +431,7 @@ for ind in range(0, min_length, min_l):
                 entropy = calculate_entropy.calculate_entropy(SDR1_2)
                 DWT.entropy.append(entropy)
                 DWT.CR_rate.append((entropy) * abs(1 - 2 * (num_errors / (Quant_Range * min_l))))
+                DWT.filtentropy.append(calculate_entropy.calculate_entropy(SDR1_1_norm))
                 if k==6:
                     cost_func = ((1 - (entropy / Quant_Range)) * cost_per_unit_entropy) + (
                             (num_errors / (k * min_l)) * cost_per_unit_biterrors) + (
@@ -502,6 +505,7 @@ for ind in range(0, min_length, min_l):
                 p_e=(num_errors / (Quant_Range * min_l))
                 #print("p_e", p_e)
                 DCT.CR_rate.append((entropy) * abs(1 - 2 * (num_errors / (Quant_Range * min_l))))
+                DCT.filtentropy.append(calculate_entropy.calculate_entropy(SDR1_1_norm))
                 #if p_e!=0:
                     #DCT.CR_rate.append((entropy) * (-(p_e)*math.log2(p_e)-(1-p_e)*math.log2(1-p_e)))
                 #else:
@@ -518,7 +522,7 @@ for ind in range(0, min_length, min_l):
             label = f'{k}'
             labelarray.append(label)
 
-mark='o'
+mark='.'
 mark_cap='D'
 
 print("Jana CR rate", Jana.CR_rate)
@@ -541,8 +545,8 @@ print("No Filter", No_Filter.CR_rate)
 #confidence_interval.plot_confidence_interval(np.array(Jana.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3,  "Jana CRrate", 'red', mark)
 #confidence_interval.plot_confidence_interval(np.array(Jana.entropy).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3,  "Jana Capacity", 'red', mark_cap)
 
-confidence_interval.plot_confidence_interval(np.array(Savgol.entropy).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "CR Cap. CFO", 'magenta', mark_cap)
-confidence_interval.plot_confidence_interval(np.array(Gaussian.entropy).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "CR Cap. RSSI", 'orange', mark_cap)
+confidence_interval.plot_confidence_interval(np.array(DCT.filtentropy).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "Eng. En. CFO", 'magenta', mark_cap)
+confidence_interval.plot_confidence_interval(np.array(DWT.filtentropy).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "Eng. En. RSSI", 'orange', mark_cap)
 #confidence_interval.plot_confidence_interval(np.array(Savgol.CR_rate4).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "BEF", 'black', mark)
 #confidence_interval.plot_confidence_interval(np.array(KLT.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "Eq13", 'brown', mark)
 #confidence_interval.plot_confidence_interval(np.array(Savgol.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, r"$\varphi=1$", 'cyan', mark)
@@ -564,9 +568,9 @@ confidence_interval.plot_confidence_interval(np.array(Gaussian.CR_rate).reshape(
 #confidence_interval.plot_confidence_interval(np.array(Ali.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, f"SG $Z=9$\nPol5", 'orange', mark)
 #confidence_interval.plot_confidence_interval(np.array(Gaussian.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "Gauss CRrate", 'green', mark)
 #confidence_interval.plot_confidence_interval(np.array(DCT.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "DCT CRrate", 'brown', mark)
-confidence_interval.plot_confidence_interval(np.array(No_Filter.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "NF CFO", 'red', mark)
 #confidence_interval.plot_confidence_interval(np.array(No_Filter.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "Savgol X-2 CRrate", 'blue', mark)
 confidence_interval.plot_confidence_interval(np.array(Jana.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "NF RSSI", 'yellow', mark)
+confidence_interval.plot_confidence_interval(np.array(No_Filter.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "NF CFO", 'red', mark)
 
 #confidence_interval.plot_confidence_interval(np.array(Aman.CR_rate).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "Aman CRrate", 'green', mark)
 #confidence_interval.plot_confidence_interval(np.array(No_Filter.entropy).reshape(num_columns, num_rows).transpose(), np.array(quan_size), labelarray, axis3, "Aman Capacity", 'green', mark_cap)

@@ -2,29 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="93ded42d-dba7-41e4-8fd9-b6acae1c0569" name="Changes" comment="UPDATE: Histogram plot for error distribution added to quantization main">
-      <change afterPath="$PROJECT_DIR$/CDF.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ecdf.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/empericalcdf.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/find_entropy.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/freqspectrum_dctvssg.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/generateCR_DCT.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/justdct.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/justdct_pe.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/multibit_8vs16.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/multibit_crrate8v16v32v64.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/8bvs16b.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CDF2.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cdfafterrand.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/imagedct.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/conditionalprob_pcr.py" beforeDir="false" afterPath="$PROJECT_DIR$/conditionalprob_pcr.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/conditionalprob_pcr_cr.py" beforeDir="false" afterPath="$PROJECT_DIR$/conditionalprob_pcr_cr.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/confidence_interval.py" beforeDir="false" afterPath="$PROJECT_DIR$/confidence_interval.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CDF.py" beforeDir="false" afterPath="$PROJECT_DIR$/CDF.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/crratedct.py" beforeDir="false" afterPath="$PROJECT_DIR$/crratedct.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extract_CFO_PO_RSS.py" beforeDir="false" afterPath="$PROJECT_DIR$/extract_CFO_PO_RSS.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/generate_CR.py" beforeDir="false" afterPath="$PROJECT_DIR$/generate_CR.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/int2byte_conversion.py" beforeDir="false" afterPath="$PROJECT_DIR$/int2byte_conversion.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dct.py" beforeDir="false" afterPath="$PROJECT_DIR$/dct.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/find_entropy.py" beforeDir="false" afterPath="$PROJECT_DIR$/find_entropy.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/generateCR_DCT.py" beforeDir="false" afterPath="$PROJECT_DIR$/generateCR_DCT.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lossless_quantization.py" beforeDir="false" afterPath="$PROJECT_DIR$/lossless_quantization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/multibit_crrate8v16v32v64.py" beforeDir="false" afterPath="$PROJECT_DIR$/multibit_crrate8v16v32v64.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/multibitquant_SoAcomparison.py" beforeDir="false" afterPath="$PROJECT_DIR$/multibitquant_SoAcomparison.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/noise_removal.py" beforeDir="false" afterPath="$PROJECT_DIR$/noise_removal.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/save_to_bin.py" beforeDir="false" afterPath="$PROJECT_DIR$/save_to_bin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tobssimul.py" beforeDir="false" afterPath="$PROJECT_DIR$/tobssimul.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uniform_quantization.py" beforeDir="false" afterPath="$PROJECT_DIR$/uniform_quantization.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,7 +53,7 @@
       <recent name="C:\Users\prashanth\Documents\GitHub\CR_Quantization" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.sp800_22_tests">
+  <component name="RunManager">
     <configuration name="dct" type="PythonConfigurationType" factoryName="Python">
       <module name="CR_Quantization" />
       <option name="INTERPRETER_OPTIONS" value="" />

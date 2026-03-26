@@ -74,8 +74,8 @@ list_of_strings_SDR1 = RSSI_data_read_SDR1.split('\n')
 list_of_strings_SDR2 = RSSI_data_read_SDR2.split('\n')
 
 # Convert string to float
-list_of_int_SDR1 = [int(x) for x in list_of_strings_SDR1]
-list_of_int_SDR2 = [int(x) for x in list_of_strings_SDR2]
+list_of_int_SDR1 = [np.int8(x) for x in list_of_strings_SDR1]
+list_of_int_SDR2 = [np.int8(x) for x in list_of_strings_SDR2]
 new_list1, new_list2 = zip(*[
     (a, b) for a, b in zip(list_of_int_SDR1, list_of_int_SDR2) if a <= 0
 ])
@@ -87,7 +87,7 @@ RSSI_8bit_SDR2=Common_Source(list_of_int_SDR2)
 
 min_length=262144
 
-rep_unit=18
+rep_unit=16
 n=2**rep_unit
 
 block_length=min_length/n
@@ -97,12 +97,55 @@ min_l = int(min_length/block_length)
 print("Number of blocks", min_l)
 window_size = min_l
 ind=0
-
-sample_entropy=[]
+quant=16
+sample_entropy_obs=[]
+sample_entropy_fil=[]
+nr2entropy=[]
+quantentropy=[]
 for ind in range(0, min_length, min_l):
-    sample_entropy.append(calculate_entropy.calculate_entropy(RSSI_8bit_SDR1.raw_samples[ind:ind + min_l]))
+    #Obs_sample=np.array(dct.adaptive_dct_filter(RSSI_8bit_SDR1.raw_samples[ind:ind + min_l]).round(decimals=3))
+    Obs_sample = RSSI_8bit_SDR1.raw_samples[ind:ind + min_l]
+    Obs_sample = [np.int8(x) for x in Obs_sample]
+    #Obs_sample=np.array(Obs_sample).round(decimals=5)
+    sample_entropy_obs.append(calculate_entropy.calculate_entropy(Obs_sample))
+    SDR1_1_norm = dct.adaptive_dct_filter_window(Obs_sample, 2) #32bit DCT
+    SDR2_1_norm_2 = dct.adaptive_dct_filter(RSSI_8bit_SDR2.raw_samples[ind:ind + min_l])
+    #SDR1_1_norm = np.array(SDR1_1_norm).round(decimals=5)
+    #MSB
+    #SDR1_1_norm = (np.array(SDR1_1_norm).astype(np.int16) >> 8).astype(np.int8)
+    #SDR2_1_norm = (np.array(SDR2_1_norm_2).astype(np.int16) >> 8).astype(np.int8)
+    #LSB
+    #SDR1_1_norm = np.array(SDR1_1_norm).astype(np.int8)
+    #SDR2_1_norm = np.array(SDR2_1_norm_2).astype(np.int8)
+    #Part 3 LSB
+    SDR1_1_norm = [np.int16(x) for x in SDR1_1_norm]
+    SDR2_1_norm = [np.int16(x) for x in SDR2_1_norm_2]
+    print("Filtered out 1", calculate_entropy.calculate_entropy(SDR1_1_norm))
+    #print("Filtered out 2", SDR2_1_norm)
+    # SDR2_1_norm = dct.adaptive_dct_filter_window(list_of_floats_SDR2[ind:ind + min_l], int(min_l/2))
     #SDR1_1_norm = np.array(RSSI_8bit_SDR1.raw_samples[ind:ind + min_l]).round(decimals=3)
-    #sample_entropy.append(calculate_entropy.calculate_entropy(SDR1_1_norm))
+    sample_entropy_fil.append(calculate_entropy.calculate_entropy(SDR1_1_norm))
 
-print("Entropy", sample_entropy)
-print("Mean of entropy", np.mean(sample_entropy))
+    SDR1_2gbytes, SDR2_2gbytes = lossless_quantization.multi_bit_quantization_corrplot(SDR1_1_norm,
+                                                                                       SDR2_1_norm,
+                                                                                       min_l,
+                                                                                       min_l,
+                                                                                       quant,
+                                                                                       True, False)
+
+    SDR1_2, SDR2_2 = int2byte_conversion.intarray_to_bytearray(SDR1_2gbytes, SDR2_2gbytes, quant)
+
+    num_errors, error_dist = erroranderror_distribution.error_distribution(SDR1_2gbytes, SDR2_2gbytes, quant)
+
+    quantentropy.append(calculate_entropy.calculate_entropy(SDR1_2gbytes))
+    print("Entropy Quant", calculate_entropy.calculate_entropy(SDR1_2gbytes))
+    SDR1_2, SDR2_2 = int2byte_conversion.intarray_to_bytearray(SDR1_2gbytes, SDR2_2gbytes, quant)
+    entropy=(calculate_entropy.calculate_entropy(SDR1_2))* abs(1 - (2 * (num_errors / (quant * min_l))))
+    nr2entropy.append(entropy)
+    print("CR rate", entropy)
+
+print("Entropy of observation", sample_entropy_obs)
+print("Entropy of filter", sample_entropy_fil)
+print("Mean of entropy of obs. and fil.", np.mean(sample_entropy_obs), np.mean(sample_entropy_fil))
+print("Mean Cr rate", np.mean(nr2entropy))
+print("Quant entropy", np.mean(quantentropy))
