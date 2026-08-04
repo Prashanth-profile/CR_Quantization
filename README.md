@@ -7,7 +7,8 @@ Run the file multiquant_SoAcomparison.py Make sure to add the Path to the correc
 
   @data{tn1p-p947-24, doi = {10.21227/tn1p-p947}, url = {https://dx.doi.org/10.21227/tn1p-p947}, author = {Prashanth K. H. Sheshagiri and Martin Reisslein and Juan Alberto Cabrera and Frank H. P. Fitzek}, publisher = {IEEE Dataport}, title = {Raw channel metrics from Ettus N210 USRP for common randomness generation }, year = {2024} }
   
-  @data{tn1p-p947-24, doi = {10.21227/tn1p-p947}, url = {https://dx.doi.org/10.21227/tn1p-p947}, author = {Prashanth K. H. Sheshagiri and Martin Reisslein and Juan Alberto Cabrera and Frank H. P. Fitzek}, publisher = {IEEE Dataport}, title = {Raw channel metrics from Ettus N210 USRP for common randomness generation }, year = {2024} }
+  @data{vmdc-dw42-25, doi = {10.21227/vmdc-dw42}, url = {https://dx.doi.org/10.21227/vmdc-dw42}, author = {Prashanth Kumar Herooru Sheshagiri and Martin Reisslein and Juan Alberto Cabrera and Frank H. P. Fitzek},
+publisher = {IEEE Dataport}, title = {RSS readings in Software Defined Radios with Channel Emulator for CR Generation}, year = {2025} }
 
 ## Please cite the following articles if you used our dataset or the code
 
